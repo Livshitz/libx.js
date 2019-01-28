@@ -1,0 +1,68 @@
+{
+   // Use IntelliSense to find out which attributes exist for C# debugging
+   // Use hover for the description of the existing attributes
+   // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
+   "version": "0.2.0",
+   "configurations": [
+		{
+            "name": "Node.JS (local)",
+            "type": "node",
+            "request": "attach",
+            "port": 9229
+		},
+		{
+			"name": "Node Attach | Debug Function",
+			"type": "node",
+			"request": "attach",
+			"port": 5003
+		},
+        {
+            "name": ".NET Core Launch (console)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceFolder}/bin/Debug/netcoreapp2.0/code.dll",
+            "args": ["a"],
+            "cwd": "${workspaceFolder}",
+            // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
+            "console": "internalConsole",
+            "stopAtEntry": false,
+            "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
+            "name": ".NET Core Attach",
+            "type": "coreclr",
+            "request": "attach",
+            "processId": "${command:pickProcess}"
+		},
+		{
+			"name": "GulpTester",
+			"type": "node",
+			"request": "launch",
+			"program": "${workspaceRoot}/node_modules/gulp/bin/gulp.js",
+			// "program": "${workspaceRoot}/infra-node/test.js",
+			// "program": "${workspaceRoot}/test/test.js",
+			"stopOnEntry": false,
+			"args": ["run"],
+			"cwd": "${workspaceRoot}/",
+			"runtimeArgs": [
+				"--nolazy"
+			],
+			"console": "internalConsole",
+		},
+		{
+			"name": "GulpTester2",
+			"type": "node",
+			"request": "launch",
+			"program": "${workspaceRoot}/test/fuser.js",
+			"stopOnEntry": false,
+			"args": ["--build", "--serve", "--watch", "--libs"],
+			"cwd": "${workspaceRoot}/test",
+			"runtimeArgs": [
+				"--nolazy"
+			],
+			"console": "internalConsole",
+		}
+    ]
+}

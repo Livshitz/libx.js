@@ -1,0 +1,11 @@
+{
+	"dotnet-test-explorer.testProjectPath": "./tests",
+	"files.exclude": {
+		"base/js/build": true,
+		"base/*.html": true,
+		"base/**/*.css": true,
+		"base/source/*": true,
+		"test/api/build/": true,
+		"test/lib-cache/": true
+	}
+}
