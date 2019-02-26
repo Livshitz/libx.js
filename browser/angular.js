@@ -9,10 +9,12 @@ module.exports = (function(){
 			var service = {};
 			return mod;
 		});
-
 	
 		//#region Basics
 		mod.bootstrap = (appModuleName, rootElm)=> {
+			if (window._libx_angular_boot) throw "angular was already bootstrapped!";
+			window._libx_angular_boot = true;
+
 			infra.log.verbose('infra.angular.bootstrap');
 			var loader = ()=> {
 				infra.log.verbose('infra.angular.bootstrap: loader');

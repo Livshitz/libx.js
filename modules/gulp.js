@@ -1,4 +1,6 @@
 const infra = require('../bundles/essentials.js');
+infra.node = require('../node/index.js');
+infra.crypto = require('../modules/crypto.js');
 const gulp = require('gulp');
 const gulpif = require('gulp-if');
 const through = require('through');
@@ -180,7 +182,7 @@ module.exports = (function(){
 			var ext = m[3];
 			var isRemote = src.match(/^(.+:)?\/\/|http/g) != null
 			// if (!isRemote) return;
-			var h = infra.crypto.SHA1(src).toString();
+			var h = infra.crypto.lib.SHA1(src).toString();
 			var p = (libCacheDir || './') + 'lib-cache/' + (avoidRenameFile ? dir : '');
 			// var fname = avoidRenameFile ? `${name}${ext}` : `${h}${ext}`;
 			var fname = `${name}${ext}`;
@@ -286,11 +288,30 @@ module.exports = (function(){
 	//#region methods: 
 	mod.getArgs = () => argv;
 
-	mod.readConfig = (path) => {
-		path = path || mod.config.workdir + 'project.json';
-		var content = fs.readFileSync(path);
+	mod.readConfig = (_path, secretsKey) => {
+		_path = _path || mod.config.workdir + 'project.json';
+		var content = fs.readFileSync(_path);
 		mod.projconfig = infra.readConfig(content, mod.config.env );
 		infra.log.verbose('infra.gulp:readConfig: Config for "{0}" v.{1} in env={2} was loaded'.format(mod.projconfig.projectName, mod.projconfig.version, mod.config.env));
+
+		var secretsPath = path.dirname(_path) + '/project-secrets.json';
+		if (!fs.existsSync(secretsPath)) return mod.projconfig;
+
+		var content = fs.readFileSync(secretsPath);
+
+		// try to decrypt:
+		try {
+			content = infra.crypto.decrypt(content.toString(), secretsKey);
+		} catch (ex) {
+			infra.log.warning('infra.gulp:readConfig: were unable to decrypt secret config file, maybe already decrypted. ex: ', ex);
+		}
+
+		var secrets = infra.readConfig(content, mod.config.env);
+		if (secrets == null) throw "infra.gulp:readConfig: Failed to read secrets config!";
+
+		infra.log.verbose('infra.gulp:readConfig: Extending config with secrets'.format(mod.projconfig.projectName, mod.projconfig.version, mod.config.env));
+		infra.extend(true, mod.projconfig, secrets); //deep
+
 		return mod.projconfig;
 	};
 
@@ -320,6 +341,7 @@ module.exports = (function(){
 			}
 		}
 
+		options.debug = false;
 		var stream = gulp.src(_source, options);
 		if (options.debug == null) options.debug = mod.config.debug;
 		if (options.debug != false) stream = stream.pipe(debug())

@@ -1,7 +1,6 @@
 module.exports = (function(){
 	var mod = {};
 	var log = require('../modules/log.js');
-
 	var infra = require('../bundles/essentials.js');
 
 	mod.isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;

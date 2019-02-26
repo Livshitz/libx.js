@@ -1,10 +1,11 @@
 module.exports = (function(){
 	// var infra = require('../liv.infra.shared.js');
-
+	
 	require('../modules/extensions.js')();
 	// var infra = {};
 	var infra = require('../modules/helpers.js');
 	infra.log = require('../modules/log.js');
+	infra.buffer = require('Buffer/').Buffer;
 
 	// infra.log.isShowStacktrace = false;
 

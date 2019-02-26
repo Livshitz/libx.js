@@ -41,11 +41,22 @@ module.exports = (function(){
 	};
 	mod.isNumeric = function (obj) {
 		return !isNaN(parseFloat(obj)) && isFinite(obj)
-	},
+	};
 	mod.type = function (obj) {
-		return obj == null ? String(obj) : class2type[toString.call(obj)] || "object"
-	},
+		return obj == null ? String(obj) : mod.class2type[toString.call(obj)] || "object"
+	};
+	mod.class2type = {
+		"[object Boolean]": "boolean",
+		"[object Number]": "number",
+		"[object String]": "string",
+		"[object Function]": "function",
+		"[object Array]": "array",
+		"[object Date]": "date",
+		"[object RegExp]": "regexp",
+		"[object Object]": "object"
+	};
 	mod.isPlainObject = function (obj) {
+		var hasOwn = Object.prototype.hasOwnProperty;
 		if (!obj || mod.type(obj) !== "object" || obj.nodeType) {
 			return false
 		}
@@ -126,17 +137,8 @@ module.exports = (function(){
 			push = Array.prototype.push,
 			slice = Array.prototype.slice,
 			trim = String.prototype.trim,
-			indexOf = Array.prototype.indexOf,
-			class2type = {
-				"[object Boolean]": "boolean",
-				"[object Number]": "number",
-				"[object String]": "string",
-				"[object Function]": "function",
-				"[object Array]": "array",
-				"[object Date]": "date",
-				"[object RegExp]": "regexp",
-				"[object Object]": "object"
-			};
+			indexOf = Array.prototype.indexOf;
+			
 		if (typeof target === "boolean") {
 			deep = target;
 			target = arguments[1] || {};
@@ -165,7 +167,7 @@ module.exports = (function(){
 							clone = src && mod.isPlainObject(src) ? src : {};
 						}
 						// WARNING: RECURSION
-						target[name] = extend(deep, clone, copy);
+						target[name] = mod.extend(deep, clone, copy);
 					} else if (copy !== undefined) {
 						target[name] = copy;
 					}
