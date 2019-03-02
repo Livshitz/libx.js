@@ -99,7 +99,6 @@ module.exports = (function(){
 					if ($window.ga != null) $window.ga('send', 'pageview', { page: $location.path() });
 				}
 				catch(ex) {
-					infra.log.warning('viewContentLoaded: Error sending to GA...', ex);
 				}
 				window.ngScope = angular.element('[ng-view]').scope();
 	

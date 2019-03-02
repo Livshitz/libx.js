@@ -387,7 +387,7 @@ module.exports = (function(){
 
 
 	mod.watch = async (source, dest, middlewares, callback, _options) => {
-		if (middlewares != null && typeof middlewares != 'function') throw 'middlewares arguemtn must be an initializator (function)!'
+		if (middlewares != null && typeof middlewares != 'function') throw 'middlewares arguments must be an initializator (function)!'
 		
 		var options =  {}; //{ base: path.relative(__dirname, path.dirname(source)) }; 
 		infra.extend(options, _options);
@@ -398,7 +398,7 @@ module.exports = (function(){
 			infra.log.verbose('mod.watch: File "%s" changed', p, ev.type, dest);
 			// options.base = './src'
 			// p = path.relative(__dirname, p);
-			await mod.copy(p, dest, middlewares, false, options);
+			await mod.copy(options.useSourceDir ? source : p, dest, middlewares, false, options);
 			if (callback) callback(p);
 		})
 	};
