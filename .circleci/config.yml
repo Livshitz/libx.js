@@ -30,11 +30,11 @@ jobs:
       - run:
           name: Authenticate with registry
           command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > ~/repo/.npmrc
-    #   - run:
-    #       name: package bump
-    #       command: npm version patch -f
       - run:
-          name: Publish package
+          name: package bump
           command: |
             git config user.email "eli.livshitz@gmail.com"
-            npm publish
+            npm version patch -f
+      - run:
+          name: Publish package
+          command: npm publish
