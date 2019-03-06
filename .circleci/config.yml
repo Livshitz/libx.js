@@ -34,6 +34,7 @@ jobs:
           name: package bump
           command: |
             git config user.email "eli.livshitz@gmail.com"
+            git config user.name "Eli Livshitz"
             npm version patch -f
       - run:
           name: Publish package
