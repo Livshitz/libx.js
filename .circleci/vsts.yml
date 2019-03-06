@@ -49,7 +49,7 @@ steps:
   #   env:
   #     pswd: $(dockerPassword)
 
-  - task: Publish npm package
+  - task: Npm@1
     inputs:
       command: publish
       publishEndpoint: 'registry.npmjs.org/:_authToken=b586f78e-21eb-4756-a517-71b294db05a6'
