@@ -1,0 +1,50 @@
+# Build NodeJS Express app using Azure Pipelines
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript?view=vsts
+pool:
+  vmImage: 'Ubuntu 16.04'
+  
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '8.x'
+
+  - script: npm install
+    
+  - task: Npm@1
+    displayName: 'npm install'
+    inputs:
+      command: install
+
+  # - task: Npm@1
+  #   displayName: 'npm test'
+  #   inputs:
+  #     command: custom
+  #     customCommand: 'test'
+
+  # - task: PublishTestResults@2
+  #   inputs:
+  #     testResultsFiles: '**/TEST-RESULTS.xml'
+  #     testRunTitle: 'Test results for JavaScript'
+  #   condition: succeededOrFailed()
+
+  # - task: PublishCodeCoverageResults@1
+  #   inputs: 
+  #     codeCoverageTool: Cobertura
+  #     summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/*coverage.xml'
+  #     reportDirectory: '$(System.DefaultWorkingDirectory)/**/coverage'
+      
+  # - task: ArchiveFiles@2
+  #   inputs:
+  #     rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
+  #     includeRootFolder: false
+
+  - task: PublishBuildArtifacts@1
+
+  # - script: |
+  #     npm install
+  #     npm test
+  #     docker build -f Dockerfile -t $(dockerId).azurecr.io/$(imageName) .
+  #     docker login -u $(dockerId) -p $pswd $(dockerId).azurecr.io
+  #     docker push $(dockerId).azurecr.io/$(imageName)
+  #   env:
+  #     pswd: $(dockerPassword)
