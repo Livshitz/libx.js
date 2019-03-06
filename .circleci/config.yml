@@ -11,31 +11,49 @@ jobs:
     steps:
       - checkout
 
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-      # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+      # ------------------------------------ 
 
+      - restore_cache: # special step to restore the dependency cache
+          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
+          key: dependency-cache-{{ checksum "package.json" }}
       - run: npm install
-    #   - run:
-    #       name: Run tests
-    #       command: npm test
-
-      - save_cache:
+      - save_cache: # special step to save the dependency cache
+          key: dependency-cache-{{ checksum "package.json" }}
           paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+            - ./node_modules
 
+      # ------------------------------------
+    
+      #   - run:
+      #       name: Run tests
+      #       command: npm test
+
+      - run:
+          name: Build
+          command: node build-libs.js
+
+      - persist_to_workspace:
+          root: ~/repo
+          paths: .
+
+      # ------------------------------------
+      
       - run:
           name: Authenticate with registry
           command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > ~/repo/.npmrc
+      - attach_workspace:
+          at: ~/repo
       - run:
           name: package bump
           command: |
+            git config --global push.default simple
             git config user.email "eli.livshitz@gmail.com"
             git config user.name "Eli Livshitz"
-            npm version patch -f
+            git add . 
+            # git add . && git commit -m "(CI) leftovers [skip ci]"
+            npm version patch -m "^ pkg bump (%s) [skip ci]"
+            git push origin master
+            git push --tags
       - run:
           name: Publish package
           command: npm publish
