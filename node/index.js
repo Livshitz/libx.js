@@ -3,13 +3,20 @@ module.exports = (function(){
 	const fs = require('fs');
 	const path = require('path');
 	const argv = require('yargs').argv;
+	const bump = require('json-bump')
 
 	var infra = require('../bundles/essentials.js');
 	infra.crypto = require('../modules/crypto.js');
 
 	mod.args = argv;
 
-	mod.readJsonFileStripComments = (file)=> {
+	mod.bumpNpmVersion = (file, releaseType) => {
+		var obj = {};
+		obj[releaseType] = 1;
+		return bump(file, { obj })
+	}
+
+	mod.readJsonFileStripComments = (file) => {
 		var data = fs.readFileSync(file);
 	}
 
