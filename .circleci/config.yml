@@ -49,7 +49,8 @@ jobs:
             git config --global push.default simple
             git config user.email "eli.livshitz@gmail.com"
             git config user.name "Eli Livshitz"
-            git add . 
+            git add .
+            git reset -- .npmrc
             # git add . && git commit -m "(CI) leftovers [skip ci]"
             npm version patch -m "^ pkg bump (%s) [skip ci]"
             git push origin master
