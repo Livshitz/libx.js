@@ -32,17 +32,17 @@ jobs:
         #   name: Build
         #   command: node build-libs.js
 
-      - persist_to_workspace:
-          root: ~/repo
-          paths: .
+    #   - persist_to_workspace:
+    #       root: ~/repo
+    #       paths: .
 
       # ------------------------------------
       
       - run:
           name: Authenticate with registry
           command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > ~/repo/.npmrc
-      - attach_workspace:
-          at: ~/repo
+    #   - attach_workspace:
+    #       at: ~/repo
       - run:
           name: package bump
           command: |
@@ -50,7 +50,7 @@ jobs:
             git config user.email "eli.livshitz@gmail.com"
             git config user.name "Eli Livshitz"
             git add .
-            git checkout HEAD -- .npmrc
+            git checkout HEAD -- ~/repo/.npmrc
             git commit -m "(CI) leftovers [skip ci]"
             npm version patch -m "^ pkg bump (%s) [skip ci]"
             git push origin master
