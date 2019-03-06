@@ -1,10 +1,13 @@
 module.exports = (function(){
 	var mod = {};
-	var fs = require('fs');
-	var path = require('path');
+	const fs = require('fs');
+	const path = require('path');
+	const argv = require('yargs').argv;
 
 	var infra = require('../bundles/essentials.js');
 	infra.crypto = require('../modules/crypto.js');
+
+	mod.args = argv;
 
 	mod.readJsonFileStripComments = (file)=> {
 		var data = fs.readFileSync(file);

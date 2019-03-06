@@ -5,7 +5,7 @@ module.exports = (function(){
 	// var infra = {};
 	var infra = require('../modules/helpers.js');
 	infra.log = require('../modules/log.js');
-	infra.buffer = require('Buffer/').Buffer;
+	infra.buffer = require('buffer/').Buffer;
 
 	// infra.log.isShowStacktrace = false;
 

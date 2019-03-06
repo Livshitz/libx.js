@@ -111,8 +111,9 @@ module.exports = (function(){
 			filename: name + '-templates.js',
 			// standalone: true,
 			//module: 'myApp'
+			base: mod.config.workdir, //process.cwd(),
 			transformUrl: function(url) {
-				url = path.relative(mod.config.workdir , url);
+				// url = path.relative(mod.config.workdir , url);
 				return '/' + url; // '/' + name +  //url.replace(/\.tpl\.html$/, '.html')
 			}
 		})
@@ -172,6 +173,7 @@ module.exports = (function(){
 	mod.middlewares.localize = (libCacheDir, dest, avoidCache) => {
 		var transform = async (e, attr, avoidRenameFile) => {
 			var promise = infra.newPromise();
+			var sourceDir = process.cwd(); 
 			var src = e.attr(attr);
 			var dest = e.attr('dest');
 			if (src == null) return;
@@ -197,7 +199,7 @@ module.exports = (function(){
 			}
 		
 			if (avoidCache || !fs.existsSync(f)) {
-				console.log('getting: ', src, ext, h);
+				console.log('getting: ', src, ext, h, dir);
 
 				var isNetworkResource = src.startsWith("http://") || src.startsWith("https://") || src.startsWith("ftp://") || src.startsWith("//");
 
@@ -216,7 +218,7 @@ module.exports = (function(){
 				if (isNetworkResource) {
 					infra.network.httpGet(src, { dataType: '' }).then(handler)
 				} else {
-					var p = path.relative(process.cwd(), process.cwd() + '/' + mod.config.workdir + '/' + src);
+					var p = path.relative(process.cwd(), mod.config.workdir + '/' + src);
 					fs.readFile(p, (err, data)=> handler(data));
 				}
 			} else {
@@ -520,7 +522,7 @@ module.exports = (function(){
 	//#region config: 
 	mod.projconfig = {};
 	mod.config = {};
-	mod.config.workdir = path.relative(__dirname, '.');
+	mod.config.workdir = process.cwd(); //path.relative(process.cwd(), '.'); //__dirname
 	mod.config.env = mod.getArgs().env || 'dev';
 	mod.config.isProd = argv.env == 'prod';
 	mod.config.devServer = {};
