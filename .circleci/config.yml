@@ -50,7 +50,7 @@ jobs:
             git config user.email "eli.livshitz@gmail.com"
             git config user.name "Eli Livshitz"
             git add . && git commit -m "(CI) leftovers [skip ci]"
-            git reset -- .npmrc
+            git checkout HEAD -- .npmrc 
             npm version patch -m "^ pkg bump (%s) [skip ci]"
             git push origin master
             git push --tags
