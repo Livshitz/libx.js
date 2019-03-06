@@ -48,3 +48,8 @@ steps:
   #     docker push $(dockerId).azurecr.io/$(imageName)
   #   env:
   #     pswd: $(dockerPassword)
+
+  - task: Npm@1
+    inputs:
+      command: publish
+      publishEndpoint: '<copy and paste the name of the service connection here>'
