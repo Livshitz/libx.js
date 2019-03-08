@@ -1,5 +1,5 @@
 module.exports = (function(){
-	// var require = infra.browser.require;
+	// var require = libx.browser.require;
 
 	if (typeof window == 'undefined') return require;
 
@@ -28,7 +28,7 @@ module.exports = (function(){
 					else {
 						var m = evt.error.stack.match(/^[^\n@]*@([^\n]+):\d+:\d+/);
 						if (m === null) {
-							console.warn("infra.browser.require: unable to read file name from stack");
+							console.warn("libx.browser.require: unable to read file name from stack");
 						}
 						else if (evt.error.fileName != m[1]) {
 							evt.preventDefault();

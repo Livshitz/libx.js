@@ -1,6 +1,6 @@
-const infra = require('../bundles/essentials.js');
-infra.node = require('../node/index.js');
-infra.crypto = require('../modules/crypto.js');
+const libx = require('../bundles/essentials.js');
+libx.node = require('../node/index.js');
+libx.crypto = require('../modules/crypto.js');
 const gulp = require('gulp');
 const gulpif = require('gulp-if');
 const through = require('through');
@@ -42,7 +42,7 @@ const streamify = require('gulp-streamify');
 const intoStream = require('into-stream');
 const uglify = require('gulp-uglify');
 const concat = require('gulp-concat');
-const cheerio = require('cheerio')
+const cheerio = require('cheerio');
 
 module.exports = (function(){
 	var mod = {};
@@ -54,7 +54,7 @@ module.exports = (function(){
 
 	//#region middlewares: 
 	mod.middlewares = {};
-	mod.middlewares.minify = (options) => streamify(minify(infra.extend({ mangle: false, builtIns: false }, options)));
+	mod.middlewares.minify = (options) => streamify(minify(libx.extend({ mangle: false, builtIns: false }, options)));
 	mod.middlewares.renameFunc = (func) => rename(func);
 	mod.middlewares.rename = (to) => rename(to);
 	mod.middlewares.babelify = () => babel({ presets: ['es2015'] }); //['es2015']
@@ -78,12 +78,12 @@ module.exports = (function(){
 	};
 	mod.middlewares.pug = (locals) => {
 		return jade({
-			locals: infra.extend(locals || {}, { config: mod.projconfig }),
+			locals: libx.extend(locals || {}, { config: mod.projconfig }),
 			// pretty: mod.config.isProd,
 		})
 	};
 	mod.middlewares.usemin = (base) => {
-		infra.log.verbose('usemin:', )
+		libx.log.verbose('usemin:', )
 		return usemin({
 			// assetsDir: './tests/bundle/',
 			path: base, //'./tests/bundle/',
@@ -139,7 +139,7 @@ module.exports = (function(){
 		// 	options.minify = false;
 		// }
 
-		infra.extend(options, _options);
+		libx.extend(options, _options);
 
 		// return browserify(options).bundle() //buffer()
 		var browserified = through2.obj(function(chunk, enc, callback) {
@@ -172,7 +172,7 @@ module.exports = (function(){
 	};
 	mod.middlewares.localize = (libCacheDir, dest, avoidCache) => {
 		var transform = async (e, attr, avoidRenameFile) => {
-			var promise = infra.newPromise();
+			var promise = libx.newPromise();
 			var sourceDir = process.cwd(); 
 			var src = e.attr(attr);
 			var dest = e.attr('dest');
@@ -184,13 +184,13 @@ module.exports = (function(){
 			var ext = m[3];
 			var isRemote = src.match(/^(.+:)?\/\/|http/g) != null
 			// if (!isRemote) return;
-			var h = infra.crypto.lib.SHA1(src).toString();
+			var h = libx.crypto.lib.SHA1(src).toString();
 			var p = (libCacheDir || './') + 'lib-cache/' + (avoidRenameFile ? dir : '');
 			// var fname = avoidRenameFile ? `${name}${ext}` : `${h}${ext}`;
 			var fname = `${name}${ext}`;
 			console.log('fname: ', fname);
 			var f = p + fname;
-			if (!fs.existsSync(p)) infra.node.mkdirRecursiveSync(p);
+			if (!fs.existsSync(p)) libx.node.mkdirRecursiveSync(p);
 
 			var func = async ()=> {
 				onFileReady(e, attr, f, ext, fname, avoidRenameFile ? dir : null).then(()=> {
@@ -216,7 +216,7 @@ module.exports = (function(){
 				}
 
 				if (isNetworkResource) {
-					infra.network.httpGet(src, { dataType: '' }).then(handler)
+					libx.network.httpGet(src, { dataType: '' }).then(handler)
 				} else {
 					var p = path.relative(process.cwd(), mod.config.workdir + '/' + src);
 					fs.readFile(p, (err, data)=> handler(data));
@@ -246,7 +246,7 @@ module.exports = (function(){
 			dir = dir || '';
 			dir = dir.replace(/^fonts(\/)?(lib)?/, '');
 			var p = `/resources/${type}/lib/${dir}`;
-			infra.gulp.copy([file], dest + p)
+			libx.gulp.copy([file], dest + p)
 		
 			if (attr != null) elm.attr(attr, p.substr(1) + fname);
 		}
@@ -293,8 +293,8 @@ module.exports = (function(){
 	mod.readConfig = (_path, secretsKey) => {
 		_path = _path || mod.config.workdir + 'project.json';
 		var content = fs.readFileSync(_path);
-		mod.projconfig = infra.readConfig(content, mod.config.env );
-		infra.log.verbose('infra.gulp:readConfig: Config for "{0}" v.{1} in env={2} was loaded'.format(mod.projconfig.projectName, mod.projconfig.version, mod.config.env));
+		mod.projconfig = libx.readConfig(content, mod.config.env );
+		libx.log.verbose('libx.gulp:readConfig: Config for "{0}" v.{1} in env={2} was loaded'.format(mod.projconfig.projectName, mod.projconfig.version, mod.config.env));
 
 		var secretsPath = path.dirname(_path) + '/project-secrets.json';
 		if (!fs.existsSync(secretsPath)) return mod.projconfig;
@@ -303,16 +303,16 @@ module.exports = (function(){
 
 		// try to decrypt:
 		try {
-			content = infra.crypto.decrypt(content.toString(), secretsKey);
+			content = libx.crypto.decrypt(content.toString(), secretsKey);
 		} catch (ex) {
-			infra.log.warning('infra.gulp:readConfig: were unable to decrypt secret config file, maybe already decrypted. ex: ', ex);
+			libx.log.warning('libx.gulp:readConfig: were unable to decrypt secret config file, maybe already decrypted. ex: ', ex);
 		}
 
-		var secrets = infra.readConfig(content, mod.config.env);
-		if (secrets == null) throw "infra.gulp:readConfig: Failed to read secrets config!";
+		var secrets = libx.readConfig(content, mod.config.env);
+		if (secrets == null) throw "libx.gulp:readConfig: Failed to read secrets config!";
 
-		infra.log.verbose('infra.gulp:readConfig: Extending config with secrets'.format(mod.projconfig.projectName, mod.projconfig.version, mod.config.env));
-		infra.extend(true, mod.projconfig, secrets); //deep
+		libx.log.verbose('libx.gulp:readConfig: Extending config with secrets'.format(mod.projconfig.projectName, mod.projconfig.version, mod.config.env));
+		libx.extend(true, mod.projconfig, secrets); //deep
 
 		return mod.projconfig;
 	};
@@ -321,25 +321,25 @@ module.exports = (function(){
 		if (middlewares != null && typeof middlewares != 'function') throw 'middlewares argument must be an initializator (function)!'
 		if (middlewares == null) middlewares = ()=> [through()];
 
-		var p = infra.newPromise();
+		var p = libx.newPromise();
 
 		var options = { }; // base: mod.config.workdir };
-		infra.extend(options, _options);
+		libx.extend(options, _options);
 
 		// if '_source' contains 
 		if (options.base == null) {
-			if (!infra._.isArray(_source)) _source = [_source];
-			var src = infra._.map(_source, i=> {
+			if (!libx._.isArray(_source)) _source = [_source];
+			var src = libx._.map(_source, i=> {
 				var m = i.match(/(.+?)\/\*/)
 				if (m == null || m.length <= 1) return;
 				return m[1];
 			})
-			src = infra._.reduce(src);
+			src = libx._.reduce(src);
 			if (src == null || src.length == 0) {
 				// options.base = mod.config.workdir;
 			} else {
 				options.base = src;
-				infra.log.verbose('copy: setting base to: ', options.base);
+				libx.log.verbose('copy: setting base to: ', options.base);
 			}
 		}
 
@@ -348,19 +348,19 @@ module.exports = (function(){
 		if (options.debug == null) options.debug = mod.config.debug;
 		if (options.debug != false) stream = stream.pipe(debug())
 		
-		infra._.each(middlewares(), i=> 
+		libx._.each(middlewares(), i=> 
 			stream = stream.pipe(i) 
 		);
 
 		stream.pipe(gulp.dest(dest));
-		stream.on('error', (err) => infra.log.error('--- ERROR: --- ', err) );
+		stream.on('error', (err) => libx.log.error('--- ERROR: --- ', err) );
 		stream.on('end', ()=> {
 			p.resolve(stream);
 			if (options.callback) options.callback(stream);
 		});
 
 		shouldWatch = shouldWatch || false;
-		if (Array.isArray(_source)) _source = infra._.map(_source, i=> i.replace(/^(\!)?\.\//, '$1'));
+		if (Array.isArray(_source)) _source = libx._.map(_source, i=> i.replace(/^(\!)?\.\//, '$1'));
 		else _source = _source.replace(/^(\!)?\.\//, '$1');
 
 		if (shouldWatch) mod.watch(_source, dest, middlewares, null, options);
@@ -369,7 +369,7 @@ module.exports = (function(){
 	};
 
 	mod.test = async (src, dest) => {
-		var p = infra.newPromise();
+		var p = libx.newPromise();
 
 		gulp.src(src + '/**/*.less')
 			// .pipe(concat('all.css'))
@@ -392,12 +392,12 @@ module.exports = (function(){
 		if (middlewares != null && typeof middlewares != 'function') throw 'middlewares arguments must be an initializator (function)!'
 		
 		var options =  {}; //{ base: path.relative(__dirname, path.dirname(source)) }; 
-		infra.extend(options, _options);
+		libx.extend(options, _options);
 
-		infra.log.verbose('watch: Starting to watch "%s"', source);
+		libx.log.verbose('watch: Starting to watch "%s"', source);
 		mod.watchSimple(source, async(ev, p)=> {
 			if (ev.type != 'changed') return;
-			infra.log.verbose('mod.watch: File "%s" changed', p, ev.type, dest);
+			libx.log.verbose('mod.watch: File "%s" changed', p, ev.type, dest);
 			// options.base = './src'
 			// p = path.relative(__dirname, p);
 			await mod.copy(options.useSourceDir ? source : p, dest, middlewares, false, options);
@@ -407,7 +407,7 @@ module.exports = (function(){
 
 	mod.watchSimple = async (source, callback, _options) => {
 		var options = { }; // cwd: "./" };
-		options = infra.extend(options, _options); // {cwd: './'}
+		options = libx.extend(options, _options); // {cwd: './'}
 		gulp.watch(source,  options , async (ev)=> { //
 			var p = ev.path;
 			p = path.relative(process.cwd(), p);
@@ -446,18 +446,18 @@ module.exports = (function(){
 				// })
 			],
 		};
-		opts = infra.extend(opts, options);
+		opts = libx.extend(opts, options);
 
 		if (watchPath != null) {
-			infra.log.verbose('server: starting watch');
-			var debounce = infra.debounce((path)=> {
-				infra.log.verbose('server: debounce', path);
+			libx.log.verbose('server: starting watch');
+			var debounce = libx.debounce((path)=> {
+				libx.log.verbose('server: debounce', path);
 				if (watchCallback) watchCallback(path);
 				gulp.src(path).pipe(connect.reload());
 				// setTimeout(()=>gulp.src(path).pipe(connect.reload()), 500);
 			}, 500);
 			gulp.watch(watchPath, e => { //{cwd: path} ,
-				infra.log.verbose('server: detected change!', e.path);
+				libx.log.verbose('server: detected change!', e.path);
 				debounce(e.path)
 			});
 		}
@@ -473,13 +473,13 @@ module.exports = (function(){
 		var cmd = commands;
 		if (Array.isArray(commands)) {
 			cmd = '';
-			infra._.forEach(commands, i=>{
+			libx._.forEach(commands, i=>{
 				cmd += i + ' && ';
 			})
 			cmd = cmd.slice(0, -4);
 		}
 
-		var p = infra.newPromise();
+		var p = libx.newPromise();
 
 		// var output = [];
 		// var process = spawn('ls', ['-lh', '/usr']);
@@ -497,7 +497,7 @@ module.exports = (function(){
 		// });
 
 		var process = exec(cmd, (err, stdout, stderr)=> {
-			if (!infra.isEmpty(err) || !infra.isEmptyString(stderr)) {
+			if (!libx.isEmpty(err) || !libx.isEmptyString(stderr)) {
 				p.reject(err || stderr);
 				return;
 			}

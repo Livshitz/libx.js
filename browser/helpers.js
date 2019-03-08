@@ -1,7 +1,7 @@
 module.exports = (function(){
 	var mod = {};
 	var log = require('../modules/log.js');
-	var infra = require('../bundles/essentials.js');
+	var libx = require('../bundles/essentials.js');
 
 	mod.isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
@@ -98,7 +98,7 @@ module.exports = (function(){
 		var textArea,
 			copy;
 
-		var p = infra.newPromise();
+		var p = libx.newPromise();
 
 		function isOS() {
 			return navigator.userAgent.match(/ipad|iphone/i);
@@ -285,7 +285,7 @@ module.exports = (function(){
 
 	//#endregion
 
-	//#region infra.jQueryExt
+	//#region libx.jQueryExt
 	mod.jQueryExt = {};
 	mod.jQueryExt.setup = function($){
 		$.postJson = function (url, jsonData) {
@@ -343,7 +343,7 @@ module.exports = (function(){
 			repeat: true,
 			offset: '10%', //200,
 			callbackFunction: function(elem, action){
-				//infra.log.verbose('viewportChecker:reveal-reset');
+				//libx.log.verbose('viewportChecker:reveal-reset');
 				var e = $(elem);
 				if (action=='add'){
 					e.addClass(e.attr('reveal-reset'));
@@ -359,7 +359,7 @@ module.exports = (function(){
 			//classToRemove: 'fadeInUp visible animated',
 			offset: '10%',
 			callbackFunction: function(elem, action){
-				//infra.log.verbose('viewportChecker:reveal');
+				//libx.log.verbose('viewportChecker:reveal');
 				var e = $(elem);
 				if (action=='add'){
 					e.addClass(e.attr('reveal'));
@@ -386,13 +386,13 @@ module.exports = (function(){
 			mod.jQueryExt.applyReveal();
 		});	
 	} else {
-		log.warning('helpers: jQuery is not defined, skipping jQuery infra setup...');
+		log.warning('helpers: jQuery is not defined, skipping jQuery libx setup...');
 	}
 	//#endregion
 
 	mod.getImageMeta = function (url) {
 		// var deferred = new $.Deferred();
-		var defer = infra.newPromise();
+		var defer = libx.newPromise();
 		var img = new Image();
 		img.addEventListener("load", function () {
 			defer.resolve({ width: this.naturalWidth, height: this.naturalHeight });

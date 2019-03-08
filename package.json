@@ -63,5 +63,6 @@
         "vinyl-source-stream": "^2.0.0",
         "vinyl-transform": "^1.0.0",
         "yargs": "^12.0.5"
-    }
+    },
+    "devDependencies": {}
 }

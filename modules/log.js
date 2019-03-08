@@ -1,11 +1,11 @@
 module.exports = (function(){
 	var mod = {};
 
-	var infra = require('./helpers.js');
+	var libx = require('./helpers.js');
 
 	mod.isDebug = false;
 	mod.isShowStacktrace = true;
-	mod.isShowTime = !infra.isBrowser;
+	mod.isShowTime = !libx.isBrowser;
 	mod.isShowPrefix = true;
 	mod.severities = {
 		debug: 0, //console.debug
@@ -49,7 +49,7 @@ module.exports = (function(){
 		var trace = '';
 		if (mod.isShowStacktrace) trace = mod.getStackTrace();
 
-		if (infra.isBrowser) {
+		if (libx.isBrowser) {
 			var _msg = `${prefix}${time} ${msg} %c${trace}`; //${color != null ? '%c' : ''}
 			if (args.length == 0) console[func].call(console, _msg, 'font-size:8px;');
 			else console[func].call(console, _msg, 'font-size:8px;', args);

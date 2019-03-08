@@ -1,7 +1,7 @@
 module.exports = (function(){
 	var mod = {};
 
-	var infra = require('../bundles/essentials.js');
+	var libx = require('../bundles/essentials.js');
 
 	var http = require('http');
 	var https = require('https');
@@ -22,7 +22,7 @@ module.exports = (function(){
 	};
 
 	mod.httpRequest = (url, data, method, _options)=> {
-		var defer = infra.newPromise();
+		var defer = libx.newPromise();
 
 		url = mod.helpers.fixUrl(url);
 
@@ -52,8 +52,8 @@ module.exports = (function(){
 			withCredentials: false,
 			dataType: "json",
 		};
-		infra.extend(options, _options);
-		options = infra.extend(dest, options);
+		libx.extend(options, _options);
+		options = libx.extend(dest, options);
 
 		var op = http;
 		if (dest.protocol == 'https:') op = https;
@@ -73,7 +73,7 @@ module.exports = (function(){
 		if (data != null) request.write(JSON.stringify(data));
 
 		request.on('error', function (e) {
-			infra.log.error(e.message);
+			libx.log.error(e.message);
 			defer.reject(e);
 		});
 		request.end();

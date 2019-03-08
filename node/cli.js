@@ -1,12 +1,12 @@
 (async()=>{
-	var infra = require('../bundles/essentials.js');
-	infra.node = require('../node');
+	var libx = require('../bundles/essentials.js');
+	libx.node = require('../node');
 
-	if (infra.node.args.bump) {
+	if (libx.node.args.bump) {
 		
-		var f = infra.node.args._[0];
-		var releaseType = infra.node.args.bump;
-		var res = infra.node.bumpNpmVersion(f, releaseType);
+		var f = libx.node.args._[0];
+		var releaseType = libx.node.args.bump;
+		var res = libx.node.bumpNpmVersion(f, releaseType);
 		console.log(releaseType, f, res)
 	}
 

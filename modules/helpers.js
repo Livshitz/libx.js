@@ -2,6 +2,7 @@ module.exports = (function(){
 	var mod = {};
 	mod.deferred = require('jquery-deferred');
 	mod._ = require('lodash/core');
+	mod._.range = require('lodash/range');
 	var log = require('./log.js');
 
 	mod.isBrowser = typeof window !== 'undefined';
@@ -225,8 +226,18 @@ module.exports = (function(){
 		}
 	}
 
-	mod.jsonify = function (obj) {
+	mod.jsonify = function (obj, isCompact) {
 		// return JSON.stringify(obj, null, "\t");
+
+		if (isCompact) {
+			return JSON.stringify(obj,function(k,v){
+				if(v instanceof Array)
+				   return JSON.stringify(v);
+				return v;
+			 },4);
+			 
+		}
+
 		return JSON.stringify(obj, null, 4); 
 	}
 	

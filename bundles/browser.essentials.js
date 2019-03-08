@@ -1,25 +1,25 @@
 module.exports = (function(){
-	// var infra = require('../liv.infra.shared.js');
+	// var libx = require('../libx.shared.js');
 
-	var infra = require('./essentials.js');
+	var libx = require('./essentials.js');
 
-	// infra.log.isShowStacktrace = false;
+	// libx.log.isShowStacktrace = false;
 
-	// infra.helpers = require('./liv.infra.helpers.js');
-	// infra.node = require('./liv.infra.node.js');
-	// infra.gulp = require('./liv.infra.gulp.js');
+	// libx.helpers = require('./liv.libx.helpers.js');
+	// libx.node = require('./liv.libx.node.js');
+	// libx.gulp = require('./liv.libx.gulp.js');
 	
-	// if (infra.modules == null) infra.modules = {};
+	// if (libx.modules == null) libx.modules = {};
 	// if (typeof window == 'undefined') window = global;
 	
-	if (infra.browser == null) infra.browser = {};
-	infra.browser.require = require('../browser/require.js');
-	infra.browser.helpers = require('../browser/helpers.js');
+	if (libx.browser == null) libx.browser = {};
+	libx.browser.require = require('../browser/require.js');
+	libx.browser.helpers = require('../browser/helpers.js');
 
-	// // infra.browser.angular = require('./browser/angular.js');
-	// infra.modules.network = require('./modules/network.js');
-	// infra.modules.firebase = require('./modules/firebase.js');
+	// // libx.browser.angular = require('./browser/angular.js');
+	// libx.modules.network = require('./modules/network.js');
+	// libx.modules.firebase = require('./modules/firebase.js');
 
-	return infra;
+	return libx;
 
 })();

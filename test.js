@@ -1,4 +1,4 @@
-var infra = require('./bundles/essentials.js');
+var libx = require('./bundles/essentials.js');
 var gulp = require('./modules/gulp.js');
 
 /*
@@ -14,13 +14,14 @@ const buffer = require('vinyl-buffer');
 const path = require('path');
 
 (async ()=>{ /* init */
-	// infra._.each([1,2,3,4,5], i=> console.log(i))
+	libx._.each([1,2,3,4,5], i=> console.log(i))
+	
 
 	// await gulp.delete('./temp/');
-	await gulp.copy('./bundles/essentials.js', './temp/', ()=>[ // '../test/build/resources/scripts/'
-		gulp.middlewares.browserify({ }),
-		gulp.middlewares.ifProd(gulp.middlewares.minify()),
-	]);
+	// await gulp.copy('./bundles/essentials.js', './temp/', ()=>[ // '../test/build/resources/scripts/'
+	// 	gulp.middlewares.browserify({ }),
+	// 	gulp.middlewares.ifProd(gulp.middlewares.minify()),
+	// ]);
 
 	/*
 	const gulp = require('gulp');

@@ -1,9 +1,9 @@
 module.exports = (function(){
 	var mod = {};
-	var infra = require('../bundles/essentials.js');
+	var libx = require('../bundles/essentials.js');
 
 	mod.init = ()=> {
-		mod = angular.module('infra.angular', ['ngResource', 'ngRoute']);
+		mod = angular.module('libx.angular', ['ngResource', 'ngRoute']);
 	
 		mod.factory('utils', ($rootScope, $window, $resource, $q, $timeout, $location, $http) => {
 			var service = {};
@@ -15,14 +15,14 @@ module.exports = (function(){
 			if (window._libx_angular_boot) throw "angular was already bootstrapped!";
 			window._libx_angular_boot = true;
 
-			infra.log.verbose('infra.angular.bootstrap');
+			libx.log.verbose('libx.angular.bootstrap');
 			var loader = ()=> {
-				infra.log.verbose('infra.angular.bootstrap: loader');
+				libx.log.verbose('libx.angular.bootstrap: loader');
 				mod.injector = angular.bootstrap(rootElm || document.body.parentNode, [appModuleName || 'myApp']);
 			}
 			loader();
 			angular.element(window).on('load', ()=> {
-				infra.log.verbose('infra.angular.bootstrap: load');
+				libx.log.verbose('libx.angular.bootstrap: load');
 			});
 		};
 	
@@ -41,7 +41,7 @@ module.exports = (function(){
 		// mod.onReady2 = (func) => angular.element('body').ready(func);
 	
 		mod.config(()=>{
-			infra.log.verbose('infra.angular: config');
+			libx.log.verbose('libx.angular: config');
 		});
 
 		// Self init stuff:
@@ -52,10 +52,10 @@ module.exports = (function(){
 		});
 	
 		mod.run(($rootScope, $window, $resource, $q, $timeout, $location, $http)=>{
-			infra.log.verbose('infra.angular: run');
+			libx.log.verbose('libx.angular: run');
 
-			$rootScope.infra = {};
-			$rootScope.infra.browser = infra.browser;
+			$rootScope.libx = {};
+			$rootScope.libx.browser = libx.browser;
 	
 			mod.$window = $window;
 			mod.$rootScope = $rootScope;
@@ -94,7 +94,7 @@ module.exports = (function(){
 			});
 	
 			$rootScope.$on('$viewContentLoaded', function () {
-				infra.log.verbose('$viewContentLoaded', $location.$$path);
+				libx.log.verbose('$viewContentLoaded', $location.$$path);
 				try{
 					if ($window.ga != null) $window.ga('send', 'pageview', { page: $location.path() });
 				}
@@ -108,7 +108,7 @@ module.exports = (function(){
 			});
 	
 			mod.ngRefresh = function(elmQuery) {
-				if (infra.isNull(elmQuery)) elmQuery = "body";
+				if (libx.isNull(elmQuery)) elmQuery = "body";
 				var scope = angular.element(elmQuery).scope();
 				var compile = angular.element(elmQuery).injector().get('$compile');
 			
@@ -117,7 +117,7 @@ module.exports = (function(){
 			}
 
 			mod.goBack = function () {
-				infra.log.verbose('goBack');
+				libx.log.verbose('goBack');
 				var cur = $location.path();
 		
 				var prevUrl = "/";
@@ -241,7 +241,7 @@ module.exports = (function(){
 		};
 	
 		mod.httpPostJson = function (endpoint, data, exHeaders) {
-			infra.extend(exHeaders, { 'Content-Type': 'application/json; charset=UTF-8' });
+			libx.extend(exHeaders, { 'Content-Type': 'application/json; charset=UTF-8' });
 			return mod.httpPost(endpoint, data, { headers: exHeaders });
 		}
 	
@@ -357,13 +357,13 @@ module.exports = (function(){
 		mod.showDialog = function (dialogName, dialogTemplate, dlg, locals, showCloseButton) {
 			mod.lazy.controller(dialogName, function ($scope, $mdDialog, locals) {
 				$scope.hide = function () {
-					//infra.log.verbose('Dialog:' + dialogName + ': Hidel!');
+					//libx.log.verbose('Dialog:' + dialogName + ': Hidel!');
 					//$('.md-dialog-container').hide();
 					//$mdDialog.hide();
 					$mdDialog.cancel();
 				};
 				$scope.cancel = function () {
-					infra.log.verbose('Dialog:' + dialogName + ': Cancel!');
+					libx.log.verbose('Dialog:' + dialogName + ': Cancel!');
 					if ($scope.locals.onClose != null) $scope.locals.onClose();
 					$mdDialog.cancel();
 				};
@@ -394,11 +394,11 @@ module.exports = (function(){
 						clickOutsideToClose: true,
 						escapeToClose: true
 					}).then(function (answer) {
-						infra.log.verbose('Dialog:' + dialogName + ': dialog successfull');
+						libx.log.verbose('Dialog:' + dialogName + ': dialog successfull');
 						ngGet('$rootScope').showFloatingBackButton = false;
 					}, function () {
 						if ($scope.locals != null && $scope.locals.onClose != null) $scope.locals.onClose();
-						infra.log.verbose('Dialog:' + dialogName + ': dialog cancelled');
+						libx.log.verbose('Dialog:' + dialogName + ': dialog cancelled');
 						ngGet('$rootScope').showFloatingBackButton = false;
 					});
 				},
@@ -418,7 +418,7 @@ module.exports = (function(){
 		}
 	
 		mod.autoNameInputs = function(){
-			//infra.log.verbose('autoNameInputs')
+			//libx.log.verbose('autoNameInputs')
 			$('input[ng-model]').each(function (i, x) {
 				var elm = $(x);
 				if (elm.attr('name') != null) return;
@@ -458,7 +458,7 @@ module.exports = (function(){
 	
 			mod.setEditInPlaceTabNext = function() {
 				$('.ng-inline-edit').on('focus', '.ng-inline-edit__text', function(ev) { 
-					infra.log.verbose('x', ev)
+					libx.log.verbose('x', ev)
 					var input = ev.currentTarget 
 					if (input == null) return;
 					input.click();
@@ -492,7 +492,7 @@ module.exports = (function(){
 	
 			function resizeFunc($window, $scope, $elm, $attr, event) {
 				var clientWidth = document.documentElement.clientWidth;
-				infra.log.verbose('resizeFunc');
+				libx.log.verbose('resizeFunc');
 	
 				_.each(mod.screenModes, function (value, key) {
 					if ($window.matchMedia(value).matches) {
@@ -591,9 +591,9 @@ module.exports = (function(){
 	
 				element.bind('click', function () {
 					scope.$apply(function () {
-						infra.log.verbose(scope);
-						infra.log.verbose(attrs['ngToggle']);
-						infra.log.verbose(scope.$eval( attrs['ngToggle'] ) );
+						libx.log.verbose(scope);
+						libx.log.verbose(attrs['ngToggle']);
+						libx.log.verbose(scope.$eval( attrs['ngToggle'] ) );
 						scope.$eval( attrs['ngToggle'] + '=!' + attrs['ngToggle']  )
 					});
 				});
@@ -605,7 +605,7 @@ module.exports = (function(){
 				restrict: 'A',
 				link: function ($scope, $element) {
 					$timeout(function () {
-						infra.log.verbose('autofocus', $element[0]);
+						libx.log.verbose('autofocus', $element[0]);
 						$element[0].focus();
 					}, 500);
 				}
@@ -644,7 +644,7 @@ module.exports = (function(){
 	
 		mod.filter('escape2', function () {
 			return function (url) {
-				infra.log.verbose(url);
+				libx.log.verbose(url);
 				url = url.replace(/\//g, '*');
 				return window.encodeURIComponent(url);
 			};
@@ -657,7 +657,7 @@ module.exports = (function(){
 				link: function(scope, element, attrs, modelCtrl) {
 					// var pattern = $parse(attrs.noSpecialChar)(scope);
 					var pattern = attrs.disallow;
-					// infra.log.verbose('strict: pattern= ', pattern);
+					// libx.log.verbose('strict: pattern= ', pattern);
 	
 					modelCtrl.$parsers.push(function(inputValue) {
 						if (inputValue == null) return '';
@@ -689,10 +689,10 @@ module.exports = (function(){
 				restrict: 'A',
 				link: function(scope, element, attrs, modelCtrl) {
 					var pattern = attrs.strict;
-					// infra.log.verbose('strict: pattern= ', pattern);
+					// libx.log.verbose('strict: pattern= ', pattern);
 	
 					element.on('keypress', function(event) { 
-						// infra.log.verbose('creditCardFormatter: key= ', event.key);
+						// libx.log.verbose('creditCardFormatter: key= ', event.key);
 	
 						var value = event.target.value + event.key;
 						// value.replace(new RegExp(pattern, 'gi'), '');
@@ -719,7 +719,7 @@ module.exports = (function(){
 	
 						cleanInputValue = inputValue.replace(new RegExp("\\D", 'gi'), '');
 	
-						// infra.log.verbose('spacer: val= ', cleanInputValue)
+						// libx.log.verbose('spacer: val= ', cleanInputValue)
 						var initialString = cleanInputValue;
 						for(var i=spaceEach; i<initialString.length; i+=spaceEach) {
 							var position = i + (i/spaceEach - 1);
@@ -826,7 +826,7 @@ module.exports = (function(){
 		
 	};
 
-	if (typeof angular == "undefined") infra.log.debug('infra.angular: Angular is not defined, skipping Angular infra setup...');
+	if (typeof angular == "undefined") libx.log.debug('libx.angular: Angular is not defined, skipping Angular libx setup...');
 	else mod.init();
 
 	return mod;
