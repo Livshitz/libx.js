@@ -1,5 +1,6 @@
 var libx = require('./bundles/essentials.js');
 var gulp = require('./modules/gulp.js');
+var rx = require('./node/rxjs');
 
 /*
 const gulp = require('gulp');
@@ -14,7 +15,12 @@ const buffer = require('vinyl-buffer');
 const path = require('path');
 
 (async ()=>{ /* init */
-	libx._.each([1,2,3,4,5], i=> console.log(i))
+	// libx._.each([1,2,3,4,5], i=> console.log(i))
+	//console.log(rx)
+	rx.range(1, 200).pipe(
+		rx.Operators.filter(x => x % 2 === 1),
+		rx.Operators.map(x => x + x)
+	).subscribe(x => console.log(x));
 	
 
 	// await gulp.delete('./temp/');

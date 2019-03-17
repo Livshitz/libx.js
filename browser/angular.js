@@ -34,7 +34,7 @@ module.exports = (function(){
 			return ret;
 		};
 		window.ngGet = (getModule) => window.ngInjector().get(getModule);
-		window.ngScopeInline = function() { return angular.element('[ng-controller="inlineController"]').scope() };
+		window.ngScopeInline = function() { return angular.element('[ng-controller="inlineController"]').last().scope() };
 		window.scope = window.ngScopeInline();
 		mod.do = (func, reqModules)=> window.ngInjector(reqModules).invoke(func);
 		mod.get = (instanceName) => window.ngGet(instanceName);
@@ -84,13 +84,12 @@ module.exports = (function(){
 			};
 	
 			$rootScope.$on('$routeChangeSuccess', function ($event) {
+				libx.log.verbose('$routeChangeSuccess');
 				$rootScope.hasBack = function () {
 					return mod.history.length > 1 && mod.history[mod.history.length - 1] != '/'; // $location.$$path != '/' &&
 				};
 	
 				mod.history.push($location.$$path);
-	
-				window.scope = window.ngScopeInline();
 			});
 	
 			$rootScope.$on('$viewContentLoaded', function () {
@@ -104,7 +103,7 @@ module.exports = (function(){
 	
 				// mod.autoNameInputs();
 	
-				window.scope = window.ngScopeInline();
+				window.$scope = window.ngScopeInline();
 			});
 	
 			mod.ngRefresh = function(elmQuery) {
@@ -158,6 +157,7 @@ module.exports = (function(){
 		//#region Controllers
 		mod.controller('inlineControllerBase', function ($scope, $rootScope) {
 			window.$scope = ngScopeInline();
+			window.$rootScope = $rootScope;
 			$scope.app = app;
 			$scope.root = $rootScope;
 		});

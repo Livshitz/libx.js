@@ -5,10 +5,16 @@
    "version": "0.2.0",
    "configurations": [
 		{
-            "name": "Node.JS (local)",
-            "type": "node",
-            "request": "attach",
-            "port": 9229
+			"name": "Node.JS (local)",
+			"type": "node",
+			"request": "launch",
+			"program": "${workspaceRoot}/test.js",
+			"stopOnEntry": false,
+			"args": [],
+			// "args": ["--develop"],
+			"cwd": "${workspaceRoot}",
+			"runtimeArgs": [],
+			"console": "internalConsole",
 		},
 		{
 			"name": "Node Attach | Debug Function",

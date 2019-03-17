@@ -1,9 +1,22 @@
 module.exports = (function(){
 	var mod = {};
-	mod.deferred = require('jquery-deferred');
 	mod._ = require('lodash/core');
 	mod._.range = require('lodash/range');
-	var log = require('./log.js');
+	mod._.flatMap = require('lodash/flatMap');
+	mod._.uniq = require('lodash/uniq');
+	mod._.countBy = require('lodash/countBy');
+	mod._.toPairs = require('lodash/toPairs');
+	mod._.array = require('lodash/array');
+
+	mod._.fp = require("lodash/fp");;
+	// mod.fp.map = require("lodash/fp/map");
+	// mod.fp.flatten = require("lodash/fp/flatten");
+	// mod.fp.sortBy = require("lodash/fp/sortBy");
+	// mod.fp.flow = require("lodash/fp/flow");
+
+	mod.Callbacks = require('./callbacks');
+	mod.deferred = require('deferred-js');
+	mod.log = require('./log.js');
 
 	mod.isBrowser = typeof window !== 'undefined';
 
@@ -73,6 +86,20 @@ module.exports = (function(){
 		return key === undefined || hasOwn.call(obj, key)
 	}
 
+	mod.throttle = (func, wait, immediate) => {
+		var timeout;
+		return function() {
+			var context = this, args = arguments;
+			var later = function() {
+				timeout = null;
+				if (!immediate) func.apply(context, args);
+			};
+			
+			if (timeout != null) return;
+			timeout = setTimeout(later, wait);
+		};
+	};
+
 	mod.debounce = (func, wait, immediate) => {
 		var timeout;
 		return function() {
@@ -97,7 +124,7 @@ module.exports = (function(){
 	}
 	
 	mod.newPromise = () => {
-		var promise = mod.deferred.Deferred();
+		var promise = mod.deferred();
 		return promise;
 	}
 	
@@ -113,7 +140,7 @@ module.exports = (function(){
 		for(var i=0; i<tasks.length; i++) {
 			var t = tasks[i];
 			await t().then(()=> {
-				log.debug('chain: done #' + counter++);
+				mod.log.debug('chain: done #' + counter++);
 			});
 		}
 	}
@@ -203,7 +230,7 @@ module.exports = (function(){
 	
 			return obj;
 		} catch(ex) {
-			log.error('Error: ', ex);
+			mod.log.error('Error: ', ex);
 		}
 	}
 

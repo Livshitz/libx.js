@@ -2,6 +2,8 @@ module.exports = (function(){
 	var mod = {};
 	var log = require('../modules/log.js');
 	var libx = require('../bundles/essentials.js');
+	if (global._ == null) global._ = libx._;
+	global._.fp = libx._.fp;
 
 	mod.isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
@@ -35,6 +37,10 @@ module.exports = (function(){
 		fileref.setAttribute("href", filename)
 		if (typeof fileref != "undefined")
 			document.getElementsByTagName("head")[0].appendChild(fileref)
+	}
+
+	mod.reload = () => {
+		window.location.reload();
 	}
 
 	mod.events = {};
@@ -164,6 +170,7 @@ module.exports = (function(){
 	mod.urlize = function (obj) {
 		var str = "";
 		for (var key in obj) {
+			if (obj[key] == null) continue;
 			if (str != "") {
 				str += "&";
 			}
