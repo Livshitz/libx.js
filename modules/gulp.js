@@ -272,7 +272,7 @@ module.exports = (function(){
 					$(e).remove();
 				});
 			
-				await Promise.all(p);
+				await Promise.all(p); 
 			
 				console.log('all done, saving')
 				file.contents = Buffer.from($.html());
