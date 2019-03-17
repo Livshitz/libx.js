@@ -214,9 +214,9 @@ module.exports = (function(){
 						// return onFileReady(e, attr, f, ext, fname, avoidRenameFile ? dir : null);
 					});
 				}
-
+				
 				if (isNetworkResource) {
-					libx.network.httpGet(src, { dataType: '' }).then(handler)
+					libx.network.httpGet(src, { dataType: '' }).then(data=>handler(data));
 				} else {
 					var p = path.relative(process.cwd(), mod.config.workdir + '/' + src);
 					fs.readFile(p, (err, data)=> handler(data));
