@@ -14,6 +14,18 @@ module.exports = (function(){
 		var plaintext = bytes.toString(mod.lib.enc.Utf8);
 		return plaintext
 	};
+
+	mod.base64_encode = (text) => {
+		const encryptedWord = mod.lib.enc.Utf8.parse(text); // encryptedWord Array object
+		const encrypted = mod.lib.enc.Base64.stringify(encryptedWord); // string: 'NzUzMjI1NDE='
+		return encrypted;
+	}
+
+	mod.base64_decode = (ciphertext) => {
+		const encryptedWord = mod.lib.enc.Base64.parse(encrypted); // encryptedWord via Base64.parse()
+		const decrypted = mod.lib.enc.Utf8.stringify(encryptedWord); // decrypted encryptedWord via Utf8.stringify() '75322541'
+		return decrypted;
+	}
 	
 	return mod; //mod;
 })();

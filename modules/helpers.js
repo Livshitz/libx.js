@@ -155,6 +155,8 @@ module.exports = (function(){
 		return true;
 	}
 	
+	mod.clone = (target, source) => mod.extend(true, target, source);
+
 	mod.extend = function() {
 		var options, name, src, copy, copyIsArray, clone, target = arguments[0] || {},
 			i = 1,

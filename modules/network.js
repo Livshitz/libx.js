@@ -32,10 +32,11 @@ module.exports = (function(){
 				'Accept': "*/*",
 				// 'Origin': origin,
 				// 'Referer': origin,
-				//'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36",
+				// 'User-Agent': 'Mozilla/5.0'
+				// 'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36",
 				//'Content-Type':'application/x-www-form-urlencoded'
+				// 'client': process.env.MOVIEGLU_CLIENT,
 				/*
-				'client': process.env.MOVIEGLU_CLIENT,
 				'x-api-key': process.env.MOVIEGLUE_API_KEY,
 				'api-version': process.env.MOVIEGLU_API_VERSION,
 				'Authorization': process.env.MOVIEGLUE_AUTHORISATION,
@@ -52,7 +53,7 @@ module.exports = (function(){
 			withCredentials: false,
 			dataType: "json",
 		};
-		libx.extend(options, _options);
+		libx.clone(options, _options);
 		options = libx.extend(dest, options);
 
 		var op = http;

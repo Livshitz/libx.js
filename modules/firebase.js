@@ -44,7 +44,7 @@ module.exports = function(firebaseApp, firebaseProvider){
 
 	mod.get = function(path) {
 		libx.log.debug('api.firebase.get: Getting \"' + path + '\"');
-		var defer = $.Deferred();
+		var defer = libx.newPromise();
 		mod._database.ref(path).once('value').then(function(snp) {
 			var obj = snp.val();
 			defer.resolve(obj);
@@ -54,7 +54,7 @@ module.exports = function(firebaseApp, firebaseProvider){
 
 	mod.update = function(path, data, avoidFill) {
 		libx.log.debug('api.firebase.update: Updating data to \"' + path + '\"', data);
-		var defer = $.Deferred();
+		var defer = libx.newPromise();
 
 		data = mod._fixObj(data);
 
@@ -65,13 +65,13 @@ module.exports = function(firebaseApp, firebaseProvider){
 		return defer.promise();
 	}
 
-	mod.set = function(path, data) {
+	mod.set = function(path, data, avoidFill) {
 		libx.log.debug('api.firebase.set: Setting data to \"' + path + '\"', data);
-		var defer = $.Deferred();
+		var defer = libx.newPromise();
 
 		data = mod._fixObj(data);
 
-		data = mod._fillMissingFields(data, path);
+		if (!avoidFill) data = mod._fillMissingFields(data, path);
 		mod._database.ref(path).set(data).then(function() {
 			defer.resolve(path);
 		});
@@ -81,7 +81,7 @@ module.exports = function(firebaseApp, firebaseProvider){
 	mod.push = function(path, data, avoidFill) {
 		var key = mod.makeKey();
 		libx.log.debug('api.firebase.push: Pushing to \"' + path + '\" key=' + key, data);
-		var defer = $.Deferred();
+		var defer = libx.newPromise();
 
 		data = mod._fixObj(data);
 		
@@ -96,7 +96,7 @@ module.exports = function(firebaseApp, firebaseProvider){
 
 	mod.delete = function(path) {
 		libx.log.debug('api.firebase.delete: Removing data to \"' + path + '\"');
-		var defer = $.Deferred();
+		var defer = libx.newPromise();
 		mod._database.ref(path).remove().then(function() {
 			defer.resolve(path);
 		});
@@ -105,7 +105,7 @@ module.exports = function(firebaseApp, firebaseProvider){
 
 	mod.filter = function(path, byChild, byValue) {
 		libx.log.debug('api.firebase.filter: Querying data from "{0}", by child "{1}", by value "{2}"'.format(path, byChild, byValue));
-		var defer = $.Deferred();
+		var defer = libx.newPromise();
 		mod._database.ref(path).orderByChild(byChild).equalTo(byValue).once('value').then(function(snp) {
 			var obj = snp.val();
 			if (obj != null) obj = mod.dictToArray(obj);
@@ -163,6 +163,8 @@ module.exports = function(firebaseApp, firebaseProvider){
 		var date = new Date();
 		
 		// Delete 'date' field
+
+		if (typeof data != 'object') return data;
 
 		if (data._entity == null) {
 			data._entity = {};

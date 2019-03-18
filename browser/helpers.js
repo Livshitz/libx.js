@@ -5,8 +5,44 @@ module.exports = (function(){
 	if (global._ == null) global._ = libx._;
 	global._.fp = libx._.fp;
 
-	mod.isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+	mod.isBrowser = typeof window !== 'undefined';
 
+	// Special section for helpers that are relevant to browsers but run in node (for example)
+	mod.urlize = function (obj) {
+		var str = "";
+		for (var key in obj) {
+			if (obj[key] == null) continue;
+			if (str != "") {
+				str += "&";
+			}
+			str += key + "=" + encodeURIComponent(obj[key]);
+		}
+		return str;
+	};
+
+	mod.cleanUrl = function (url) {
+		if (url == null) return null;
+		//return url.replace('/(?<!http:)\/\//g', '/');
+		return url.replace(new RegExp("([^:]\/)\/+", "g"), "$1");
+	};
+
+	mod.querialize = function(obj, avoidPrefix) {
+		if (obj == null || obj.length < 1) return null;
+		var str = [];
+		for (var p in obj)
+			if (obj.hasOwnProperty(p)) {
+			str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+		}
+		return (!avoidPrefix ? '?' : '') + str.join("&");
+	}
+
+	// If not browser, quit here!
+	if (!mod.isBrowser) {
+		return mod;
+	}
+
+	mod.isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+	
 	mod.injectScript = function(src, onReady) {
 		/*
 		return new Promise((resolve, reject) => {
@@ -167,18 +203,6 @@ module.exports = (function(){
 		return url.substr(0, url.indexOf("://") + 3) + hostname + '/';
 	};
 
-	mod.urlize = function (obj) {
-		var str = "";
-		for (var key in obj) {
-			if (obj[key] == null) continue;
-			if (str != "") {
-				str += "&";
-			}
-			str += key + "=" + encodeURIComponent(obj[key]);
-		}
-		return str;
-	};
-
 	mod.getParameters = function () {
 		var search = location.search;
 		search = search.replace(/(?![?&])([^=&?]+)(\=)?([^&]+)?/g, '$1=$3'); // fix missing values, e.g: ?hint -> ?hint=
@@ -186,16 +210,6 @@ module.exports = (function(){
 		if (search == null || search == "") return {};
 		return JSON.parse('{"' + decodeURI(search).replace(/\"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') + '"}');
 	};
-
-	mod.querialize = function(obj, avoidPrefix) {
-		if (obj == null || obj.length < 1) return null;
-		var str = [];
-		for (var p in obj)
-			if (obj.hasOwnProperty(p)) {
-			str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-		}
-		return (!avoidPrefix ? '?' : '') + str.join("&");
-	}
 
 	mod.getAttributes = function ($node, pattern) {
 		var attrs = {};
@@ -211,12 +225,6 @@ module.exports = (function(){
 		});
 
 		return attrs;
-	};
-
-	mod.cleanUrl = function (url) {
-		if (url == null) return null;
-		//return url.replace('/(?<!http:)\/\//g', '/');
-		return url.replace(new RegExp("([^:]\/)\/+", "g"), "$1");
 	};
 
 	mod.getSubDomain = ()=> { 
@@ -429,5 +437,4 @@ module.exports = (function(){
 
 
 	return mod;
-
 })();
