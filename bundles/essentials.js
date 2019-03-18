@@ -1,7 +1,9 @@
 module.exports = (function(){
 	require('../modules/extensions.js')();
 	var libx = require('../modules/helpers.js');
-	libx.modules = {};
+
+	if (libx.modules == null) libx.modules = {};
+
 	libx.log = require('../modules/log.js');
 	libx.buffer = require('buffer/').Buffer;
 

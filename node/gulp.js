@@ -1,6 +1,8 @@
 const libx = require('../bundles/essentials.js');
-libx.node = require('../node/index.js');
-libx.crypto = require('../modules/crypto.js');
+libx.node = require('./index.js');
+libx.modules.crypto = require('../modules/crypto');
+libx.modules.network = require('../modules/network');
+
 const gulp = require('gulp');
 const gulpif = require('gulp-if');
 const through = require('through');
@@ -98,7 +100,7 @@ module.exports = (function(){
 			jsBundle: [ 'concat' ],
 			sitejs: [ babel({ presets: ['es2015'] }), minify({ mangle: false }).on('error', (uglify) => {
 				console.error('! Uglify error: ', uglify.message);
-				console.error('Error: ', uglify.stack);
+				console.error('usemin error: ', uglify.stack);
 				this.emit('end');
 			})],
 			componentsjs: [ minify({ mangle: false }) ],
@@ -184,7 +186,7 @@ module.exports = (function(){
 			var ext = m[3];
 			var isRemote = src.match(/^(.+:)?\/\/|http/g) != null
 			// if (!isRemote) return;
-			var h = libx.crypto.lib.SHA1(src).toString();
+			var h = libx.modules.crypto.lib.SHA1(src).toString();
 			var p = (libCacheDir || './') + 'lib-cache/' + (avoidRenameFile ? dir : '');
 			// var fname = avoidRenameFile ? `${name}${ext}` : `${h}${ext}`;
 			var fname = `${name}${ext}`;
@@ -216,7 +218,7 @@ module.exports = (function(){
 				}
 				
 				if (isNetworkResource) {
-					libx.network.httpGet(src, { dataType: '' }).then(data=>handler(data));
+					libx.modules.network.httpGet(src, { dataType: '' }).then(data=>handler(data));
 				} else {
 					var p = path.relative(process.cwd(), mod.config.workdir + '/' + src);
 					fs.readFile(p, (err, data)=> handler(data));
@@ -303,7 +305,7 @@ module.exports = (function(){
 
 		// try to decrypt:
 		try {
-			content = libx.crypto.decrypt(content.toString(), secretsKey);
+			content = libx.modules.crypto.decrypt(content.toString(), secretsKey);
 		} catch (ex) {
 			libx.log.warning('libx.gulp:readConfig: were unable to decrypt secret config file, maybe already decrypted. ex: ', ex);
 		}

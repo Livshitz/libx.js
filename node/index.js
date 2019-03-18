@@ -4,9 +4,9 @@ module.exports = (function(){
 	const path = require('path');
 	const argv = require('yargs').argv;
 	const bump = require('json-bump')
-
+	
 	var libx = require('../bundles/essentials.js');
-	libx.crypto = require('../modules/crypto.js');
+	libx.modules.crypto = require('../modules/crypto.js');
 
 	mod.args = argv;
 
@@ -22,14 +22,14 @@ module.exports = (function(){
 
 	mod.encryptFile = (file, key, newFile) => {
 		var content = fs.readFileSync(file).toString();
-		var encrypted = libx.crypto.encrypt(content, key);
+		var encrypted = libx.modules.crypto.encrypt(content, key);
 		fs.writeFileSync(newFile || file, encrypted);
 		return encrypted;
 	}
 
 	mod.decryptFile = (file, key, newFile) => {
 		var content = fs.readFileSync(file);
-		var data = libx.crypto.decrypt(content.toString(), key);
+		var data = libx.modules.crypto.decrypt(content.toString(), key);
 		fs.writeFileSync(newFile || file, data);
 		return data;
 	}

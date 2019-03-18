@@ -1,5 +1,5 @@
 var libx = require('./bundles/essentials.js');
-var gulp = require('./modules/gulp.js');
+var gulp = require('./node/gulp.js/index.js');
 var rx = require('./node/rxjs');
 
 /*
@@ -17,17 +17,17 @@ const path = require('path');
 (async ()=>{ /* init */
 	// libx._.each([1,2,3,4,5], i=> console.log(i))
 	//console.log(rx)
-	rx.range(1, 200).pipe(
-		rx.Operators.filter(x => x % 2 === 1),
-		rx.Operators.map(x => x + x)
-	).subscribe(x => console.log(x));
+	// rx.range(1, 200).pipe(
+	// 	rx.Operators.filter(x => x % 2 === 1),
+	// 	rx.Operators.map(x => x + x)
+	// ).subscribe(x => console.log(x));
 	
 
-	// await gulp.delete('./temp/');
-	// await gulp.copy('./bundles/essentials.js', './temp/', ()=>[ // '../test/build/resources/scripts/'
-	// 	gulp.middlewares.browserify({ }),
-	// 	gulp.middlewares.ifProd(gulp.middlewares.minify()),
-	// ]);
+	await gulp.delete('./temp/');
+	await gulp.copy('./bundles/essentials.js', './temp/', ()=>[ // '../test/build/resources/scripts/'
+		gulp.middlewares.browserify({ }),
+		gulp.middlewares.ifProd(gulp.middlewares.minify()),
+	]);
 
 	/*
 	const gulp = require('gulp');
@@ -44,9 +44,7 @@ const path = require('path');
 		return version + '.' + name + '.' + 'min';
 	};
 	   
-	*/
 
-	/*
 	var bundler = browserify({
 		entries: ['./bundles/essentials.js'],
 		debug: false

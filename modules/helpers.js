@@ -230,7 +230,7 @@ module.exports = (function(){
 	
 			return obj;
 		} catch(ex) {
-			mod.log.error('Error: ', ex);
+			mod.log.error('readConfig error: ', ex);
 		}
 	}
 

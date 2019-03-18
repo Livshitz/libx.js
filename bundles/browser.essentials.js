@@ -16,8 +16,9 @@ module.exports = (function(){
 	libx.browser.require = require('../browser/require.js');
 	libx.browser.helpers = require('../browser/helpers.js');
 
-	// // libx.browser.angular = require('./browser/angular.js');
+	// libx.browser.angular = require('../browser/angular.js');
 	// libx.modules.network = require('./modules/network.js');
+	// libx.modules.firebase = require('./modules/firebase.js');
 	// libx.modules.firebase = require('./modules/firebase.js');
 
 	return libx;

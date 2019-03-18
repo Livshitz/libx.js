@@ -1,6 +1,6 @@
 module.exports = (function(){
 	var mod = {};
-	var libx = require('../bundles/essentials.js');
+	const libx = require('../bundles/browser.essentials');
 
 	mod.init = ()=> {
 		mod = angular.module('libx.angular', ['ngResource', 'ngRoute']);
