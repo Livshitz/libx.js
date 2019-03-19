@@ -294,11 +294,13 @@ module.exports = (function(){
 
 	mod.readConfig = (_path, secretsKey) => {
 		_path = _path || mod.config.workdir + 'project.json';
+		if (!fs.existsSync(path)) throw `libx.gulp:readConfig: Config file could not be fount at '${_path}'`;
 		var content = fs.readFileSync(_path);
 		mod.projconfig = libx.readConfig(content, mod.config.env );
 		libx.log.verbose('libx.gulp:readConfig: Config for "{0}" v.{1} in env={2} was loaded'.format(mod.projconfig.projectName, mod.projconfig.version, mod.config.env));
 
 		var secretsPath = path.dirname(_path) + '/project-secrets.json';
+		if (!fs.existsSync(secretsPath)) throw `libx.gulp:readConfig: Secrets config file could not be fount at '${_path}'`;
 		if (!fs.existsSync(secretsPath)) return mod.projconfig;
 
 		var content = fs.readFileSync(secretsPath);
