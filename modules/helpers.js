@@ -7,6 +7,9 @@ module.exports = (function(){
 	mod._.countBy = require('lodash/countBy');
 	mod._.toPairs = require('lodash/toPairs');
 	mod._.array = require('lodash/array');
+	mod._.includes = require('lodash/includes');
+	mod._.transform = require('lodash/transform');
+	mod._.groupBy = require('lodash/groupBy');
 
 	mod._.fp = require("lodash/fp");;
 	// mod.fp.map = require("lodash/fp/map");
@@ -31,6 +34,29 @@ module.exports = (function(){
 			}));
 		}
 	});
+
+	mod._projectConfig = null;
+	mod.getProjectConfig = (containingFolder, secret)=>{
+		if (mod._projectConfig == null) {
+			if (global.libx == null) global.libx = {};
+			if (global.libx._projconfig != null) {
+				return mod._projectConfig = projconfig;
+			}
+
+			if (!mod.isBrowser) {
+				var secretsKey = secret || process.env.FUSER_SECRET_KEY;
+				// libx.log.info('!!! Secret key is: ', secretsKey);
+				var node = require('../node')
+				var projconfig = node.readConfig(containingFolder || '.' + '/project.json', secretsKey);
+				global.libx._projconfig = projconfig;
+				mod._projectConfig = projconfig;
+			} else {
+				if (global.libx._projconfig == null) throw "libx:helpers:getProjectConfig: Detected browser, but `window.libx._projconfig` was not provided";
+			}
+		}
+		if (mod._projectConfig == null) throw "libx:helpers:getProjectConfig: Could not find/load project.json in '{0}'".format(containingFolder);
+		return mod._projectConfig;
+	}
 
 	mod.spawnHierarchy = (path)=> {
 		var p = path.split('.')
@@ -217,7 +243,7 @@ module.exports = (function(){
 		return json;
 	}
 	
-	mod.readConfig = function(contents, env) {
+	mod.parseConfig = function(contents, env) {
 		try{
 			var obj = mod.parseJsonFileStripComments(contents);
 	

@@ -10,6 +10,38 @@ module.exports = (function(){
 
 	mod.args = argv;
 
+	mod.readConfig = (_path, secretsKey) => {
+		_path = (_path || mod.config.workdir) + '/project.json';
+		if (!fs.existsSync(_path)) throw `libx.gulp:readConfig: Config file could not be fount at '${_path}'`;
+		var content = fs.readFileSync(_path);
+
+		var env = mod.args.env || 'dev';
+
+		mod.projconfig = libx.parseConfig(content, env);
+		libx.log.verbose('libx.gulp:readConfig: Config for "{0}" v.{1} in env={2} was loaded'.format(mod.projconfig.projectName, mod.projconfig.version, env));
+
+		var secretsPath = path.dirname(_path) + '/project-secrets.json';
+		if (!fs.existsSync(secretsPath)) throw `libx.gulp:readConfig: Secrets config file could not be fount at '${_path}'`;
+		if (!fs.existsSync(secretsPath)) return mod.projconfig;
+
+		var content = fs.readFileSync(secretsPath);
+
+		// try to decrypt:
+		try {
+			content = libx.modules.crypto.decrypt(content.toString(), secretsKey);
+		} catch (ex) {
+			libx.log.warning('libx.gulp:readConfig: were unable to decrypt secret config file, maybe already decrypted. ex: ', ex);
+		}
+
+		var secrets = libx.parseConfig(content, env);
+		if (secrets == null) throw "libx.gulp:readConfig: Failed to read secrets config!";
+
+		libx.log.verbose('libx.gulp:readConfig: Extending config with secrets'.format(mod.projconfig.projectName, mod.projconfig.version, env));
+		libx.extend(true, mod.projconfig, secrets); //deep
+
+		return mod.projconfig;
+	};
+
 	mod.bumpNpmVersion = (file, releaseType) => {
 		var obj = {};
 		obj[releaseType] = 1;
