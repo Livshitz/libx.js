@@ -12,6 +12,7 @@ module.exports = (function(){
 	
 		//#region Basics
 		mod.bootstrap = (appModuleName, rootElm)=> {
+			mod.rootElm = rootElm;
 			if (window._libx_angular_boot) throw "angular was already bootstrapped!";
 			window._libx_angular_boot = true;
 
@@ -27,7 +28,7 @@ module.exports = (function(){
 		};
 	
 		window.ngInjector = function () {
-			var ret = mod.injector;
+			var ret = mod.injector || angular.element(mod.rootElm || document.body.parentNode).injector();
 			//angular.injector(['ng']); //.invoke(($window)=> console.log($window.origin));
 			// angular.element('body').injector();
 			if (ret == null) throw 'angular is not ready yet'; // ret = angular.injector(['ng']);
