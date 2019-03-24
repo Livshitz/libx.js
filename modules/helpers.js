@@ -10,6 +10,7 @@ module.exports = (function(){
 	mod._.includes = require('lodash/includes');
 	mod._.transform = require('lodash/transform');
 	mod._.groupBy = require('lodash/groupBy');
+	mod._.keyBy = require('lodash/keyBy');
 
 	mod._.fp = require("lodash/fp");;
 	// mod.fp.map = require("lodash/fp/map");
@@ -51,6 +52,7 @@ module.exports = (function(){
 				global.libx._projconfig = projconfig;
 				mod._projectConfig = projconfig;
 			} else {
+				if (global.projconfig != null) return global.projconfig == null;
 				if (global.libx._projconfig == null) throw "libx:helpers:getProjectConfig: Detected browser, but `window.libx._projconfig` was not provided";
 			}
 		}
