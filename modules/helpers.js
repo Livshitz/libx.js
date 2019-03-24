@@ -12,7 +12,7 @@ module.exports = (function(){
 	mod._.groupBy = require('lodash/groupBy');
 	mod._.keyBy = require('lodash/keyBy');
 
-	mod._.fp = require("lodash/fp");;
+	mod._.fp = require("lodash/fp");
 	// mod.fp.map = require("lodash/fp/map");
 	// mod.fp.flatten = require("lodash/fp/flatten");
 	// mod.fp.sortBy = require("lodash/fp/sortBy");
