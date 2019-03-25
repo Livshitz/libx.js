@@ -11,12 +11,12 @@ if (!isInjectedMode) {
 		if (_ == null) _ = require('lodash');
 		libx._ = _;
 	} catch(ex) {
-		console.log('libx:init: failed to require lodsash, ex:', ex)
+		libx.log.e('libx:init: failed to require lodsash, ex:', ex)
 	}
 }
 
 var isImportedAsScriptTagOnHtml = ()=> libx._.some(document.getElementsByTagName('script'), i=> i.getAttribute('liv-libx-injected') == '');
-if (!isInjectedMode && libx.isBrowser) isInjectedMode = isImportedAsScriptTagOnHtml();
+if (!isInjectedMode && libx.isBrowser isInjectedMode = isImportedAsScriptTagOnHtml();
 
 /* =========== [ Things: ] =========== */
 //#region Things
@@ -84,7 +84,7 @@ if (!isInjectedMode) {
 	exports = libx;
 }
 
-console.log('libx: libx is ready', isInjectedMode)
+libx.log.i('libx: libx is ready', isInjectedMode)
 
 
 // if (global.libx.autoApply != false) libx.applyExtensions();

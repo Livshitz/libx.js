@@ -190,7 +190,7 @@ module.exports = (function(){
 			var p = (libCacheDir || './') + 'lib-cache/' + (avoidRenameFile ? dir : '');
 			// var fname = avoidRenameFile ? `${name}${ext}` : `${h}${ext}`;
 			var fname = `${name}${ext}`;
-			console.log('fname: ', fname);
+			libx.log.v('fname: ', fname);
 			var f = p + fname;
 			if (!fs.existsSync(p)) libx.node.mkdirRecursiveSync(p);
 
@@ -201,14 +201,14 @@ module.exports = (function(){
 			}
 		
 			if (avoidCache || !fs.existsSync(f)) {
-				console.log('getting: ', src, ext, h, dir);
+				libx.log.v('getting: ', src, ext, h, dir);
 
 				var isNetworkResource = src.startsWith("http://") || src.startsWith("https://") || src.startsWith("ftp://") || src.startsWith("//");
 
 				var handler = (data)=> {
 					if (data == null) 
 						throw `Could not find "${src}"!`;
-					console.log('got data: ', data.length);
+					libx.log.i('got data: ', data.length);
 						
 					fs.writeFile(f, data, err=> {
 						if (err) throw 'Write: error: ', err;
@@ -230,7 +230,7 @@ module.exports = (function(){
 		}
 
 		var onFileReady = async (elm, attr, file, ext, fname, dir) => {
-			console.log('onFileReady: ', file)
+			libx.log.v('onFileReady: ', file)
 			var type = '';
 			switch(ext) {
 				case '.js': type = 'scripts'; break;
@@ -257,7 +257,7 @@ module.exports = (function(){
 			if(file.isBuffer()) {
 				var $ = cheerio.load(file.contents);
 				// $('script').each(async (i, e)=> {
-				// 	console.log('$$$ ', i, $(e).attr('src'))
+				// 	libx.log.v('$$$ ', i, $(e).attr('src'))
 				// });
 
 				var p = [];
@@ -276,7 +276,7 @@ module.exports = (function(){
 			
 				await Promise.all(p); 
 			
-				console.log('all done, saving')
+				libx.log.i('all done, saving')
 				file.contents = Buffer.from($.html());
 
 				this.push(file);
@@ -352,10 +352,10 @@ module.exports = (function(){
 
 			.pipe(gulp.dest('./dist2/'))
 			.on('error', (err) => 
-				console.log('--- ERROR: --- ', err)
+				libx.log.e('--- ERROR: --- ', err)
 				)
 			.on('end', ()=> {
-				console.log('--- DONE --- ')
+				libx.log.i('--- DONE --- ')
 				p.resolve();
 			});
 	
@@ -459,11 +459,11 @@ module.exports = (function(){
 		// var output = [];
 		// var process = spawn('ls', ['-lh', '/usr']);
 		// process.stdout.on('data', function (data) {
-		// 	console.log('stdout: ' + data.toString());
+		// 	libx.log.e('stdout: ' + data.toString());
 		// });
 		
 		// process.stderr.on('data', function (data) {
-		// 	console.log('stderr: ' + data.toString());
+		// 	libx.log.e('stderr: ' + data.toString());
 		// });
 		
 		// process.on('exit', function (code) {
@@ -480,7 +480,7 @@ module.exports = (function(){
 		});
 		if (verbose) {
 			process.stdout.on('data', function(data) {
-				console.log(data.slice(0, -1)); 
+				libx.log.v(data.slice(0, -1)); 
 			});
 		}
 		return p;

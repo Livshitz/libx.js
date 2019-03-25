@@ -5,8 +5,6 @@ module.exports = (function(){
 	if (global._ == null) global._ = libx._;
 	global._.fp = libx._.fp;
 
-	mod.isBrowser = typeof window !== 'undefined';
-
 	// Special section for helpers that are relevant to browsers but run in node (for example)
 	mod.urlize = function (obj) {
 		var str = "";
@@ -37,7 +35,7 @@ module.exports = (function(){
 	}
 
 	// If not browser, quit here!
-	if (!mod.isBrowser) {
+	if (!libx.isBrowser) {
 		return mod;
 	}
 

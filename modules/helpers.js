@@ -18,11 +18,11 @@ module.exports = (function(){
 	// mod.fp.sortBy = require("lodash/fp/sortBy");
 	// mod.fp.flow = require("lodash/fp/flow");
 
+	mod.isBrowser = typeof window !== 'undefined';
+
 	mod.Callbacks = require('./callbacks');
 	mod.deferred = require('deferred-js');
 	mod.log = require('./log.js');
-
-	mod.isBrowser = typeof window !== 'undefined';
 
 	mod._.mixin({
 		'sortKeysBy': function (obj, comparator) {
@@ -38,26 +38,32 @@ module.exports = (function(){
 
 	mod._projectConfig = null;
 	mod.getProjectConfig = (containingFolder, secret)=>{
-		if (mod._projectConfig == null) {
-			if (global.libx == null) global.libx = {};
-			if (global.libx._projconfig != null) {
-				return mod._projectConfig = projconfig;
-			}
+		var ret = null;
+		try {
+			if (mod._projectConfig == null) {
+				if (global.libx == null) global.libx = {};
+				if (global.libx._projconfig != null) {
+					return ret = mod._projectConfig = global.libx._projconfig;
+				}
 
-			if (!mod.isBrowser) {
-				var secretsKey = secret || process.env.FUSER_SECRET_KEY;
-				// libx.log.info('!!! Secret key is: ', secretsKey);
-				var node = require('../node')
-				var projconfig = node.readConfig(containingFolder || '.' + '/project.json', secretsKey);
-				global.libx._projconfig = projconfig;
-				mod._projectConfig = projconfig;
-			} else {
-				if (global.projconfig != null) return global.projconfig == null;
-				if (global.libx._projconfig == null) throw "libx:helpers:getProjectConfig: Detected browser, but `window.libx._projconfig` was not provided";
+				if (!mod.isBrowser) {
+					var secretsKey = secret || process.env.FUSER_SECRET_KEY;
+					// libx.log.info('!!! Secret key is: ', secretsKey);
+					var node = require('../node')
+					var projconfig = node.readConfig(containingFolder || '.' + '/project.json', secretsKey);
+					global.libx._projconfig = projconfig;
+					mod._projectConfig = projconfig;
+				} else {
+					if (global.projconfig != null) return ret = global.projconfig;
+					if (global.libx._projconfig == null) throw "libx:helpers:getProjectConfig: Detected browser, but `window.libx._projconfig` was not provided";
+				}
 			}
+			if (mod._projectConfig == null) throw "libx:helpers:getProjectConfig: Could not find/load project.json in '{0}'".format(containingFolder);
+			return ret = mod._projectConfig;
+		} finally {
+			if (ret != null && ret.private == null) ret.private = {};
+			return ret;
 		}
-		if (mod._projectConfig == null) throw "libx:helpers:getProjectConfig: Could not find/load project.json in '{0}'".format(containingFolder);
-		return mod._projectConfig;
 	}
 
 	mod.spawnHierarchy = (path)=> {

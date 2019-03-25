@@ -15,12 +15,12 @@ const buffer = require('vinyl-buffer');
 const path = require('path');
 
 (async ()=>{ /* init */
-	// libx._.each([1,2,3,4,5], i=> console.log(i))
-	//console.log(rx)
+	// libx._.each([1,2,3,4,5], i=> libx.log.v(i))
+	//libx.log.v(rx)
 	// rx.range(1, 200).pipe(
 	// 	rx.Operators.filter(x => x % 2 === 1),
 	// 	rx.Operators.map(x => x + x)
-	// ).subscribe(x => console.log(x));
+	// ).subscribe(x => libx.log.v(x));
 	
 
 	await gulp.delete('./temp/');
@@ -65,5 +65,5 @@ const path = require('path');
 	bundle();
 	*/
 
-	console.log('done')
+	libx.log.i('done')
 })();

@@ -7,7 +7,7 @@
 		var f = libx.node.args._[0];
 		var releaseType = libx.node.args.bump;
 		var res = libx.node.bumpNpmVersion(f, releaseType);
-		console.log(releaseType, f, res)
+		libx.log.info(releaseType, f, res)
 	}
 
 })();

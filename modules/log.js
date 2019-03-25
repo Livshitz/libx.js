@@ -1,11 +1,11 @@
 module.exports = (function(){
 	var mod = {};
 
-	var libx = require('./helpers.js');
+	mod.isBrowser = typeof window !== 'undefined';
 
 	mod.isDebug = false;
 	mod.isShowStacktrace = true;
-	mod.isShowTime = !libx.isBrowser;
+	mod.isShowTime = !mod.isBrowser;
 	mod.isShowPrefix = true;
 	mod.severities = {
 		debug: 0, //console.debug
@@ -16,12 +16,19 @@ module.exports = (function(){
 		fatal: 5, //console.log("%c" + msg, "color:" + 'red');
 	}
 
-	mod.debug = (...args) 	=> mod.write(mod.severities.debug, ...args);
+	mod.debug = (...args) 		=> mod.write(mod.severities.debug, ...args);
 	mod.verbose = (...args) 	=> mod.write(mod.severities.verbose, ...args);
 	mod.info = (...args) 		=> mod.write(mod.severities.info, ...args);
 	mod.warning = (...args) 	=> mod.write(mod.severities.warning, ...args);
-	mod.error = (...args) 	=> mod.write(mod.severities.error, ...args);
-	mod.fatal = (...args) 	=> mod.write(mod.severities.fatal, ...args);
+	mod.error = (...args) 		=> mod.write(mod.severities.error, ...args);
+	mod.fatal = (...args) 		=> mod.write(mod.severities.fatal, ...args);
+
+	mod.d = mod.debug;
+	mod.v = mod.verbose;
+	mod.i = mod.info;
+	mod.w = mod.warning;
+	mod.e = mod.error;
+	mod.f = mod.fatal;
 
 	mod.write = function() { //msg, args
 		// var time = DateTime.Now.ToString("HH:mm:ss.fff");
@@ -42,6 +49,7 @@ module.exports = (function(){
 			case mod.severities.fatal: 	func='error'; 	prefix=" [!!!]"; style+="color:red;"; break;
 		}
 
+		prefix += '\t';
 		if (!mod.isShowPrefix) prefix = '';
 		
 		if (severity == mod.severities.debug && !mod.isDebug) return;
@@ -49,7 +57,7 @@ module.exports = (function(){
 		var trace = '';
 		if (mod.isShowStacktrace) trace = mod.getStackTrace();
 
-		if (libx.isBrowser) {
+		if (mod.isBrowser) {
 			var _msg = `${prefix}${time} ${msg} %c${trace}`; //${color != null ? '%c' : ''}
 			if (args.length == 0) console[func].call(console, _msg, 'font-size:8px;');
 			else console[func].call(console, _msg, 'font-size:8px;', args);

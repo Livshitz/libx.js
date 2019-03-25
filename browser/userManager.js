@@ -41,9 +41,9 @@ module.exports = function(firebaseModule){
 		if (mod.profile == null) mod.profile = {};
 		mod.profile.displayName = displayName;
 		mod.auth.signInAnonymously().then(function (u) {
-			console.log(' > app:user: Got anon user');
+			libx.log.verbose(' > app:user: Got anon user');
 		}).catch(function (error) {
-			console.log(' ! app:user: Failed to get anon user', error);
+			libx.log.verbose(' ! app:user: Failed to get anon user', error);
 			// var errorCode = error.code;
 			// var errorMessage = error.message;
 		});
@@ -77,16 +77,16 @@ module.exports = function(firebaseModule){
 		if (mod.auth.currentUser != null && mod.auth.currentUser.isAnonymous) {
 			var credential = mod.auth.EmailAuthProvider.credential(email, password);
 			mod.auth.currentUser.linkWithCredential(credential).then(function(user) {
-				console.log("Account linking success", user);
+				libx.log.verbose("Account linking success", user);
 				mod.onAuthStateChanged(user);
 			}, function(error) {
-				console.log("Account linking error", error);
+				libx.log.verbose("Account linking error", error);
 			});
 			return;
 		}
 		
 		mod.auth.signInWithEmailAndPassword(email, password).catch(function(error) {
-			console.log(' ! app:user:signInEmail: Error- ', error);
+			libx.log.verbose(' ! app:user:signInEmail: Error- ', error);
 			var errorCode = error.code;
 			var errorMessage = error.message;
 		});
@@ -137,7 +137,7 @@ module.exports = function(firebaseModule){
 	mod.observeUser = function() {
 		firebaseModule.listen('/users/' + mod.data.id, data => {
 			if (data != null && data.length == 1) data = data[0];
-			console.log('> user: user data changed', data)
+			libx.log.verbose('> user: user data changed', data)
 			libx.extend(mod.data, data);
 			mod.onDataChanged.trigger(mod.data);
 		});
@@ -145,12 +145,12 @@ module.exports = function(firebaseModule){
 	mod.observeProfile = function() {
 		firebaseModule.listen('/profiles/' + mod.data.id, data => {
 			if (data != null && data.length == 1) data = data[0];
-			console.log('> user: profile data changed', data)
+			libx.log.verbose('> user: profile data changed', data)
 
 			libx.extend(mod.profile, data);
 
 			if (libx.isEmpty(mod.profile)) { 
-				console.log('> user: profile is empty, taking from user object (login)')
+				libx.log.verbose('> user: profile is empty, taking from user object (login)')
 				mod.profile = {};
 				mod.profile.email = mod.data.email;
 				if (mod.auth.currentUser.displayName != null) mod.profile.displayName = mod.auth.currentUser.displayName;
