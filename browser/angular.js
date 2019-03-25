@@ -29,7 +29,7 @@ module.exports = (function(){
 	
 		window.ngInjector = function () {
 			var ret = mod.injector || angular.element(mod.rootElm || document.body.parentNode).injector(); 
-			//angular.injector(['ng']); //.invoke(($window)=> console.log($window.origin));
+			//angular.injector(['ng']); //.invoke(($window)=> libx.log.v($window.origin));
 			// angular.element('body').injector();
 			if (ret == null) throw 'angular is not ready yet'; // ret = angular.injector(['ng']);
 			return ret;

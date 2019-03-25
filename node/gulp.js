@@ -424,16 +424,16 @@ module.exports = (function(){
 		opts = libx.extend(opts, options);
 
 		if (watchPath != null) {
-			libx.log.verbose('server: starting watch');
+			libx.log.verbose('serve: starting watch');
 			var debounce = libx.debounce((path)=> {
-				libx.log.verbose('server: debounce', path);
+				libx.log.verbose('serve: debounce', path);
 				if (watchCallback) watchCallback(path);
 				gulp.src(path).pipe(connect.reload());
 				// setTimeout(()=>gulp.src(path).pipe(connect.reload()), 500);
-			}, 500);
+			}, 2000, true);
 			gulp.watch(watchPath, e => { //{cwd: path} ,
-				libx.log.verbose('server: detected change!', e.path);
-				debounce(e.path)
+				libx.log.verbose('serve: detected change!', e.path);
+				setTimeout(()=>debounce(e.path), 1000);
 			});
 		}
 
@@ -480,7 +480,7 @@ module.exports = (function(){
 		});
 		if (verbose) {
 			process.stdout.on('data', function(data) {
-				libx.log.v(data.slice(0, -1)); 
+				console.log(data.slice(0, -1)); 
 			});
 		}
 		return p;
