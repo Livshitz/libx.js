@@ -106,6 +106,7 @@ module.exports = function(firebaseModule){
 	mod.onAuthStateChanged = function (user) {
 		libx.log.debug('userManager:onAuthStateChanged: ', user);
 
+		mod.isReady = true;
 		mod._fbUser = user;
 
 		if (!user) {
