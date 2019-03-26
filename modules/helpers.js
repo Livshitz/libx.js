@@ -11,6 +11,7 @@ module.exports = (function(){
 	mod._.transform = require('lodash/transform');
 	mod._.groupBy = require('lodash/groupBy');
 	mod._.keyBy = require('lodash/keyBy');
+	mod._.merge = require('lodash/merge');
 
 	mod._.fp = require("lodash/fp");
 	// mod.fp.map = require("lodash/fp/map");
