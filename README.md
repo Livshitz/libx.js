@@ -35,6 +35,9 @@ Different projects usually have a shared portion of infrastructural or helpers c
 ## Usage
 > npm install --save libx.js
 
+__For browser:__ <br/>
+Create a dedicated file, include (e.g: require) the needed modules into `global` (window) scope and browserify it.
+
 ## Contributing
 
 Fork into your own repo, run locally, make changes and submit PullRequests to the main repository.

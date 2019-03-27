@@ -1,6 +1,6 @@
-var libx = require('./bundles/essentials.js');
-var gulp = require('./node/gulp');
-var rx = require('./node/rxjs');
+var libx = require('../bundles/essentials.js');
+var gulp = require('../node/gulp');
+var rx = require('../node/rxjs');
 
 /*
 const gulp = require('gulp');
