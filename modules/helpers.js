@@ -454,6 +454,23 @@ module.exports = (function(){
 		return JSON.stringify(obj) === JSON.stringify({});
 	}
 
+	mod.makeEmpty = (obj) => {
+		mod._.each(Object.keys(obj), prop=>{
+			if (!obj.hasOwnProperty(prop)) return;
+	
+			if (Array.isArray(obj[prop])) {
+				obj[prop] = [];
+			} else if (typeof obj[prop] == "object") {
+				hasContent = true;			
+				mod.makeEmpty(obj[prop]);
+			} else {
+				obj[prop] = '';
+			}
+		});
+		
+		return obj;
+	}
+
 	mod.base64ToUint8Array = (base64String) => {
 		var padding = mod._.repeat('=', (4 - base64String.length % 4) % 4);
 		var base64 = (base64String + padding)
