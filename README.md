@@ -1,5 +1,6 @@
 # Libx.js 
 
+[![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](/LICENSE)
 [![npm](https://img.shields.io/npm/v/libx.js.svg?maxAge=1000)](https://www.npmjs.com/package/libx.js)
 [![CircleCI](https://circleci.com/gh/Livshitz/libx.fuser/tree/master.svg?style=shield)](https://circleci.com/gh/Livshitz/libx.fuser)
 [![npm](https://img.shields.io/bundlephobia/minzip/libx.js.svg?style=plastic)](https://www.npmjs.com/package/libx.js)
