@@ -12,6 +12,8 @@ module.exports = (function(){
 	mod._.groupBy = require('lodash/groupBy');
 	mod._.keyBy = require('lodash/keyBy');
 	mod._.merge = require('lodash/merge');
+	mod._.sum = require('lodash/sum');
+	mod._.sumBy = require('lodash/sumBy');
 
 	mod._.fp = require("lodash/fp");
 	// mod.fp.map = require("lodash/fp/map");
@@ -77,6 +79,23 @@ module.exports = (function(){
 			cur = cur[next];
 		}	
 		return cur;
+	}
+
+	/**
+	 * Deep diff between two object, using lodash
+	 * @param  {Object} object Object compared
+	 * @param  {Object} base   Object to compare with
+	 * @return {Object}        Return a new object who represent the diff
+	*/
+	mod.diff = (object, base)=>{
+		function changes(object, base) {
+			return _.transform(object, function(result, value, key) {
+				if (!_.isEqual(value, base[key])) {
+					result[key] = (_.isObject(value) && _.isObject(base[key])) ? changes(value, base[key]) : value;
+				}
+			});
+		}
+		return changes(object, base);
 	}
 
 	mod.isFunction = function (obj) {

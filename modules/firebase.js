@@ -8,6 +8,7 @@ module.exports = function(firebaseApp, firebaseProvider){
 	mod.firebaseApp = firebaseApp;
 	mod.firebaseProvider = firebaseProvider;
 	mod._database = mod.firebaseApp.database();
+	mod.firebasePathPrefix = null;
 
 	mod.isConnected = async (callback) => {
 		var ret = mod.get('.info/connected');
@@ -25,6 +26,7 @@ module.exports = function(firebaseApp, firebaseProvider){
 	}
 
 	mod.getRef = (path, type, callback)=>{
+		path = mod._fixPath(path);
 		if (type != null && callback != null) {
 			return mod._database.ref(path).on(type, callback);
 		} else {
@@ -34,6 +36,7 @@ module.exports = function(firebaseApp, firebaseProvider){
 	}
 
 	mod.listen = function(path, callback) {
+		path = mod._fixPath(path);
 		libx.log.debug('api.firebase.listen: Listening to \"' + path + '\"');
 		mod._database.ref(path).on('value', function(snp) {
 			libx.log.debug('api.firebase.listen: Value Changed at \"' + path + '\"');
@@ -43,6 +46,7 @@ module.exports = function(firebaseApp, firebaseProvider){
 	}
 
 	mod.get = function(path) {
+		path = mod._fixPath(path);
 		libx.log.debug('api.firebase.get: Getting \"' + path + '\"');
 		var defer = libx.newPromise();
 		mod._database.ref(path).once('value').then(function(snp) {
@@ -53,6 +57,7 @@ module.exports = function(firebaseApp, firebaseProvider){
 	}
 
 	mod.update = function(path, data, avoidFill) {
+		path = mod._fixPath(path);
 		libx.log.debug('api.firebase.update: Updating data to \"' + path + '\"', data);
 		var defer = libx.newPromise();
 
@@ -66,6 +71,7 @@ module.exports = function(firebaseApp, firebaseProvider){
 	}
 
 	mod.set = function(path, data, avoidFill) {
+		path = mod._fixPath(path);
 		libx.log.debug('api.firebase.set: Setting data to \"' + path + '\"', data);
 		var defer = libx.newPromise();
 
@@ -79,6 +85,7 @@ module.exports = function(firebaseApp, firebaseProvider){
 	}
 
 	mod.push = function(path, data, avoidFill) {
+		path = mod._fixPath(path);
 		var key = mod.makeKey();
 		libx.log.debug('api.firebase.push: Pushing to \"' + path + '\" key=' + key, data);
 		var defer = libx.newPromise();
@@ -95,6 +102,7 @@ module.exports = function(firebaseApp, firebaseProvider){
 	}
 
 	mod.delete = function(path) {
+		path = mod._fixPath(path);
 		libx.log.debug('api.firebase.delete: Removing data to \"' + path + '\"');
 		var defer = libx.newPromise();
 		mod._database.ref(path).remove().then(function() {
@@ -104,6 +112,7 @@ module.exports = function(firebaseApp, firebaseProvider){
 	}
 
 	mod.filter = function(path, byChild, byValue) {
+		path = mod._fixPath(path);
 		libx.log.debug('api.firebase.filter: Querying data from "{0}", by child "{1}", by value "{2}"'.format(path, byChild, byValue));
 		var defer = libx.newPromise();
 		mod._database.ref(path).orderByChild(byChild).equalTo(byValue).once('value').then(function(snp) {
@@ -141,6 +150,7 @@ module.exports = function(firebaseApp, firebaseProvider){
 	}
 
 	mod.onPresent = (path, value, onDisconnectValue)=>{
+		path = mod._fixPath(path);
 		mod.isConnected((isConnected)=>{
 			libx.log.debug(`api.firebase.onPresent: Setting presence on '${path}', with value '${value}' (onDisconnectValue: '${onDisconnectValue}')`)
 			if (!isConnected) return;
@@ -184,6 +194,14 @@ module.exports = function(firebaseApp, firebaseProvider){
 		}
 
 		return data;
+	}
+
+	mod._fixPath = (path)=> {
+		if (mod.firebasePathPrefix == null) return path;
+		if (path.startsWith(mod.firebasePathPrefix)) return path;
+		if (path.startsWith('.')) return path;
+		if (!path.startsWith('/') && !mod.firebasePathPrefix.endsWith('/')) path = '/' + path;
+		return mod.firebasePathPrefix + path;
 	}
 
 

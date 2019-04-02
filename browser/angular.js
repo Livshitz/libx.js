@@ -354,6 +354,33 @@ module.exports = (function(){
 		//#endregion
 	
 		//#region UI Helpers
+
+		mod.showPrompt = function(title, callback, options) {
+			// Appending dialog to document.body to cover sidenav in docs app
+			var p = libx.newPromise();
+			var options = options || {};
+			var $mdDialog = ngGet('$mdDialog');
+			var confirm = $mdDialog.prompt()
+				.title(title)
+				.textContent(options.content)
+				.placeholder(options.placeholder)
+				//- .ariaLabel('Dog name')
+				.initialValue(options.initialValue)
+				// .targetEvent(ev)
+				.required(options.required || true)
+				.ok(options.ok || 'Ok')
+				.cancel(options.cancel || 'Cancel');
+
+			$mdDialog.show(confirm).then(async (result)=>{
+				if (callback) callback(result);
+				p.resolve(result);
+			}, function() {
+				if (callback) callback(null);
+				p.resolve(null);
+			});
+			return p;
+		};
+
 	
 		mod.showDialog = function (dialogName, dialogTemplate, dlg, locals, showCloseButton) {
 			mod.lazy.controller(dialogName, function ($scope, $mdDialog, locals) {
@@ -604,14 +631,70 @@ module.exports = (function(){
 		mod.directive('autofocus', ['$timeout', function ($timeout) {
 			return {
 				restrict: 'A',
-				link: function ($scope, $element) {
-					$timeout(function () {
-						libx.log.verbose('autofocus', $element[0]);
-						$element[0].focus();
-					}, 500);
+				link: function ($scope, $element, attrs) {
+					if (attrs != null && attrs['autofocus'] != null) {
+						var trigetElm = angular.element(attrs['autofocus'])
+						var isSelectAll = _.has(attrs, 'autofocusSelect');
+
+						trigetElm.bind('click', function() {
+							libx.log.debug('autofocus-click', trigetElm[0], $element[0]);
+							$element[0].blur();
+							$timeout(function () {
+								$element[0].focus();
+								if(isSelectAll) $element[0].select();
+							}, 100);
+						});
+					} else {
+						$timeout(function () {
+							libx.log.debug('autofocus', $element[0]);
+							$element[0].focus();
+						}, 500);
+					}
 				}
 			}
 		}]);
+
+		mod.directive("contenteditable", function () {
+			return {
+				restrict: "A",
+				require: "ngModel",
+				link: function (scope, element, attrs, ngModel) {
+					// read is the main handler, invoked here by the blur event
+					function read() {
+						// Keep the newline value for substitutin when cleaning the <br>
+						var text = element.html();
+						if (!isNaN(text)) {
+							text = eval(text);
+						}
+						else if (text.indexOf("<br>") > -1) {
+							var newLine = String.fromCharCode(10);
+							// Firefox adds a <br> for each new line, we replace it back to a regular '\n'
+							text = text.replace(/<br>/ig,newLine).replace(/\r/ig,'');
+						}
+						// update the model
+						ngModel.$setViewValue(text);
+						// Set the formated (cleaned) value back into the element's html.
+						element.text(text);
+					}
+	
+					ngModel.$render = function () {
+						element.html(ngModel.$viewValue !== null ? ngModel.$viewValue : "");
+					};
+	
+					element.bind("blur", function () {
+						// update the model when we loose focus
+						scope.$apply(read);
+					});
+					element.bind("paste", function(e){
+						// This is a tricky one when copying values while editing, the value might be copied with formatting, 
+						// for example <span style="line-height: 20px">copied text</span> to overcome this, we replace the default behavior and 
+						// insert only the plain text that's in the clipboard
+						e.preventDefault();
+						document.execCommand('inserttext', false, (e.clipboardData || e.originalEvent.clipboardData).getData('text/plain'));
+					});
+				}
+			};
+		});
 	
 		mod.factory('page', function () {
 			var title = '';
