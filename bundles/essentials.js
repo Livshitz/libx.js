@@ -1,11 +1,15 @@
 module.exports = (function(){
 	require('../modules/extensions.js')();
 	var libx = require('../modules/helpers.js');
+	
+	libx.di = require('../modules/dependencyInjector');
 
 	if (libx.modules == null) libx.modules = {};
 
-	libx.log = require('../modules/log.js');
+	libx.log = require('../modules/log');
 	libx.buffer = require('buffer/').Buffer;
+
+	libx.di.register('log', libx.log)
 
 	// libx.log.isShowStacktrace = false;
 

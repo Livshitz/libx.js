@@ -1,6 +1,4 @@
 module.exports = (function(){
-	var mod = {};
-	
 	class Callbacks {
         constructor() {
 			this.counter = 0;

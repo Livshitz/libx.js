@@ -568,7 +568,11 @@ module.exports = (function(){
 	var ARGUMENT_NAMES = /([^\s,]+)/g;
 	mod.getParamNames = function(func) {
 		var fnStr = func.toString().replace(STRIP_COMMENTS, '');
-		var result = fnStr.slice(fnStr.indexOf('(')+1, fnStr.indexOf(')')).match(ARGUMENT_NAMES);
+		var m = fnStr.match(/\(?(?:function )?([\w\d\,\s]+)\)?/);
+		if (m == null || m.length < 1) return null;
+		var params = m[1].replace(', ', ',');
+		var result = params.split(',');
+		// var result = fnStr.slice(fnStr.indexOf('(')+1, fnStr.indexOf(')')).match(ARGUMENT_NAMES);
 		if(result === null)
 			result = [];
 		return result;
