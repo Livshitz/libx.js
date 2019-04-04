@@ -563,7 +563,7 @@ module.exports = (function(){
 	var ARGUMENT_NAMES = /([^\s,]+)/g;
 	mod.getParamNames = function(func) {
 		var fnStr = func.toString().replace(STRIP_COMMENTS, '');
-		var m = fnStr.match(/^\(?(?:function\s)?\(?([\w\d\,\s]+)\)?/);
+		var m = fnStr.match(/^\(?(?:function\s?)?\(?([\w\d\,\s]+)\)?/);
 		if (m == null || m.length < 1) return null;
 		var params = m[1].replace(', ', ',');
 		var result = params.split(',');
