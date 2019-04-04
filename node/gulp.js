@@ -1,7 +1,7 @@
-const libx = require('../bundles/essentials.js');
-libx.node = require('./index.js');
-libx.modules.crypto = require('../modules/crypto');
-libx.modules.network = require('../modules/network');
+var libx = __libx;
+libx.node = libx.di.get('node') || require('./index.js');
+libx.modules.crypto = libx.di.get('crypto') || require('../modules/crypto');
+libx.modules.network = libx.di.get('network') || require('../modules/network');
 
 const gulp = require('gulp');
 const gulpif = require('gulp-if');
@@ -124,7 +124,7 @@ module.exports = (function(){
 		options = {
 			// entries: files,
 			transform: [babelify.configure({
-				presets: ['es2015']
+				presets: ['es2015'] // ["@babel/preset-env", "@babel/preset-react"] 
 			})],
 			bare: true, 
 			// plugin: ['http'],

@@ -1,21 +1,16 @@
 module.exports = (function(){
 	var mod = {};
+	global.__libx = mod;
+	mod.di = require('../modules/dependencyInjector');
+
 	mod._ = require('lodash/core');
 	mod._.range = require('lodash/range');
-	mod._.flatMap = require('lodash/flatMap');
-	mod._.uniq = require('lodash/uniq');
 	mod._.countBy = require('lodash/countBy');
 	mod._.toPairs = require('lodash/toPairs');
-	mod._.array = require('lodash/array');
-	mod._.includes = require('lodash/includes');
-	mod._.transform = require('lodash/transform');
-	mod._.groupBy = require('lodash/groupBy');
 	mod._.keyBy = require('lodash/keyBy');
-	mod._.merge = require('lodash/merge');
-	mod._.sum = require('lodash/sum');
-	mod._.sumBy = require('lodash/sumBy');
 
-	mod._.fp = require("lodash/fp");
+	mod.di.register('_', mod._)
+
 	// mod.fp.map = require("lodash/fp/map");
 	// mod.fp.flatten = require("lodash/fp/flatten");
 	// mod.fp.sortBy = require("lodash/fp/sortBy");
@@ -23,9 +18,9 @@ module.exports = (function(){
 
 	mod.isBrowser = typeof window !== 'undefined';
 
-	mod.Callbacks = require('./callbacks');
 	mod.deferred = require('deferred-js');
 	mod.log = require('./log.js');
+	mod.di.register('log', mod.log)
 
 	mod._.mixin({
 		'sortKeysBy': function (obj, comparator) {
@@ -568,7 +563,7 @@ module.exports = (function(){
 	var ARGUMENT_NAMES = /([^\s,]+)/g;
 	mod.getParamNames = function(func) {
 		var fnStr = func.toString().replace(STRIP_COMMENTS, '');
-		var m = fnStr.match(/\(?(?:function )?([\w\d\,\s]+)\)?/);
+		var m = fnStr.match(/^\(?(?:function\s)?\(?([\w\d\,\s]+)\)?/);
 		if (m == null || m.length < 1) return null;
 		var params = m[1].replace(', ', ',');
 		var result = params.split(',');

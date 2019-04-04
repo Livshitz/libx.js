@@ -1,7 +1,7 @@
 module.exports = (function(){
 	var mod = {};
 
-	var libx = require('../bundles/essentials.js');
+	var libx = __libx; //require('../bundles/essentials.js');
 
 	var http = require('http');
 	var https = require('https');
@@ -121,4 +121,8 @@ module.exports = (function(){
 
 	
 	return mod;
+})();
+
+(()=>{ // Dependency Injector auto module registration
+	__libx.di.register('network', module.exports);
 })();

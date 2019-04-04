@@ -1,7 +1,8 @@
 module.exports = (function(){
 	var mod = {};
-	var log = require('../modules/log.js');
-	var libx = require('../bundles/essentials.js');
+	var libx = __libx;
+	var log = libx.di.get('log');
+
 	if (global._ == null) global._ = libx._;
 	global._.fp = libx._.fp;
 
@@ -435,4 +436,8 @@ module.exports = (function(){
 
 
 	return mod;
+})();
+
+(()=>{ // Dependency Injector auto module registration
+	__libx.di.register('browserHelpers', module.exports);
 })();

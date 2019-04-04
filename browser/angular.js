@@ -1,6 +1,7 @@
 module.exports = (function(){
 	var mod = {};
-	const libx = require('../bundles/browser.essentials');
+	var libx = __libx;
+	// const libx = require('../bundles/browser.essentials');
 
 	mod.init = ()=> {
 		mod = angular.module('libx.angular', ['ngResource', 'ngRoute']);
@@ -914,4 +915,8 @@ module.exports = (function(){
 	else mod.init();
 
 	return mod;
+})();
+
+(()=>{ // Dependency Injector auto module registration
+	libx.di.register('angular', module.exports);
 })();

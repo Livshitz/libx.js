@@ -29,3 +29,7 @@ module.exports = (function(){
 	
 	return mod; //mod;
 })();
+
+(()=>{ // Dependency Injector auto module registration
+	__libx.di.register('crypto', module.exports);
+})();

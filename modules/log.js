@@ -81,3 +81,7 @@ module.exports = (function(){
 	
 	return mod;
 })();
+
+(()=>{ // Dependency Injector auto module registration
+	__libx.di.register('log', module.exports);
+})();

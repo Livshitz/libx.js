@@ -1,7 +1,8 @@
 module.exports = function(firebaseApp, firebaseProvider){
 	var mod = {};
 
-	var libx = require('../bundles/essentials');
+	var libx = __libx;
+	// var libx = require('../bundles/essentials');
 
 	mod.maxDate = new Date('01/01/2200').getTime(); //7258111200000 //32503672800000;
 	mod.entityVersion = 0;
@@ -206,4 +207,8 @@ module.exports = function(firebaseApp, firebaseProvider){
 
 
 	return mod;
-}
+};
+
+(()=>{ // Dependency Injector auto module registration
+	__libx.di.register('Firebase', module.exports);
+})();

@@ -3,3 +3,7 @@ module.exports = (function(){
 
 	return Rx; 
 })();
+
+(()=>{ // Dependency Injector auto module registration
+	__libx.di.register('rxjs', module.exports);
+})();

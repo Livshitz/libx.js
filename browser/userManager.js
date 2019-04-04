@@ -1,8 +1,8 @@
 module.exports = function(firebaseModule){
 	var mod = {};
 
-	// var libx = require('../modules/helpers')
-	var libx = require('../bundles/browser.essentials');
+	var libx = __libx;
+	// var libx = require('../bundles/browser.essentials');
 
 	mod.firebaseModule = firebaseModule;
 	mod.firebase = firebaseModule.firebaseApp;
@@ -181,4 +181,8 @@ module.exports = function(firebaseModule){
 	mod.auth.onAuthStateChanged(mod.onAuthStateChanged.bind(this));
 
 	return mod;
-}
+};
+
+(()=>{ // Dependency Injector auto module registration
+	__libx.di.register('UserManager', module.exports);
+})();

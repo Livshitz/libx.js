@@ -30,3 +30,7 @@ module.exports = (function(){
 
 	return Callbacks; 
 })();
+
+(()=>{ // Dependency Injector auto module registration
+	__libx.di.register('Callbacks', module.exports);
+})();
