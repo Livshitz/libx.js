@@ -5,6 +5,7 @@ module.exports = (function(){ // dependencyInjector.js
 
 	mod.register = (name, instance)=>{
 		mod.modules[name] = instance;
+		return instance;
 	}
 	mod.get = (name)=>{
 		var ret = mod.modules[name];

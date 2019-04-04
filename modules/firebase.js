@@ -10,6 +10,7 @@ module.exports = function(firebaseApp, firebaseProvider){
 	mod.firebaseProvider = firebaseProvider;
 	mod._database = mod.firebaseApp.database();
 	mod.firebasePathPrefix = null;
+	mod.onReady = new libx.Callbacks();
 
 	mod.isConnected = async (callback) => {
 		var ret = mod.get('.info/connected');
@@ -205,6 +206,10 @@ module.exports = function(firebaseApp, firebaseProvider){
 		return mod.firebasePathPrefix + path;
 	}
 
+	mod.isConnected((isConnected)=>{
+		mod.isReady = isConnected;
+		if (isConnected) mod.onReady.trigger();
+	})
 
 	return mod;
 };
