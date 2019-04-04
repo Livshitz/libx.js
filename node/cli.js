@@ -1,5 +1,5 @@
 (async()=>{
-	var libx = __libx;
+	var libx = require('../bundles/essentials.js');
 	libx.node = require('../node');
 	libx.di.register('node', libx.node)
 
