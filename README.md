@@ -7,7 +7,7 @@
 [![npm](https://img.shields.io/bundlephobia/min/libx.js.svg?style=plastic)](https://www.npmjs.com/package/libx.js)
 [![npm](https://img.shields.io/github/languages/code-size/livshitz/libx.js.svg?label=source%20code%20size)](https://www.github.com/livshitz/libx.js)
 
-> libx.js is a swiss army knife full of useful modules and helpers for node & browser apps
+> 🛠 libx.js is a carefully crafted toolbelt full of useful modules and helpers for node & web apps
 
 ## Features: 
 * Heavily modular and flexible
