@@ -22,7 +22,6 @@
   * Crypto related helpers
 * Browser-only support:
   * General helpers & extensions
-  * AngularJS heavy modification to allow progressive webapps with minimal setup/effort
   * Require (for browser)
   * User management
 * Node-only support:
