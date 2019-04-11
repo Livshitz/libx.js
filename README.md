@@ -13,6 +13,7 @@
 * Heavily modular and flexible
 * Browserify & bundler friendly
 * Shared support:
+  * Dependency Injection
   * General helpers & extensions
   * Firebase wrapper
   * Log
