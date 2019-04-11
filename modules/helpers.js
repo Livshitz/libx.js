@@ -1,7 +1,8 @@
 module.exports = (function(){
 	var mod = {};
 	global.__libx = mod;
-	mod.di = require('../modules/dependencyInjector');
+	mod.DependencyInjector = require('./dependencyInjector');
+	mod.di = new mod.DependencyInjector();
 
 	mod._ = require('lodash/core');
 	mod._.range = require('lodash/range');
