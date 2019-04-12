@@ -1,5 +1,5 @@
 var libx = require('../bundles/essentials.js');
-var gulp = require('../node/gulp');
+var bundler = require('../node/bundler');
 var rx = require('../modules/rxjs');
 
 /*
@@ -23,10 +23,10 @@ const path = require('path');
 	// ).subscribe(x => libx.log.v(x));
 	
 
-	await gulp.delete('./temp/');
-	await gulp.copy('./bundles/essentials.js', './temp/', ()=>[ // '../test/build/resources/scripts/'
-		gulp.middlewares.browserify({ }),
-		gulp.middlewares.ifProd(gulp.middlewares.minify()),
+	await bundler.delete('./temp/');
+	await bundler.copy('./bundles/essentials.js', './temp/', ()=>[ // '../test/build/resources/scripts/'
+		bundler.middlewares.browserify({ }),
+		bundler.middlewares.ifProd(bundler.middlewares.minify()),
 	]);
 
 	/*

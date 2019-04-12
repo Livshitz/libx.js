@@ -23,14 +23,13 @@
 * Browser-only support:
   * General helpers & extensions
   * Require (for browser)
-  * User management
+  * User management (firebase)
 * Node-only support:
   * CLI helpers
-  * Watcher, bundler, transformer, etc. base on gulp
+  * Bundler - Watcher, bundler, transformer, and more
 
 ## Description:
-Different projects usually have a shared portion of infrastructural or helpers code. Libx.js is intended to bring a broad of useful tools, shaped and sharped to be easily used, hiding the complex or troublesome routines usually needed. <br/>
-
+Different projects usually have a shared portion of infrastructural or helpers code. Libx.js is intended to bring a broad of useful tools, shaped and sharpened to be easily used, hiding the complex or troublesome routines usually needed. <br/>
 
 
 ## Usage

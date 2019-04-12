@@ -44,18 +44,10 @@ module.exports = (function(){
 				if (global.libx._projconfig != null) {
 					return ret = mod._projectConfig = global.libx._projconfig;
 				}
-
-				if (!mod.isBrowser) {
-					var secretsKey = secret || process.env.FUSER_SECRET_KEY;
-					// libx.log.info('!!! Secret key is: ', secretsKey);
-					var node = require('../node')
-					var projconfig = node.readConfig(containingFolder || '.' + '/project.json', secretsKey);
-					global.libx._projconfig = projconfig;
-					mod._projectConfig = projconfig;
-				} else {
-					if (global.projconfig != null) return ret = global.projconfig;
-					if (global.libx._projconfig == null) throw "libx:helpers:getProjectConfig: Detected browser, but `window.libx._projconfig` was not provided";
-				}
+				
+				if (global.projconfig != null) return ret = global.projconfig;
+				if (global.libx._projconfig == null) throw "libx:helpers:getProjectConfig: Detected browser, but `window.libx._projconfig` was not provided";
+			
 			}
 			if (mod._projectConfig == null) throw "libx:helpers:getProjectConfig: Could not find/load project.json in '{0}'".format(containingFolder);
 			return ret = mod._projectConfig;
