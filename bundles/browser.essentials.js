@@ -1,6 +1,5 @@
 module.exports = (function(){
 	// var libx = require('../libx.shared.js');
-
 	var libx = require('./essentials.js');
 
 	if (libx.browser == null) libx.browser = {};

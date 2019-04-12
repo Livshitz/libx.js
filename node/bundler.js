@@ -248,7 +248,7 @@ module.exports = (function(){
 			dir = dir || '';
 			dir = dir.replace(/^fonts(\/)?(lib)?/, '');
 			var p = `/resources/${type}/lib/${dir}`;
-			libx.gulp.copy([file], dest + p)
+			libx.bundler.copy([file], dest + p)
 		
 			if (attr != null) elm.attr(attr, p.substr(1) + fname);
 		}
