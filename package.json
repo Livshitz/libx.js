@@ -60,7 +60,7 @@
         "semver": "^5.6.0",
         "through": "^2.3.8",
         "through2": "^3.0.0",
-        "truffle-hdwallet-provider": "^1.0.2",
+        // "truffle-hdwallet-provider": "^1.0.2",
         "vinyl-buffer": "^1.0.1",
         "vinyl-source-stream": "^2.0.0",
         "vinyl-transform": "^1.0.0",
