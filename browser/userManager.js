@@ -1,8 +1,10 @@
-module.exports = function(firebaseModule){
+module.exports = async function(firebaseModule){
 	var mod = {};
 
 	var libx = __libx;
 	// var libx = require('../bundles/browser.essentials');
+
+	var appEvents = await require('../modules/appEvents');
 
 	mod.firebaseModule = firebaseModule;
 	mod.firebase = firebaseModule.firebaseApp;
@@ -14,7 +16,9 @@ module.exports = function(firebaseModule){
 	mod.onDataChanged = new libx.Callbacks();
 	mod.onProfileChanged = new libx.Callbacks();
 
-	//#region Signin options
+	appEvents.broadcast('user', { step:'init' });
+
+	//#region Signin methods
 	mod.signInGoogle = function () {
 		// Sign in Firebase using popup auth and Google as the identity provider.
 		var provider = new mod.firebaseModule.firebaseProvider.auth.GoogleAuthProvider();
@@ -112,6 +116,7 @@ module.exports = function(firebaseModule){
 		if (!user) {
 			mod.data = null;
 			mod.onSignOut.trigger(mod.data);
+			appEvents.broadcast('user', { step:'signed-out' });
 			return;
 		}
 
@@ -131,6 +136,7 @@ module.exports = function(firebaseModule){
 		// mod.writeData();
 		//mod.observeUser();
 
+		appEvents.broadcast('user', { step:'signed-in' });
 		mod.onSignIn.trigger(mod.data);
 	}
 
@@ -139,6 +145,7 @@ module.exports = function(firebaseModule){
 			if (data != null && data.length == 1) data = data[0];
 			libx.log.verbose('> user: user data changed', data)
 			libx.extend(mod.data, data);
+			appEvents.broadcast('user', { step:'user-updated' });
 			mod.onDataChanged.trigger(mod.data);
 		});
 	}
@@ -158,6 +165,7 @@ module.exports = function(firebaseModule){
 				mod.profile.profilePicUrl = mod.data.profilePicUrl;
 			}
 
+			appEvents.broadcast('user', { step:'profile-updated' });
 			mod.onProfileChanged.trigger(mod.profile);
 		});
 	}
@@ -165,6 +173,7 @@ module.exports = function(firebaseModule){
 	mod.writeData = function() {
 		firebaseModule.update('/users/' + mod.data.id, mod.data);
 		firebaseModule.update('/profiles/' + mod.data.id, mod.profile);
+		appEvents.broadcast('user', { step:'wrote-data' });
 	}
 
 	// if ($rootScope.app == null) $rootScope.app = {};

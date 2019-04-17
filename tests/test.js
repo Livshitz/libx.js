@@ -1,5 +1,5 @@
 var libx = require('../bundles/essentials.js');
-var bundler = require('../node/bundler');
+libx.bundler = require('../node/bundler');
 var rx = require('../modules/rxjs');
 
 /*
@@ -15,6 +15,18 @@ const buffer = require('vinyl-buffer');
 const path = require('path');
 
 (async ()=>{ /* init */
+	var dir = process.cwd(); //__dirname
+	var src = dir + '/';
+	var dest = __dirname + '/dist';
+	debugger
+
+	await libx.bundler.copy(src + './modules/EventsStore.js', dest, ()=>[
+		libx.bundler.middlewares.browserify({ bare: false }),
+		libx.bundler.middlewares.minify(),
+	], false, {})
+	console.log('done!')
+
+	return;
 	// libx._.each([1,2,3,4,5], i=> libx.log.v(i))
 	//libx.log.v(rx)
 	// rx.range(1, 200).pipe(

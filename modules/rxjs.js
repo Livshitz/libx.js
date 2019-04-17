@@ -1,6 +1,8 @@
 module.exports = (function(){
 	var Rx = require('rxjs');
 
+	Rx.operators = require('rxjs/operators');
+
 	return Rx; 
 })();
 
