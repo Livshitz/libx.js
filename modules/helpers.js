@@ -10,8 +10,6 @@ module.exports = (function(){
 	mod._.toPairs = require('lodash/toPairs');
 	mod._.keyBy = require('lodash/keyBy');
 
-	mod.di.register('_', mod._)
-
 	// mod.fp.map = require("lodash/fp/map");
 	// mod.fp.flatten = require("lodash/fp/flatten");
 	// mod.fp.sortBy = require("lodash/fp/sortBy");
@@ -21,7 +19,6 @@ module.exports = (function(){
 
 	mod.deferred = require('deferred-js');
 	mod.log = require('./log.js');
-	mod.di.register('log', mod.log)
 
 	mod._.mixin({
 		'sortKeysBy': function (obj, comparator) {
@@ -87,8 +84,15 @@ module.exports = (function(){
 	}
 
 	mod.isFunction = function (obj) {
-		return mod.type(obj) === "function"
+		var isFunc = mod.type(obj) === "function";
+		if (!isFunc) return false;
+
+		var fnStr = obj.toString().replace(STRIP_COMMENTS, '');
+		if (fnStr.match(/\s*class\s+/) != null) return false;
+
+		return true;
 	};
+
 	mod.isArray = Array.isArray || function (obj) {
 		return mod.type(obj) === "array"
 	};
@@ -443,7 +447,6 @@ module.exports = (function(){
 	}
 
 	mod.isNull = (obj) => obj == undefined || obj == null;
-	mod.isFunction = (obj) => (typeof obj === "function");
 	mod.isEmptyObject = function( obj ) {
 	for ( var name in obj ) {
 		return false;
@@ -556,6 +559,7 @@ module.exports = (function(){
 	var ARGUMENT_NAMES = /([^\s,]+)/g;
 	mod.getParamNames = function(func) { 
 		var fnStr = func.toString().replace(STRIP_COMMENTS, '');
+		if (fnStr.match(/^\s*class\s+/) != null) return null;
 		var m = fnStr.match(/^\(?(?:function\s?)?\(?([\w\d\,\s]+)\)?/);
 		if (m == null || m.length < 1) return null;
 		var params = m[1].replace(', ', ',');
@@ -584,6 +588,11 @@ module.exports = (function(){
 		}
 		return ret;
 	}
+
+	setTimeout(()=>	{
+		mod.di.register('log', mod.log);
+		mod.di.register('_', mod._);
+	}, 0);
 
 	return mod;
 })();

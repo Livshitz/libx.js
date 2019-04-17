@@ -7,5 +7,6 @@
 		"base/source/*": true,
 		"test/api/build/": true,
 		"test/lib-cache/": true
-	}
+	},
+	"debug.node.autoAttach": "on"
 }

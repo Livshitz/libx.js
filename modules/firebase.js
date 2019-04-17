@@ -2,7 +2,8 @@ module.exports = function(firebaseApp, firebaseProvider){
 	var mod = {};
 
 	var libx = __libx;
-	// var libx = require('../bundles/essentials');
+	
+	var appEvents = require('./appEvents');
 
 	mod.maxDate = new Date('01/01/2200').getTime(); //7258111200000 //32503672800000;
 	mod.entityVersion = 0;
@@ -17,6 +18,7 @@ module.exports = function(firebaseApp, firebaseProvider){
 		if (callback != null) {
 			mod.listen('.info/connected', isConnected => {
 				callback(isConnected);
+				appEvents.broadcast('firebase', { step: 'connection-changed', value: isConnected });
 			});
 		}
 		return ret;
@@ -208,7 +210,10 @@ module.exports = function(firebaseApp, firebaseProvider){
 
 	mod.isConnected((isConnected)=>{
 		mod.isReady = isConnected;
-		if (isConnected) mod.onReady.trigger();
+		if (isConnected) {
+			mod.onReady.trigger();
+			appEvents.broadcast('firebase', { step: 'ready' });
+		}
 	})
 
 	return mod;
