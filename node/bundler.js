@@ -36,6 +36,8 @@ const templateCache = require('gulp-angular-templatecache');
 const debug = require('gulp-debug');
 const browserify = require('browserify');
 const babelify = require('babelify');
+const tsify = require("tsify");
+const ts = require('gulp-typescript');
 const transform = require('vinyl-transform');
 const sourcemaps = require('gulp-sourcemaps');
 const source = require('vinyl-source-stream');
@@ -54,14 +56,17 @@ module.exports = (function(){
 		fun.call(args);
 	}
 
+	mod.ts = ts;
+
 	//#region middlewares: 
 	mod.middlewares = {};
 	mod.middlewares.minify = (options) => streamify(minify(libx.extend({ mangle: false, builtIns: false }, options)));
 	mod.middlewares.renameFunc = (func) => rename(func);
 	mod.middlewares.rename = (to) => rename(to);
-	mod.middlewares.babelify = () => babel({ presets: ['es2015'] }); //['es2015']
+	mod.middlewares.babelify = () => babel({ presets: ['es2015'] });
 	mod.middlewares.if = (condition, middlewareAction) => gulpif(condition, middlewareAction);
 	mod.middlewares.ifProd = (middleware) => mod.middlewares.if(mod.config.isProd, middleware);
+	mod.middlewares.sourcemaps = sourcemaps;
 	mod.middlewares.minifyLess = () => cleanCss();
 	mod.middlewares.concat = (filename) => concat(filename);
 	mod.middlewares.write = (dest) => gulp.dest(dest);
@@ -120,19 +125,68 @@ module.exports = (function(){
 			}
 		})
 	};
+	mod.middlewares.ts = (_options, tsproject) => {
+		var options = {
+			module: 'commonjs', // 'commonjs', 'amd', 'umd', 'system'.
+            // outFile: 'compiled.js',
+		};
+		libx.extend(options, _options);
+
+		// outFile forces the use of 'system' or 'amd'
+		if (options.outFile != null) {
+			options.module = "amd"
+		}
+		if (tsproject != null)
+			return tsproject(options);
+		else
+			return ts(options);
+	}
+
+	mod.middlewares.tsify = (_options) => {
+		var options = { 
+			// transform: [babelify.configure({
+			// 	presets: ['es2015'] //, require("@babel/preset-typescript")]
+			// })],
+			plugin: [tsify],
+			treatChunk: (chunk, options)=> {
+				if (options.sourcemaps) {
+					chunk.contents
+						.pipe(source(chunk.path, chunk.base)) //getBundleName() + '.js'))
+						.pipe(rename(f=>f.extname = ".js"))
+						// .pipe(source(path.basename(chunk.path))) //getBundleName() + '.js'))
+						.pipe(buffer())
+						.pipe(sourcemaps.init({loadMaps: true}))
+						// Add transformation tasks to the pipeline here.
+							// .pipe(uglify())
+							// .on('error', log.error)
+						// .pipe(minify())
+						.pipe(sourcemaps.write('./'))
+						.pipe(gulp.dest(options.sourcemapDest));
+				} else { 
+					// Just rename:
+					chunk.contents.pipe(source(chunk.path, chunk.base))
+						.pipe(rename(f=>f.extname = ".js"))
+						.pipe(gulp.dest(options.sourcemapDest));
+				}
+				return chunk;
+			}
+		};
+		libx.extend(options, _options);
+		
+		return mod.middlewares.browserify(options); 
+	}
 	mod.middlewares.browserify = (_options) => {
 		options = {
 			// entries: files,
 			transform: [babelify.configure({
-				presets: ['es2015'] // ["@babel/preset-env", "@babel/preset-react"] 
+				presets: ['es2015'] //, ["@babel/preset-env", "@babel/preset-react"] 
 			})],
-			bare: true, 
-			// plugin: ['http'],
+			// bare: true, 
 			// bundleExternal: true,
 			standalone: '__libxjs',
 			debug: false,
 			plumber: false,
-			minify: true,
+			minify: false,
 		}
 
 		// if (!mod.config.isProd) {
@@ -149,21 +203,15 @@ module.exports = (function(){
 				options.entries = chunk.path;
 
 				var b = browserify(options)
+					// .transform(babelify, { extensions: [ '.tsx', '.ts' ] })
+					.plugin(tsify) //, { noImplicitAny: false, target: 'es6' })
+   					// .transform(babelify, { extensions: [ '.tsx', '.ts' ] })
 					;
 					//.transform(to5browserify); // Any custom browserify stuff should go here
 
-				chunk.contents = b.bundle()
-
-				// if (options.sourcemaps)
-				// 	chunk.contents
-						// .pipe(source(chunk.path)) //getBundleName() + '.js'))
-						// .pipe(source(path.basename(chunk.path))) //getBundleName() + '.js'))
-						// .pipe(buffer())
-						// .pipe(sourcemaps.init({loadMaps: true}))
-						// Add transformation tasks to the pipeline here.
-						// .pipe(minify())
-						// .pipe(sourcemaps.write('./'))
-						// .pipe(gulp.dest('./temp'))
+				chunk.contents = b.bundle();
+				
+				if (options.treatChunk) options.treatChunk(chunk, options);
 
 				this.push(chunk);
 			}
