@@ -400,7 +400,7 @@ module.exports = (function(){
 			mod.jQueryExt.applyReveal();
 		});	
 	} else {
-		log.warning('helpers: jQuery is not defined, skipping jQuery libx setup...');
+		if (log) log.warning('helpers: jQuery is not defined, skipping jQuery libx setup...');
 	}
 	//#endregion
 
