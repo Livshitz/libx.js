@@ -2,6 +2,11 @@ module.exports = (function(){
 	// var rx = require('rxjs');
 	// rx.operators = require('rxjs/operators');
 
+	// Usage:
+	// appEvents.subscribe(ev=>ev.type=='test', (x)=>console.log('state: ', x), appEvents.history)
+	// appEvents.broadcast('test', { step:'init2' });
+
+
 	var libx = __libx;
 	class EventsStore {
 		constructor(intialEvents) {
@@ -53,7 +58,7 @@ module.exports = (function(){
 	
 		broadcast(type, payload) {
 			var ev = this.newEvent(type, payload);
-			libx.log.d('eventsStore:boradcast: ', ev.type, ev.payload);
+			// libx.log.d('eventsStore:boradcast: ', ev.type, ev.payload);
 			this.history.next(ev);
 			this.state.next(ev);
 			this.future.next(ev);
