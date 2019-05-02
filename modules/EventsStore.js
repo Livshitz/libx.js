@@ -17,8 +17,8 @@ module.exports = (function(){
 			// 	)
 			// 	.subscribe(val => console.log(`Even number: ${val}`));
 
-			libx.di.require(rx=>{
-				this._rx = rx;
+			libx.di.require(rxjs=>{
+				this._rx = rxjs;
 
 				this.history = new this._rx.ReplaySubject()
 				this.state = new this._rx.BehaviorSubject()
