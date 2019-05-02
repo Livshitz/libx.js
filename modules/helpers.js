@@ -562,7 +562,7 @@ module.exports = (function(){
 		if (fnStr.match(/^\s*class\s+/) != null) return null;
 		var m = fnStr.match(/^\(?(?:function\s?)?\(?([\w\d\,\s]+)\)?/);
 		if (m == null || m.length < 1) return null;
-		var params = m[1].replace(', ', ',');
+		var params = m[1].replace(/, /g, ',');
 		var result = params.split(',');
 		// var result = fnStr.slice(fnStr.indexOf('(')+1, fnStr.indexOf(')')).match(ARGUMENT_NAMES);
 		if(result === null)
