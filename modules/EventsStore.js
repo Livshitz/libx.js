@@ -11,10 +11,12 @@ module.exports = (function(){
 	class EventsStore {
 		constructor(intialEvents) {
 			// this.hub = null;
-			this.history = null;
-			this.state = null;
-			this.future = null;
-			this.handler = null;
+			this.channels = {
+				history: null,
+				state: null,
+				future: null,
+			}
+			this._handler = null;
 			this._defaultFilter = () => true;
 
 			// this.state.pipe(
@@ -25,23 +27,23 @@ module.exports = (function(){
 			libx.di.require(rxjs=>{
 				this._rx = rxjs;
 
-				this.history = new this._rx.ReplaySubject()
-				this.state = new this._rx.BehaviorSubject()
-				this.future = new this._rx.Subject()
+				this.channels.history = new this._rx.ReplaySubject()
+				this.channels.state = new this._rx.BehaviorSubject()
+				this.channels.future = new this._rx.Subject()
 				
 				this._rx.from(intialEvents || []).pipe().subscribe(i=>this.broadcast(i.type, i.payload));
 			});
 			
 		}
 	
-		subscribe(predicate, action, channel) {
-			return (channel || this.state).pipe(
+		subscribe(action, predicate, channel) {
+			return (channel || this.channels.state).pipe(
 				this._rx.operators.filter(predicate)
 			).subscribe(action);
 		}
 	
-		subscribeOnce(predicate, action, channel) {
-			return (channel || this.future).pipe(
+		subscribeOnce(action, predicate, channel) {
+			return (channel || this.channels.future).pipe(
 				this._rx.operators.filter(predicate),
 				this._rx.operators.take(1)
 			)
@@ -59,9 +61,9 @@ module.exports = (function(){
 		broadcast(type, payload) {
 			var ev = this.newEvent(type, payload);
 			// libx.log.d('eventsStore:boradcast: ', ev.type, ev.payload);
-			this.history.next(ev);
-			this.state.next(ev);
-			this.future.next(ev);
+			this.channels.history.next(ev);
+			this.channels.state.next(ev);
+			this.channels.future.next(ev);
 		}
 	
 		unsubscribe(handler) {
