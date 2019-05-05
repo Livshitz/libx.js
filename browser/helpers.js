@@ -3,8 +3,8 @@ module.exports = (function(){
 	var libx = __libx;
 	var log = libx.di.get('log');
 
-	if (global._ == null) global._ = libx._;
-	global._.fp = libx._.fp;
+	if (global.__ == null) global.__ = libx._;
+	libx._.fp = libx._.fp;
 
 	// Special section for helpers that are relevant to browsers but run in node (for example)
 	mod.urlize = function (obj) {
@@ -266,12 +266,12 @@ module.exports = (function(){
 		['log','warn','error'].forEach(function (verb) {
 			console[verb] = (function (method, verb, log) {
 				return function (text) {
-					method(_.join(arguments, ""));
+					method(libx._.join(arguments, ""));
 					// handle distinguishing between methods any way you'd like
 					var msg = document.createElement('code');
 					msg.style="display:block;";
 					msg.classList.add(verb);
-					msg.textContent = verb + ": " + _.join(arguments, "");
+					msg.textContent = verb + ": " + libx._.join(arguments, "");
 					log.appendChild(msg);
 					log.scrollTo(0,log.scrollHeight);
 				};

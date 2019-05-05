@@ -1,4 +1,6 @@
 module.exports = (function(){
+	var libx = __libx;
+
 	class Callbacks {
         constructor() {
 			this.counter = 0;
@@ -13,7 +15,7 @@ module.exports = (function(){
         }
 
 		trigger() {
-			_.each(this.list, (cb)=> {
+			libx._.each(this.list, (cb)=> {
 				cb.apply(null, arguments)
             });
         }

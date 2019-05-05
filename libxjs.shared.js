@@ -16,7 +16,7 @@ if (!isInjectedMode) {
 }
 
 var isImportedAsScriptTagOnHtml = ()=> libx._.some(document.getElementsByTagName('script'), i=> i.getAttribute('liv-libx-injected') == '');
-if (!isInjectedMode && libx.isBrowser isInjectedMode = isImportedAsScriptTagOnHtml();
+if (!isInjectedMode && libx.isBrowser) isInjectedMode = isImportedAsScriptTagOnHtml();
 
 /* =========== [ Things: ] =========== */
 //#region Things
