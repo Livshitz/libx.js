@@ -74,9 +74,9 @@ module.exports = (function(){
 	*/
 	mod.diff = (object, base)=>{
 		function changes(object, base) {
-			return _.transform(object, function(result, value, key) {
-				if (!_.isEqual(value, base[key])) {
-					result[key] = (_.isObject(value) && _.isObject(base[key])) ? changes(value, base[key]) : value;
+			return mod._.transform(object, function(result, value, key) {
+				if (!mod._.isEqual(value, base[key])) {
+					result[key] = (mod._.isObject(value) && mod._.isObject(base[key])) ? changes(value, base[key]) : value;
 				}
 			});
 		}
@@ -560,7 +560,7 @@ module.exports = (function(){
 	mod.getParamNames = function(func) { 
 		var fnStr = func.toString().replace(STRIP_COMMENTS, '');
 		if (fnStr.match(/^\s*class\s+/) != null) return null;
-		var m = fnStr.match(/^\(?(?:function\s?)?\(?([\w\d\,\s]+)\)?/);
+		var m = fnStr.match(/^\(?(?:async\s?)?(?:function\s?)?\(?([\w\d\,\s]+)\)?/);
 		if (m == null || m.length < 1) return null;
 		var params = m[1].replace(/\s/g, '');
 		var result = params.split(',');
