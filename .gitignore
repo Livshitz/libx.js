@@ -15,4 +15,4 @@ psm.sh
 
 packages/*
 
-./.npmrc
+.npmrc
