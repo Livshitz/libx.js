@@ -56,6 +56,12 @@ module.exports = (function(){
 		libx.clone(options, _options);
 		options = libx.extend(dest, options);
 
+		// Fill in missing content type based on dataType:
+		if (options.dataType != null && options.headers['content-type'] == null) {
+			if (options.dataType == 'json') options.headers['content-type'] = 'application/json; charset=UTF-8';
+			else if (options.dataType == 'formData') options.headers['content-type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
+		}
+
 		var op = http;
 		if (dest.protocol == 'https:') op = https;
 		var request = op.request(options, (res) => {
@@ -71,7 +77,13 @@ module.exports = (function(){
 		});
 
 		// post the data
-		if (data != null) request.write(JSON.stringify(data));
+		if (data != null) {
+			var dataObj = data;
+			if (options.dataType == "json") dataObj = JSON.stringify(data);
+			else if (options.dataType == "formData") dataObj = mod.helpers.params(data);
+			//if (options.headers['Content-Type'] != null && options.headers['Content-Type'].startsWith("application/x-www-form-urlencoded")) dataObj = mod.helpers.getFormData(data);
+			request.write(dataObj);
+		} 
 
 		request.on('error', function (e) {
 			libx.log.error(e.message);
@@ -119,6 +131,53 @@ module.exports = (function(){
 		return url.replace(new RegExp("([^:]\/)\/+", "g"), "$1");
 	};
 
+	mod.helpers.getFormData = object => {
+		const formData = new FormData();
+		Object.keys(object).forEach(key => {
+			if (libx.isObject(object[key])) 
+				formData.append(key, mod.helpers.getFormData(object[key]));
+			else 
+				formData.append(key, object[key])
+		});
+		return formData;
+	}
+	// object => Object.keys(object).reduce((formData, key) => {
+	// 	formData.append(key, object[key]);
+	// 	return formData;
+	// }, new FormData());
+
+	mod.helpers.formDataToString = formDataObj => [...formDataObj.entries()] // expand the elements from the .entries() iterator into an actual array
+		.map(e => encodeURIComponent(e[0]) + "=" + encodeURIComponent(e[1]));  // transform the elements into encoded key-value-pairs
+
+	mod.helpers.params = (params, keys = [], isArray = false) => {
+		const p = Object.keys(params).map(key => {
+			let val = params[key]
+		
+			if ("[object Object]" === Object.prototype.toString.call(val) || Array.isArray(val)) {
+				if (Array.isArray(params)) {
+					keys.push("")
+				} else {
+					keys.push(key)
+				}
+				return mod.helpers.params(val, keys, Array.isArray(val))
+			} else {
+				let tKey = key
+		
+				if (keys.length > 0) {
+					const tKeys = isArray ? keys : [...keys, key]
+					tKey = tKeys.reduce((str, k) => { return "" === str ? k : `${str}[${k}]` }, "")
+				}
+				if (isArray) {
+					return `${ tKey }[]=${ val }`
+				} else {
+					return `${ tKey }=${ val }`
+				}
+			}
+		}).join('&')
+		
+		keys.pop()
+		return p
+	}
 	
 	return mod;
 })();
