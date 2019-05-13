@@ -83,6 +83,8 @@ module.exports = (function(){
 		return changes(object, base);
 	}
 
+	mod.isObject = object => mod._.isObject(object);
+
 	mod.isFunction = function (obj) {
 		var isFunc = mod.type(obj) === "function";
 		if (!isFunc) return false;
