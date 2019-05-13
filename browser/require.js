@@ -147,6 +147,16 @@ module.exports = (function(){
 			//      readyState 4.
 			callback && (request[request.onload===null?'onload':'onreadystatechange'] = onLoad);
 			request.open('GET', descriptor.uri, !!callback);
+
+			// request.setRequestHeader("Origin", window.location.hostname);
+			try{
+				request.setRequestHeader("Access-Control-Allow-Origin", "*");
+				request.setRequestHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS");
+				request.setRequestHeader("Access-Control-Allow-Headers", "Origin, Content-Type, X-Auth-Token");
+			}catch(ex) {
+				console.warn('libx.require: Error setting CORS headers. ', ex);
+			}
+
 			lock[cacheid] = lock[cacheid]++||1;
 			request.send();
 			lock[cacheid]--;
