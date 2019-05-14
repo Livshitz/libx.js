@@ -1,5 +1,10 @@
 module.exports = (function(){
+	var libx = __libx;
 	var mod = {};
+
+	mod.string = {};
+	mod.date = {};
+	mod.array = {};
 
 	var getGlobalProperties = function() {
 		mod._globalProps = Object.getOwnPropertyNames( new Object() );
@@ -14,37 +19,35 @@ module.exports = (function(){
 			return mod._globalProps.indexOf( propName ) === -1;
 		}
 	}
-	
-	if (global._infar_avoidExtensions) return;
 
-	String.prototype.capitalize = function() {
+	mod.string.capitalize = function() {
 		return this.charAt(0).toUpperCase() + this.slice(1);
 	}
 
-	String.prototype.kebabCase = function() {
+	mod.string.kebabCase = function() {
 		return this.replace(/([a-z])([A-Z])/g, '$1-$2')    // get all lowercase letters that are near to uppercase ones
 		.replace(/[\s_]+/g, '-')                // replace all spaces and low dash
 		.toLowerCase() 							// convert to lower case
 	}
 
-	String.prototype.camelize = function() {
+	mod.string.camelize = function() {
 		return this.replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {
 			return index == 0 ? letter.toLowerCase() : letter.toUpperCase();
 		}).replace(/\s+|\-/g, '');
 	}
 
-	String.prototype.padNumber = function (width, z) {
+	mod.string.padNumber = function (width, z) {
 		var args = arguments;
 		z = z || '0';
 		var n = this + '';
 		return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
 	};
 
-	String.prototype.contains = function (str) {
+	mod.string.contains = function (str) {
 		return this.indexOf(str) >= 0;
 	};
 
-	String.prototype.hashCode = function () {
+	mod.string.hashCode = function () {
 		var hash = 0;
 		if (this.length == 0)
 			return hash.toString();
@@ -56,27 +59,21 @@ module.exports = (function(){
 		return hash.toString();
 	};
 
-	String.prototype.endsWith = function (suffix) {
+	mod.string.endsWith = function (suffix) {
 		return this.indexOf(suffix, this.length - suffix.length) !== -1;
 	};
 
 	// see below for better implementation!
-	String.prototype.startsWith = function (str) {
+	mod.string.startsWith = function (str) {
 		return this.indexOf(str) == 0;
 	};
 
-	String.prototype.isEmpty = function(input) {
+	mod.string.isEmpty = function(input) {
 		var v = input || this;
 		return v ? v.trim().length == 0 : true;
 	}
 
-	Date.prototype.isValid = function () {
-		// An invalid date object returns NaN for getTime() and NaN is the only
-		// object not strictly equal to itself.
-		return this.getTime() === this.getTime();
-	};
-
-	String.prototype.format = function () {
+	mod.string.format = function () {
 		var args = [];
 
 		var ret = this;
@@ -103,6 +100,14 @@ module.exports = (function(){
 
 
 		return ret;
+	};
+
+	
+
+	mod.date.isValid = function () {
+		// An invalid date object returns NaN for getTime() and NaN is the only
+		// object not strictly equal to itself.
+		return this.getTime() === this.getTime();
 	};
 
 	mod.dateFormat = function () {
@@ -204,39 +209,39 @@ module.exports = (function(){
 	};
 
 	// For convenience...
-	Date.prototype.formatx = function (mask, utc) {
+	mod.date.formatx = function (mask, utc) {
 		if (mask == null) return this;
 		return mod.dateFormat(this, mask, utc);
 	};
 
-	Date.prototype.format = function (strFormat, utc) {
+	mod.date.format = function (strFormat, utc) {
 		if (isNaN( this.getTime() )) return null;
 		// An invalid date object returns NaN for getTime() and NaN is the only
 		// object not strictly equal to itself.
 		return mod.dateFormat(this, strFormat, utc);
 	};
 
-	Date.prototype.fromJson = function (aJsonDate) {
+	mod.date.fromJson = function (aJsonDate) {
 		if (aJsonDate == undefined || aJsonDate == '')
 			return null;
 		var stripped = aJsonDate.replace("/Date(", "").replace(")/", "");
 		return new Date(parseInt(stripped, 10));
 	};
 
-	Date.prototype.toJson = function () {
+	mod.date.toJson = function () {
 		return '/Date(' + this.getTime() + ')/';
 	};
 
-	Date.prototype.addHours = function (h) {
+	mod.date.addHours = function (h) {
 		this.setTime(this.getTime() + h * 60 * 60 * 1000);
 		return this;
 	};
 
-	Array.prototype.diff = function(a, fn) {
+	mod.array.diff = function(a, fn) {
 		return this.filter(function(i) {return a.indexOf(i) < 0;});
 	};
 
-	Array.prototype.myFilter = function (fn) {
+	mod.array.myFilter = function (fn) {
 		var ret = [];
 		this.each(function (x) {
 			if (fn(x))
@@ -245,7 +250,7 @@ module.exports = (function(){
 		return ret;
 	};
 
-	Array.prototype.myFilterSingle = function (fn) {
+	mod.array.myFilterSingle = function (fn) {
 		var ret = null;
 		this.each(function (x) {
 			if (fn(x)) {
@@ -256,11 +261,27 @@ module.exports = (function(){
 		return ret;
 	};
 
-	Array.prototype.remove = function (key) {
+	mod.array.remove = function (key) {
 		var index = this.indexOf(key);
 		if (index > -1) {
 			this.splice(index, 1);
 		}
+	}
+
+	mod.applyStringExtensions = () => {
+		libx.extend(String.prototype, mod.string);
+	}
+	mod.applyDateExtensions = () => {
+		libx.extend(Date.prototype, mod.date);
+	}
+	mod.applyArrayExtensions = () => {
+		libx.extend(Array.prototype, mod.array);
+	}
+
+	mod.applyAllExtensions = () => {
+		mod.applyStringExtensions();
+		mod.applyDateExtensions();
+		mod.applyArrayExtensions();
 	}
 
 	return mod;
