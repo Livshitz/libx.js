@@ -78,7 +78,7 @@ module.exports = (function(){ // dependencyInjector.js
 	
 					if (!isReady) return;
 
-					this.pendingFunctions[modName].remove(pending);
+					libx.extensions.array.remove.call(this.pendingFunctions[modName], pending)
 					if (this.pendingFunctions[modName].length == 0) delete this.pendingFunctions[modName];
 
 					this.require(pending.func).then(res=>{
