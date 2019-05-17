@@ -192,7 +192,7 @@ module.exports = (function(){
 			minify: false,
 		}
 		options.babelifyOptions = {
-			global: true,
+			global: false,
 			presets: [
 				[
 					'@babel/preset-env', 
