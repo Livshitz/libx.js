@@ -28,14 +28,15 @@ const rename = require('gulp-rename');
 const less = require('gulp-less');
 const jade = require('gulp-pug');
 const sass2less = require('less-plugin-sass2less')
-const babel = require('gulp-babel');
+const gulpBabel = require('gulp-babel');
 const cleanCss = require('gulp-clean-css');
 const usemin = require('gulp-usemin');
 const htmlmin = require('gulp-htmlmin');
 const templateCache = require('gulp-angular-templatecache');
 const debug = require('gulp-debug');
 const browserify = require('browserify');
-const babelify = require('babelify');
+const babelify = require("babelify");
+const babel = require("@babel/core");
 const tsify = require("tsify");
 const ts = require('gulp-typescript');
 const transform = require('vinyl-transform');
@@ -63,7 +64,7 @@ module.exports = (function(){
 	mod.middlewares.minify = (options) => streamify(minify(libx.extend({ mangle: false, builtIns: false }, options)));
 	mod.middlewares.renameFunc = (func) => rename(func);
 	mod.middlewares.rename = (to) => rename(to);
-	mod.middlewares.babelify = () => babel({ presets: ['es2015'] });
+	mod.middlewares.babelify = () => gulpBabel({ presets: ['es2015'] });
 	mod.middlewares.if = (condition, middlewareAction) => gulpif(condition, middlewareAction);
 	mod.middlewares.ifProd = (middleware) => mod.middlewares.if(mod.config.isProd, middleware);
 	mod.middlewares.sourcemaps = sourcemaps;
@@ -103,7 +104,7 @@ module.exports = (function(){
 				}
 			}) ) ],
 			jsBundle: [ 'concat' ],
-			sitejs: [ babel({ presets: ['es2015'] }), minify({ mangle: false }).on('error', (uglify) => {
+			sitejs: [ gulpBabel({ presets: ['es2015'] }), minify({ mangle: false }).on('error', (uglify) => {
 				console.error('! Uglify error: ', uglify.message);
 				console.error('usemin error: ', uglify.stack);
 				this.emit('end');
@@ -178,16 +179,31 @@ module.exports = (function(){
 	mod.middlewares.browserify = (_options) => {
 		options = {
 			// entries: files,
-			transform: [babelify.configure({
-				presets: ['es2015'] //, ["@babel/preset-env", "@babel/preset-react"] 
-			})],
+			
 			// bare: true, 
 			// bundleExternal: true,
+			target: { node: 'v10.15.3' },
+			babelify: true,
+			tsify: false,
+			paths: ['./node_modules', './app/'],
 			standalone: '__libxjs',
-			debug: false,
+			debug: true,
 			plumber: false,
 			minify: false,
 		}
+		options.babelifyOptions = {
+			global: true,
+			presets: [
+				[
+					'@babel/preset-env', 
+					{
+						targets: _options.target || options.target
+					}
+				]
+				//[__dirname + '/../node_modules/babel-preset-es3'], //, ["@babel/preset-env", "@babel/preset-react"] es2015 env
+			],
+			sourceMaps: true
+		};
 
 		// if (!mod.config.isProd) {
 		// 	options.debug = true;
@@ -197,17 +213,20 @@ module.exports = (function(){
 
 		libx.extend(options, _options);
 
-		// return browserify(options).bundle() //buffer()
+		// options.treatChunk = (chunk, options)=>{
+		// 	chunk.contents.pipe(source(chunk.path, chunk.base))
+		// 		.pipe(gulpBabel({presets: ["@babel/preset-env"]}))
+		// 		// .pipe(gulp.dest(options.sourcemapDest));
+		// }
+
 		var browserified = through2.obj(function(chunk, enc, callback) {
 			if(chunk.isBuffer()) {
 				options.entries = chunk.path;
 
-				var b = browserify(options)
-					// .transform(babelify, { extensions: [ '.tsx', '.ts' ] })
-					.plugin(tsify) //, { noImplicitAny: false, target: 'es6' })
-   					// .transform(babelify, { extensions: [ '.tsx', '.ts' ] })
-					;
-					//.transform(to5browserify); // Any custom browserify stuff should go here
+				var b = browserify(options);
+
+				if (options.tsify) b.plugin(tsify) //, { noImplicitAny: false, target: 'es3' })
+				if (options.babelify) b.transform(babelify, options.babelifyOptions);
 
 				chunk.contents = b.bundle();
 				
