@@ -194,11 +194,12 @@ module.exports = (function(){
 		options.babelifyOptions = {
 			global: false,
 			presets: [
+				'@babel/preset-es2015',
 				[
 					'@babel/preset-env', 
 					{
 						targets: _options.target || options.target
-					}
+					},
 				]
 				//[__dirname + '/../node_modules/babel-preset-es3'], //, ["@babel/preset-env", "@babel/preset-react"] es2015 env
 			],
@@ -210,8 +211,7 @@ module.exports = (function(){
 		// 	options.plumber = true;
 		// 	options.minify = false;
 		// }
-
-		libx.extend(options, _options);
+		libx.extend(true, options, _options);
 
 		// options.treatChunk = (chunk, options)=>{
 		// 	chunk.contents.pipe(source(chunk.path, chunk.base))
