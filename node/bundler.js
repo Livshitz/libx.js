@@ -194,11 +194,14 @@ module.exports = (function(){
 		options.babelifyOptions = {
 			global: false,
 			presets: [
-				'@babel/preset-es2015',
+				//[ 'transform-es2015-arrow-functions' ],
 				[
 					'@babel/preset-env', 
 					{
-						targets: _options.target || options.target
+						targets: _options.target || options.target,
+						// esmodules: true,
+						// modules: 'commonjs',
+						// useBuiltIns: "entry",
 					},
 				]
 				//[__dirname + '/../node_modules/babel-preset-es3'], //, ["@babel/preset-env", "@babel/preset-react"] es2015 env
