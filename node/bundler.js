@@ -193,8 +193,15 @@ module.exports = (function(){
 		}
 		options.babelifyOptions = {
 			global: false,
+			plugins: [
+				// "transform-es2015-arrow-functions",
+				// [
+				// 	"@babel/plugin-transform-runtime", {
+				// 		regenerator: true
+				// 	}
+				// ]
+			],
 			presets: [
-				//[ 'transform-es2015-arrow-functions' ],
 				[
 					'@babel/preset-env', 
 					{
