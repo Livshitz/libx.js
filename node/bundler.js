@@ -498,7 +498,7 @@ module.exports = (function(){
 				// })
 			],
 		};
-		opts = libx.extend(opts, options);
+		opts = libx.extend({}, opts, options);
 
 		if (watchPath != null) {
 			libx.log.verbose('serve: starting watch');
