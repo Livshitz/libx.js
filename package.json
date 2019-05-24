@@ -75,16 +75,14 @@
         "vinyl-buffer": "^1.0.1",
         "vinyl-source-stream": "^2.0.0",
         "vinyl-transform": "^1.0.0",
-        "yargs": "^12.0.5"
-    },
-    "devDependencies": {
+        "typescript": "^3.4.5",
+        "typings": "^2.1.1",
         "@types/jest": "^24.0.12",
         "babel-jest": "^24.8.0",
         "jest": "^24.8.0",
         "regenerator-runtime": "^0.13.2",
         "ts-jest": "^24.0.2",
-        "typescript": "^3.4.5",
-        "typings": "^2.1.1"
+        "yargs": "^12.0.5"
     },
     "browserify": {
         "transform": [
