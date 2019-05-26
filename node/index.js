@@ -35,6 +35,13 @@ module.exports = (function(){
 		}
 	}
 
+	mod.readPackageJson = (path) => {
+		path = path || './package.json';
+		var content = fs.readFileSync(path);
+		var obj = libx.parseJsonFileStripComments(content);
+		return obj;
+	}
+
 	mod.readConfig = (_path, secretsKey) => {
 		_path = (_path || mod.config.workdir) + '/project.json';
 		if (!fs.existsSync(_path)) throw `libx.bundler:readConfig: Config file could not be fount at '${_path}'`;
