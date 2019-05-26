@@ -51,11 +51,11 @@ jobs:
             git config user.name "Eli Livshitz"
             yarn publish --patch
 
-    #   - run:
-    #       name: package bump
-    #       command: |
-    #         # node node/cli.js --bump=patch package.json
-    #         git add .
-    #         git commit -m "^ pkg bump [skip ci]"
-    #         git push origin master
-    #         git push --tags
+      - run:
+          name: Commit changes
+          command: |
+            # node node/cli.js --bump=patch package.json
+            git add .
+            git commit -m "^ pkg bump [skip ci]"
+            git push origin master
+            git push --tags
