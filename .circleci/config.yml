@@ -55,6 +55,7 @@ jobs:
           name: Commit changes
           command: |
             # node node/cli.js --bump=patch package.json
+            git checkout origin master
             git add .
             git commit -m "^ pkg bump [skip ci]"
             git push origin master
