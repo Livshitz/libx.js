@@ -12,6 +12,11 @@ module.exports = (function(){
 		var ret = await mod.httpGet(url, _options);
 		return JSON.parse(ret);
 	}
+	
+	mod.httpGetString = async (url, _options)=> {
+		_options = libx.extend({}, _options, { enc: 'utf-8' });
+		return await mod.httpGet(url, _options);
+	}
 
 	mod.httpGet = (url, _options)=> {
 		return mod.httpRequest(url, null, 'GET', _options);
@@ -49,6 +54,7 @@ module.exports = (function(){
 			// host: dest.hostname, 
 			// path: dest.path,
 			// port: dest.port,
+			enc: null,
 			method: method || 'GET',
 			withCredentials: false,
 			dataType: "json",
@@ -71,6 +77,7 @@ module.exports = (function(){
 			});
 			res.on('end', function () {
 				var buffer = Buffer.concat(data);
+				if (options.enc != null) buffer = buffer.toString(options.enc);
 				if (res.statusCode == 200) return defer.resolve(buffer);
 				else defer.reject({ statusCode: res.statusCode, response: buffer});
 			});
