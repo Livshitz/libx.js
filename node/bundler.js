@@ -165,9 +165,9 @@ module.exports = (function(){
 						.pipe(gulp.dest(options.sourcemapDest));
 				} else { 
 					// Just rename:
-					chunk.contents.pipe(source(chunk.path, chunk.base))
-						.pipe(rename(f=>f.extname = ".js"))
-						.pipe(gulp.dest(options.sourcemapDest));
+					// chunk.contents.pipe(source(chunk.path, chunk.base))
+					// 	.pipe(rename(f=>f.extname = ".js"))
+					// 	.pipe(gulp.dest(options.sourcemapDest));
 				}
 				return chunk;
 			}
@@ -182,12 +182,12 @@ module.exports = (function(){
 			
 			// bare: true, 
 			// bundleExternal: true,
-			target: { node: 'v10.15.3' },
-			babelify: true,
+			// target: { node: 'v10.15.3' },
+			babelify: false,
 			tsify: false,
-			paths: ['./node_modules', './app/'],
+			// paths: ['./node_modules', './app/'],
 			standalone: '__libxjs',
-			debug: true,
+			debug: false,
 			plumber: false,
 			minify: false,
 		}
