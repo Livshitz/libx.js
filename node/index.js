@@ -20,7 +20,7 @@ module.exports = (function(){
 					return ret = mod._projectConfig = global.libx._projconfig;
 				}
 
-				var secretsKey = secret || process.env.FUSER_SECRET_KEY;
+				var secretsKey = secret;
 				// libx.log.info('!!! Secret key is: ', secretsKey);
 				var node = mod; //require('../node')
 				var projconfig = node.readConfig(containingFolder || '.' + '/project.json', secretsKey);
@@ -59,10 +59,12 @@ module.exports = (function(){
 		var content = fs.readFileSync(secretsPath);
 
 		// try to decrypt:
-		try {
-			content = libx.modules.crypto.decrypt(content.toString(), secretsKey);
-		} catch (ex) {
-			libx.log.warning('libx.bundler:readConfig: were unable to decrypt secret config file, maybe already decrypted. ex: ', ex);
+		if (secretsKey != null) {
+			try {
+				content = libx.modules.crypto.decrypt(content.toString(), secretsKey);
+			} catch (ex) {
+				libx.log.warning('libx.bundler:readConfig: were unable to decrypt secret config file, maybe already decrypted. ex: ', ex);
+			}
 		}
 
 		var secrets = libx.parseConfig(content, env);
@@ -82,6 +84,7 @@ module.exports = (function(){
 
 	mod.readJsonFileStripComments = (file) => {
 		var data = fs.readFileSync(file);
+		return data;
 	}
 
 	mod.encryptFile = (file, key, newFile) => {
