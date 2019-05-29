@@ -18,7 +18,15 @@ const path = require('path');
 	var dir = process.cwd(); //__dirname
 	var src = dir + '/';
 	var dest = __dirname + '/dist';
-	debugger
+
+	console.log('watching: ', dir);
+	var f = './tests/**/*.*';
+	await libx.bundler.watchSimple(f, (ev) => {
+		console.log('-- file changed! ', ev)
+	});
+	console.log('done!');
+
+	return;
 
 	await libx.bundler.copy(src + './modules/EventsStore.js', dest, ()=>[
 		libx.bundler.middlewares.browserify({ bare: false }),

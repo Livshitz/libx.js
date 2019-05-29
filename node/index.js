@@ -6,7 +6,6 @@ module.exports = (function(){
 	const bump = require('json-bump')
 	
 	var libx = require('../bundles/essentials.js');
-	libx.modules.crypto = require('../modules/crypto.js');
 
 	mod.args = argv;
 
@@ -35,6 +34,12 @@ module.exports = (function(){
 		}
 	}
 
+	mod.getLibxVersion = () => {
+		var dir = __dirname;
+		var pkg = mod.readPackageJson(dir + '/../package.json');
+		return pkg.version;
+	}
+
 	mod.readPackageJson = (path) => {
 		path = path || './package.json';
 		var content = fs.readFileSync(path);
@@ -61,7 +66,8 @@ module.exports = (function(){
 		// try to decrypt:
 		if (secretsKey != null) {
 			try {
-				content = libx.modules.crypto.decrypt(content.toString(), secretsKey);
+				var crypto = require('../modules/crypto.js');
+				content = crypto.decrypt(content.toString(), secretsKey);
 			} catch (ex) {
 				libx.log.warning('libx.bundler:readConfig: were unable to decrypt secret config file, maybe already decrypted. ex: ', ex);
 			}
@@ -89,14 +95,16 @@ module.exports = (function(){
 
 	mod.encryptFile = (file, key, newFile) => {
 		var content = fs.readFileSync(file).toString();
-		var encrypted = libx.modules.crypto.encrypt(content, key);
+		var crypto = require('../modules/crypto.js');
+		var encrypted = crypto.encrypt(content, key);
 		fs.writeFileSync(newFile || file, encrypted);
 		return encrypted;
 	}
 
 	mod.decryptFile = (file, key, newFile) => {
 		var content = fs.readFileSync(file);
-		var data = libx.modules.crypto.decrypt(content.toString(), key);
+		var crypto = require('../modules/crypto.js');
+		var data = crypto.decrypt(content.toString(), key);
 		fs.writeFileSync(newFile || file, data);
 		return data;
 	}
