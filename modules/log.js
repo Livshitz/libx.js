@@ -30,6 +30,43 @@ module.exports = (function(){
 	mod.e = mod.error;
 	mod.f = mod.fatal;
 
+	mod.colors = {
+		reset: "\x1b[0m",
+		bright: "\x1b[1m",
+		dim: "\x1b[2m",
+		underscore: "\x1b[4m",
+		blink: "\x1b[5m",
+		reverse: "\x1b[7m",
+		hidden: "\x1b[8m",
+		
+		fgBlack: "\x1b[30m",
+		fgRed: "\x1b[31m",
+		fgGreen: "\x1b[32m",
+		fgYellow: "\x1b[33m",
+		fgBlue: "\x1b[34m",
+		fgMagenta: "\x1b[35m",
+		fgCyan: "\x1b[36m",
+		fgWhite: "\x1b[37m",
+		
+		bgBlack: "\x1b[40m",
+		bgRed: "\x1b[41m",
+		bgGreen: "\x1b[42m",
+		bgYellow: "\x1b[43m",
+		bgBlue: "\x1b[44m",
+		bgMagenta: "\x1b[45m",
+		bgCyan: "\x1b[46m",
+		bgWhite: "\x1b[47m",
+	}
+
+	mod.color = (str, color) => {
+		var c = null;
+		debugger
+		if (!color.startsWith("\x1b[")) c = mod.colors['fg' + color.capitalize()];
+		else c = color;
+		if (c == null && mod.colors[color] == null) throw "given color ({0}) is not supported. options: black, red, green, yellow, blue, magenta, cyan, white".format(color);
+		return c + str + mod.colors.reset;
+	}
+
 	mod.write = function() { //msg, args
 		// var time = DateTime.Now.ToString("HH:mm:ss.fff");
 		// Console.WriteLine($" [#{Thread.CurrentThread.ManagedThreadId}]:[{time}] {msg}", args);
