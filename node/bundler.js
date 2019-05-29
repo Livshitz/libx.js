@@ -448,7 +448,7 @@ module.exports = (function(){
 
 		libx.log.verbose('watch: Starting to watch "%s"', source);
 		mod.watchSimple(source, async(ev, p)=> {
-			if (ev.type != 'changed') return;
+			if (mod.config.watchOnlyChanges == true && ev.type != 'changed') return;
 			libx.log.verbose('mod.watch: File "%s" changed', p, ev.type, dest);
 			// options.base = './src'
 			// p = path.relative(__dirname, p);
@@ -458,11 +458,22 @@ module.exports = (function(){
 	};
 
 	mod.watchSimple = async (source, callback, _options) => {
-		var options = { }; // cwd: "./" };
+		var dir = process.cwd();
+		if (libx.isArray(source)) {
+			var fixedSource = [];
+			libx._.forEach(source, p => {
+				fixedSource.push(path.relative(dir, p));
+			})
+			source = fixedSource;
+		} else {
+			source = path.relative(dir, source);
+		}
+		
+		var options = { cwd: dir };
 		options = libx.extend(options, _options); // {cwd: './'}
 		gulp.watch(source,  options , async (ev)=> { //
 			var p = ev.path;
-			p = path.relative(process.cwd(), p);
+			p = path.relative(dir, p);
 			if (callback) callback(ev, p);
 		});
 	}
