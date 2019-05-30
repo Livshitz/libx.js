@@ -562,7 +562,7 @@ module.exports = (function(){
 	mod.getParamNames = function(func) { 
 		var fnStr = func.toString().replace(STRIP_COMMENTS, '');
 		if (fnStr.match(/^\s*class\s+/) != null) return null;
-		var m = fnStr.match(/^\(?(?:async\s?)?(?:function\s?)?\(?([\w\d\,\s]+)\)?/);
+		var m = fnStr.match(/^\(?(?:async\s?)?(?:function\s?)?\(?([\w\d\,\s\$\_]+)\)?/);
 		if (m == null || m.length < 1) return null;
 		var params = m[1].replace(/\s/g, '');
 		var result = params.split(',');
