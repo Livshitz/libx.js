@@ -518,7 +518,7 @@ module.exports = (function(){
 				if (watchCallback) watchCallback(path);
 				gulp.src(path).pipe(connect.reload());
 				// setTimeout(()=>gulp.src(path).pipe(connect.reload()), 500);
-			}, 2000, true);
+			}, mod.config.devServer.reloadDebounceMS || 2000, true);
 			gulp.watch(watchPath, e => { //{cwd: path} ,
 				libx.log.verbose('serve: detected change!', e.path);
 				setTimeout(()=>debounce(e.path), 1000);
