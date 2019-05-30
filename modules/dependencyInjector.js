@@ -89,10 +89,15 @@ module.exports = (function(){ // dependencyInjector.js
 		}
 
 		async require (func) {
+			var modulesName = libx.getParamNames(func);
+			return this.requireUgly(modulesName, func);
+		}
+
+		async requireUgly (depsArr, func) {
 			var ret = libx.newPromise();
 
-			var modulesName = libx.getParamNames(func);
 			var modules = [];
+			var modulesName = depsArr;
 			var wasMissing = false;
 			modulesName.forEach(m=> { 
 				var _mod = this.get(m);
