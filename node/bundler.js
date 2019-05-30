@@ -512,16 +512,20 @@ module.exports = (function(){
 		opts = libx.extend({}, opts, options);
 
 		if (watchPath != null) {
-			libx.log.verbose('serve: starting watch');
+
+			if (mod.config.devServer.reloadGraceMS == null) mod.config.devServer.reloadGraceMS = 1000;
+			if (mod.config.devServer.reloadDebounceMS == null) mod.config.devServer.reloadDebounceMS = mod.config.devServer.reloadGraceMS;
+			
+			libx.log.verbose(`serve: starting watch (debounce: ${mod.config.devServer.reloadDebounceMS}ms, grace: ${mod.config.devServer.reloadGraceMS}ms)`);
 			var debounce = libx.debounce((path)=> {
-				libx.log.verbose('serve: debounce', path);
+				libx.log.verbose('serve: debounced, reloading... ', path);
 				if (watchCallback) watchCallback(path);
 				gulp.src(path).pipe(connect.reload());
 				// setTimeout(()=>gulp.src(path).pipe(connect.reload()), 500);
-			}, mod.config.devServer.reloadDebounceMS || 2000, true);
+			}, mod.config.devServer.reloadDebounceMS, false, true);
 			gulp.watch(watchPath, e => { //{cwd: path} ,
 				libx.log.verbose('serve: detected change!', e.path);
-				setTimeout(()=>debounce(e.path), 1000);
+				setTimeout(()=>debounce(e.path), mod.config.devServer.reloadGraceMS);
 			});
 		}
 
