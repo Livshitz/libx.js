@@ -9,8 +9,8 @@ module.exports = (function(){
 	mod.url = urlapi;
 
 	mod.httpGetJson = async (url, _options)=> {
-		var ret = await mod.httpGet(url, _options);
-		return JSON.parse(ret);
+		_options = libx.extend({}, _options, { headers: 'application/json; charset=UTF-8' });
+		return await mod.httpGet(url, _options); // parsed into JSON in httpRequest
 	}
 	
 	mod.httpGetString = async (url, _options)=> {
@@ -70,14 +70,23 @@ module.exports = (function(){
 
 		var op = http;
 		if (dest.protocol == 'https:') op = https;
+
 		var request = op.request(options, (res) => {
+			res.setEncoding(options.enc || 'utf8');
 			var data = [];
 			res.on('data', function (chunk) {
 				data.push(chunk);
 			});
 			res.on('end', function () {
-				var buffer = Buffer.concat(data);
-				if (options.enc != null) buffer = buffer.toString(options.enc);
+				let buffer = data;
+				if (data != null && data.length > 0) {
+					if (Buffer.isBuffer(data)) {
+						buffer = Buffer.concat(data);
+						if (options.enc != null) buffer = buffer.toString(options.enc);
+					} else if (res.headers != null && res.headers['content-type'].contains('application/json')) {
+						buffer = JSON.parse(data);
+					}
+				}
 				if (res.statusCode == 200) return defer.resolve(buffer);
 				else defer.reject({ statusCode: res.statusCode, response: buffer});
 			});
