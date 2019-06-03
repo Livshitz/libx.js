@@ -10,23 +10,31 @@ module.exports = (function(){
 
 	mod.httpGetJson = async (url, _options)=> {
 		_options = libx.extend({}, _options, { headers: 'application/json; charset=UTF-8' });
-		return await mod.httpGet(url, _options); // parsed into JSON in httpRequest
+		let ret = await mod.httpGet(url, _options);
+		return JSON.parse(ret);
 	}
 	
 	mod.httpGetString = async (url, _options)=> {
 		_options = libx.extend({}, _options, { enc: 'utf-8' });
-		return await mod.httpGet(url, _options);
+		let ret = await mod.httpGet(url, _options);
+		return ret.toString(); //Buffer.concat(ret).toString(_options.enc);
 	}
 
-	mod.httpGet = (url, _options)=> {
-		return mod.httpRequest(url, null, 'GET', _options);
+	mod.httpGet = async (url, _options)=> {
+		let ret = await mod.httpRequest(url, null, 'GET', _options);
+		return ret;
 	};
 
-	mod.httpPost = (url, data, _options)=> {
-		return mod.httpRequest(url, data, 'POST', _options);
+	mod.httpPost = async (url, data, _options)=> {
+		return await mod.httpRequest(url, data, 'POST', _options);
 	};
 
-	mod.httpRequest = (url, data, method, _options)=> {
+	mod.httpPostJson = async (url, data, _options)=> {
+		let ret = await mod.httpRequest(url, data, 'POST', _options);
+		return JSON.parse(ret);
+	};
+
+	mod.httpRequest = async (url, data, method, _options)=> {
 		var defer = libx.newPromise();
 
 		url = mod.helpers.fixUrl(url);
@@ -58,6 +66,7 @@ module.exports = (function(){
 			method: method || 'GET',
 			withCredentials: false,
 			dataType: "json",
+			autoParse: false,
 		};
 		libx.clone(options, _options);
 		options = libx.extend(dest, options);
@@ -78,15 +87,8 @@ module.exports = (function(){
 				data.push(chunk);
 			});
 			res.on('end', function () {
-				let buffer = data;
-				if (data != null && data.length > 0) {
-					if (Buffer.isBuffer(data)) {
-						buffer = Buffer.concat(data);
-						if (options.enc != null) buffer = buffer.toString(options.enc);
-					} else if (res.headers != null && res.headers['content-type'].contains('application/json')) {
-						buffer = JSON.parse(data);
-					}
-				}
+				if (data != null && data.length == 1) data = data[0];
+				let buffer = data; //Buffer.concat(data)
 				if (res.statusCode == 200) return defer.resolve(buffer);
 				else defer.reject({ statusCode: res.statusCode, response: buffer});
 			});
