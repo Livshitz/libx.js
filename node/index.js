@@ -34,6 +34,33 @@ module.exports = (function(){
 		}
 	}
 
+	mod.exec = async (commands, verbose) => {
+		var cmd = commands;
+		if (Array.isArray(commands)) {
+			cmd = '';
+			libx._.forEach(commands, i=>{
+				cmd += i + ' && ';
+			})
+			cmd = cmd.slice(0, -4);
+		}
+
+		var p = libx.newPromise();
+
+		var process = exec(cmd, (err, stdout, stderr)=> {
+			if (!libx.isEmpty(err) || !libx.isEmptyString(stderr)) {
+				p.reject(err || stderr);
+				return;
+			}
+			p.resolve(stdout.slice(0, -1));
+		});
+		if (verbose) {
+			process.stdout.on('data', function(data) {
+				console.log(data.slice(0, -1)); 
+			});
+		}
+		return p;
+	}
+
 	mod.getLibxVersion = () => {
 		var dir = __dirname;
 		var pkg = mod.readPackageJson(dir + '/../package.json');
