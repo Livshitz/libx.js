@@ -4,6 +4,7 @@ module.exports = (function(){
 	const path = require('path');
 	const argv = require('yargs').argv;
 	const bump = require('json-bump')
+	const exec = require('child_process').exec;
 	
 	var libx = require('../bundles/essentials.js');
 
