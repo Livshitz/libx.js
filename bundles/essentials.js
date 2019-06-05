@@ -9,7 +9,7 @@ module.exports = (function(){
 
 	if (libx.modules == null) libx.modules = () => libx.di.modules;
 
-	libx.buffer = require('buffer/').Buffer;
+	libx.Buffer = require('buffer/').Buffer;
 
 	return libx;
 

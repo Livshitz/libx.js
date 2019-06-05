@@ -9,6 +9,8 @@ module.exports = (function(){
 	mod._.countBy = require('lodash/countBy');
 	mod._.toPairs = require('lodash/toPairs');
 	mod._.keyBy = require('lodash/keyBy');
+	mod._.repeat = require('lodash/repeat');
+	mod._.transform = require('lodash/transform');
 
 	// mod.fp.map = require("lodash/fp/map");
 	// mod.fp.flatten = require("lodash/fp/flatten");
@@ -427,10 +429,14 @@ module.exports = (function(){
 	mod.getMatches = (string, regex, index)=> {
 		index || (index = 1); // default to the first capturing group
 		var matches = [];
-		var match;
-		while (match = regex.exec(string)) {
+		
+		var rxp = RegExp(regex, 'g'); // make sure it's set to global, otherwise will cause infinite loop
+		let match;
+		while (match = rxp.exec(string)) {
 			matches.push(match[index]);
+			if (rxp.lastIndex == 0) break;
 		}
+
 		return matches;
 	}
 
