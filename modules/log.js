@@ -15,6 +15,7 @@ module.exports = (function(){
 		error: 4, //console.error
 		fatal: 5, //console.log("%c" + msg, "color:" + 'red');
 	}
+	mod.filterLevel = 1;
 
 	mod.debug = (...args) 		=> mod.write(mod.severities.debug, ...args);
 	mod.verbose = (...args) 	=> mod.write(mod.severities.verbose, ...args);
@@ -60,7 +61,6 @@ module.exports = (function(){
 
 	mod.color = (str, color) => {
 		var c = null;
-		debugger
 		if (!color.startsWith("\x1b[")) c = mod.colors['fg' + color.capitalize()];
 		else c = color;
 		if (c == null && mod.colors[color] == null) throw "given color ({0}) is not supported. options: black, red, green, yellow, blue, magenta, cyan, white".format(color);
@@ -77,6 +77,9 @@ module.exports = (function(){
 		var prefix = "";	
 		var style = '';
 		var func = 'log';
+
+		if (severity < mod.filterLevel) return;
+
 		switch(severity) {
 			case mod.severities.debug: 	func='log'; 	prefix=" [DBG]"; style+="font-size:10px;"; break;
 			case mod.severities.verbose: 	func='log'; 	prefix=" [v]"; break;
