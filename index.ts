@@ -13,5 +13,5 @@ class A {
 (()=>{
 	var a = new A(10);
 	// "libx.".format
-	console.log(a.test(2));
+	console.log('aaa', a.test(2));
 })
