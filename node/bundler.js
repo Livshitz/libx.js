@@ -25,8 +25,9 @@ const spawn = require('child_process').spawn;
 // middleweres
 const minify = require("gulp-babel-minify");
 const rename = require('gulp-rename');
-const less = require('gulp-less');
 const jade = require('gulp-pug');
+const less = require('gulp-less');
+const sass = require('gulp-sass');
 const sass2less = require('less-plugin-sass2less')
 const gulpBabel = require('gulp-babel');
 const cleanCss = require('gulp-clean-css');
@@ -69,6 +70,7 @@ module.exports = (function(){
 	mod.middlewares.ifProd = (middleware) => mod.middlewares.if(mod.config.isProd, middleware);
 	mod.middlewares.sourcemaps = sourcemaps;
 	mod.middlewares.minifyLess = () => cleanCss();
+	mod.middlewares.minifyCss = () => cleanCss();
 	mod.middlewares.concat = (filename) => concat(filename);
 	mod.middlewares.write = (dest) => gulp.dest(dest);
 	mod.middlewares.triggerChange = (path) => {
@@ -82,6 +84,12 @@ module.exports = (function(){
 		return less({
 			paths: [path.join(__dirname, 'less', 'includes')],
 			plugins: [sass2less]
+		})
+	};
+	mod.middlewares.sass = () => {
+		return sass({
+			paths: [path.join(__dirname, 'scss', 'includes')],
+			plugins: []
 		})
 	};
 	mod.middlewares.pug = (locals) => {
@@ -523,10 +531,11 @@ module.exports = (function(){
 				gulp.src(path).pipe(connect.reload());
 				// setTimeout(()=>gulp.src(path).pipe(connect.reload()), 500);
 			}, mod.config.devServer.reloadDebounceMS, false, true);
-			gulp.watch(watchPath, e => { //{cwd: path} ,
+			// mod.watch = async (source, dest, middlewares, callback, _options) => {
+			mod.watchSimple(watchPath, e => {
 				libx.log.verbose('serve: detected change!', e.path);
 				setTimeout(()=>debounce(e.path), mod.config.devServer.reloadGraceMS);
-			});
+			}); //, { cmd: path });
 		}
 
 		return connect.server(opts);
