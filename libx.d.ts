@@ -178,7 +178,7 @@ declare namespace LibxJS {
 		getIdFromPath(path: string);
 		dictToArray(dict: any);
 		parseKeyDate(key: string);
-		onPresent(path: string, value: any, onDisconnectValue: string);
+		onPresent(path: string, value: any, onDisconnectValue: any);
 	}
 
 	interface ICallbacks {
@@ -198,11 +198,12 @@ declare namespace LibxJS {
 	interface IDependencyInjector {
 		register(name: string, instance: any);
 		registerResolve(name: string, func: Function);
-		get(name: string);
+		get<T>(name: string): T;
 		resolve (func: Function, isGetArray: Boolean);
 		inject (func: Function);
 		require (func: Function);
 		requireUgly (depsArr: [string], func: Function);
+		modules: any;
 	}
 
 	type LogColors = { reset, bright, dim, underscore, blink, reverse, hidden, fgBlack, fgRed, fgGreen, fgYellow, fgBlue, fgMagenta, fgCyan, fgWhite, bgBlack, bgRed, bgGreen, bgYellow, bgBlue, bgMagenta, bgCyan, bgWhite };
