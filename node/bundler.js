@@ -29,6 +29,7 @@ const jade = require('gulp-pug');
 const less = require('gulp-less');
 const sass = require('gulp-sass');
 const sass2less = require('less-plugin-sass2less')
+const less2sass = require('gulp-less2sass')
 const gulpBabel = require('gulp-babel');
 const cleanCss = require('gulp-clean-css');
 const usemin = require('gulp-usemin');
@@ -91,6 +92,9 @@ module.exports = (function(){
 			paths: [path.join(__dirname, 'scss', 'includes')],
 			plugins: []
 		})
+	};
+	mod.middlewares.less2sass = () => {
+		return less2sass();
 	};
 	mod.middlewares.pug = (locals) => {
 		return jade({
@@ -371,6 +375,26 @@ module.exports = (function(){
 		});
 	}
 	mod.middlewares.liveReload = () => connect.reload();
+
+	mod.middlewares.customFileModify = (func) => {
+		return through2.obj(async function(file, encoding, callback) {
+			try {
+				if (!file.isBuffer()) return;
+
+				var newContent = func(file.contents, file)
+				if (newContent != null) {
+					if (!Buffer.isBuffer(newContent)) newContent = Buffer.from(newContent);
+					file.contents = newContent;
+				}
+
+				this.push(file);
+			}
+			finally {
+				callback();
+			}
+
+		});
+	}
 
 	//#endregion
 
