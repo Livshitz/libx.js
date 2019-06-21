@@ -1,17 +1,17 @@
-module.exports = (function(){
+module.exports = (function () {
 	var mod = {};
 	const fs = require('fs');
 	const path = require('path');
 	const argv = require('yargs').argv;
 	const bump = require('json-bump')
 	const exec = require('child_process').exec;
-	
+
 	var libx = require('../bundles/essentials.js');
 
 	mod.args = argv;
 
 	mod._projectConfig = null;
-	mod.getProjectConfig = (containingFolder, secret)=>{
+	mod.getProjectConfig = (containingFolder, secret) => {
 		var ret = null;
 		try {
 			if (mod._projectConfig == null) {
@@ -39,7 +39,7 @@ module.exports = (function(){
 		var cmd = commands;
 		if (Array.isArray(commands)) {
 			cmd = '';
-			libx._.forEach(commands, i=>{
+			libx._.forEach(commands, i => {
 				cmd += i + ' && ';
 			})
 			cmd = cmd.slice(0, -4);
@@ -47,7 +47,7 @@ module.exports = (function(){
 
 		var p = libx.newPromise();
 
-		var process = exec(cmd, (err, stdout, stderr)=> {
+		var process = exec(cmd, (err, stdout, stderr) => {
 			if (!libx.isEmpty(err) || !libx.isEmptyString(stderr)) {
 				p.reject(err || stderr);
 				return;
@@ -55,8 +55,8 @@ module.exports = (function(){
 			p.resolve(stdout.slice(0, -1));
 		});
 		if (verbose) {
-			process.stdout.on('data', function(data) {
-				console.log(data.slice(0, -1)); 
+			process.stdout.on('data', function (data) {
+				console.log(data.slice(0, -1));
 			});
 		}
 		return p;
@@ -137,26 +137,40 @@ module.exports = (function(){
 		return data;
 	}
 
-	mod.mkdirRecursiveSync = (dir) => {
-		let paths = dir.split('/'); // path.delimiter);
+	mod.mkdirRecursiveSync = (path) => {
+		let paths = path.split('/'); // path.delimiter);
 		let fullPath = '';
 		paths.forEach((path) => {
-	
+
 			if (fullPath === '') {
 				fullPath = path;
 			} else {
 				fullPath = fullPath + '/' + path;
 			}
-	
+
 			if (!fs.existsSync(fullPath)) {
 				fs.mkdirSync(fullPath);
 			}
 		});
 	};
-	
+
+	mod.rmdirRecursiveSync = function (path) {
+		if (fs.existsSync(path)) {
+			fs.readdirSync(path).forEach(function (file, index) {
+				var curPath = path + "/" + file;
+				if (fs.lstatSync(curPath).isDirectory()) { // recurse
+					deleteFolderRecursive(curPath);
+				} else { // delete file
+					fs.unlinkSync(curPath);
+				}
+			});
+			fs.rmdirSync(path);
+		}
+	};
+
 	return mod;
 })();
 
-(()=>{ // Dependency Injector auto module registration
+(() => { // Dependency Injector auto module registration
 	__libx.di.register('node', module.exports);
 })();
