@@ -232,6 +232,22 @@ module.exports = (function(){
 		else return null;
 	}
 
+	mod.localDownload = (data, fileName) => {
+		var a = document.createElement("a");
+		document.body.appendChild(a);
+		a.style = "display: none";
+
+		if (libx.isObject(data)) {
+			data = JSON.stringify(data);
+		}
+		var blob = new Blob([data], {type: "octet/stream"});
+		var url = window.URL.createObjectURL(blob);
+		a.href = url;
+		a.download = fileName;
+		a.click();
+		window.URL.revokeObjectURL(url);
+	};
+
 	// urlParams
 	mod.urlParams;
 	(window.onpopstate = function () {
