@@ -42,7 +42,7 @@ module.exports = (function(){
 
 	mod.isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 	
-	mod.injectScript = function(src, onReady) {
+	mod.injectScript = function(src, onReady, doc = document) {
 		/*
 		return new Promise((resolve, reject) => {
 				let script = document.createElement('script');
@@ -54,8 +54,8 @@ module.exports = (function(){
 				document.head.appendChild(script);
 		});
 		*/
-		var head= document.getElementsByTagName('head')[0];
-		var script= document.createElement('script');
+		var head= doc.getElementsByTagName('head')[0];
+		var script= doc.createElement('script');
 		script.type= 'text/javascript';
 		script.onreadystatechange= function () {
 			if (this.readyState == 'complete') onReady(src);
@@ -65,13 +65,13 @@ module.exports = (function(){
 		head.appendChild(script);
 	}
 
-	mod.injectCss = function(filename) {
-		var fileref = document.createElement("link")
-		fileref.setAttribute("rel", "stylesheet")
-		fileref.setAttribute("type", "text/css")
-		fileref.setAttribute("href", filename)
+	mod.injectCss = function(filename, doc = document) {
+		var fileref = doc.createElement("link");
+		fileref.setAttribute("rel", "stylesheet");
+		fileref.setAttribute("type", "text/css");
+		fileref.setAttribute("href", filename);
 		if (typeof fileref != "undefined")
-			document.getElementsByTagName("head")[0].appendChild(fileref)
+			doc.getElementsByTagName("head")[0].appendChild(fileref);
 	}
 
 	mod.reload = () => {
