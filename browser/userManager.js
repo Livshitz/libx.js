@@ -107,6 +107,14 @@ module.exports = async function(firebaseModule){
 		libx.browser.helpers.reload();
 	};
 
+	mod.refreshToken = async function () {
+		libx.log.debug('userManager:refreshToken: ');
+
+		mod.token = await mod._fbUser.getIdToken();
+
+		return mod.token;
+	}
+
 	mod.onAuthStateChanged = function (user) {
 		libx.log.debug('userManager:onAuthStateChanged: ', user);
 
@@ -120,7 +128,7 @@ module.exports = async function(firebaseModule){
 			return;
 		}
 
-		mod._fbUser.getIdToken().then(t=> mod.token = t);
+		mod.refreshToken();
 
 		if (mod.data == null) mod.data = {};
 
@@ -149,6 +157,7 @@ module.exports = async function(firebaseModule){
 			mod.onDataChanged.trigger(mod.data);
 		});
 	}
+	
 	mod.observeProfile = function() {
 		firebaseModule.listen('/profiles/' + mod.data.id, data => {
 			if (data != null && data.length == 1) data = data[0];
