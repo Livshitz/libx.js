@@ -9,7 +9,7 @@ module.exports = (function(){
 	mod.url = urlapi;
 
 	mod.httpGetJson = async (url, _options)=> {
-		_options = libx.extend({}, _options, { headers: 'application/json; charset=UTF-8' });
+		_options = libx.extend({}, _options, { headers: { 'Content-Type': 'application/json; charset=UTF-8' } });
 		let ret = await mod.httpGet(url, _options);
 		return JSON.parse(ret);
 	}
