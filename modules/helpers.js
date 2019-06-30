@@ -11,6 +11,7 @@ module.exports = (function(){
 	mod._.keyBy = require('lodash/keyBy');
 	mod._.repeat = require('lodash/repeat');
 	mod._.transform = require('lodash/transform');
+	mod._.uniq = require('lodash/uniq');
 
 	// mod.fp.map = require("lodash/fp/map");
 	// mod.fp.flatten = require("lodash/fp/flatten");
