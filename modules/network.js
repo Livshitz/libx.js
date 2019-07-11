@@ -9,7 +9,7 @@ module.exports = (function(){
 	mod.url = urlapi;
 
 	mod.httpGetJson = async (url, _options)=> {
-		_options = libx.extend({}, _options, { headers: { 'Content-Type': 'application/json; charset=UTF-8' } });
+		_options = libx.extend({}, _options, { headers: { 'Content-Type': 'application/json; charset=UTF-8' }, enc: 'utf-8' });
 		let ret = await mod.httpGet(url, _options);
 		return JSON.parse(ret);
 	}
@@ -81,14 +81,18 @@ module.exports = (function(){
 		if (dest.protocol == 'https:') op = https;
 
 		var request = op.request(options, (res) => {
-			res.setEncoding(options.enc || 'utf8');
+			if (options.enc) res.setEncoding(options.enc);
+
 			var data = [];
 			res.on('data', function (chunk) {
-				data.push(chunk);
+				data.push(libx.Buffer.from(chunk));
 			});
 			res.on('end', function () {
-				if (data != null && data.length == 1) data = data[0];
-				let buffer = data; //Buffer.concat(data)
+				let buffer = null;
+				if (data != null) {
+					if (data.length == 1) buffer = data[0];
+					else buffer = libx.Buffer.concat(data); //  data; 
+				}
 				if (res.statusCode == 200) return defer.resolve(buffer);
 				else defer.reject({ statusCode: res.statusCode, response: buffer});
 			});
