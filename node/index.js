@@ -117,8 +117,9 @@ module.exports = (function () {
 	}
 
 	mod.readJsonFileStripComments = (file) => {
-		var data = fs.readFileSync(file);
-		return data;
+		var content = fs.readFileSync(file);
+		var obj = libx.parseJsonFileStripComments(content);
+		return obj;
 	}
 
 	mod.encryptFile = (file, key, newFile) => {
