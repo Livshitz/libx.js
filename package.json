@@ -11,6 +11,7 @@
     "license": "ISC",
     "dependencies": {
         "@types/lodash": "^4.14.136",
+        "@types/node": "^12.6.2",
         "buffer": "^5.2.1",
         "crypto-js": "^3.1.9-1",
         "deferred-js": "^1.0.2",
