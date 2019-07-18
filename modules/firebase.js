@@ -64,7 +64,7 @@ module.exports = function(firebaseApp, firebaseProvider){
 		return defer.promise();
 	}
 
-	mod.update = function(path, data, avoidFill) {
+	mod.update = function(path, data, avoidFill = true) {
 		path = mod._fixPath(path);
 		libx.log.debug('api.firebase.update: Updating data to \"' + path + '\"', data);
 		var defer = libx.newPromise();
@@ -78,7 +78,7 @@ module.exports = function(firebaseApp, firebaseProvider){
 		return defer.promise();
 	}
 
-	mod.set = function(path, data, avoidFill) {
+	mod.set = function(path, data, avoidFill = true) {
 		path = mod._fixPath(path);
 		libx.log.debug('api.firebase.set: Setting data to \"' + path + '\"', data);
 		var defer = libx.newPromise();
@@ -92,7 +92,7 @@ module.exports = function(firebaseApp, firebaseProvider){
 		return defer.promise();
 	}
 
-	mod.push = function(path, data, avoidFill) {
+	mod.push = function(path, data, avoidFill = true) {
 		path = mod._fixPath(path);
 		var key = mod.makeKey();
 		libx.log.debug('api.firebase.push: Pushing to \"' + path + '\" key=' + key, data);
