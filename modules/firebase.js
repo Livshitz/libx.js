@@ -2,8 +2,12 @@ module.exports = function(firebaseApp, firebaseProvider){
 	var mod = {};
 
 	var libx = __libx;
-	
-	var appEvents = require('./appEvents');
+
+	require('./appEvents');
+	var appEvents = null;
+	libx.di.require(_appEvents=> {
+		appEvents = _appEvents;
+	})
 
 	mod.maxDate = new Date('01/01/2200').getTime(); //7258111200000 //32503672800000;
 	mod.entityVersion = 0;
@@ -18,7 +22,7 @@ module.exports = function(firebaseApp, firebaseProvider){
 		if (callback != null) {
 			mod.listen('.info/connected', isConnected => {
 				callback(isConnected);
-				appEvents.broadcast('firebase', { step: 'connection-changed', value: isConnected });
+				if (appEvents != null) appEvents.broadcast('firebase', { step: 'connection-changed', value: isConnected });
 			});
 		}
 		return ret;
@@ -36,7 +40,7 @@ module.exports = function(firebaseApp, firebaseProvider){
 		} else {
 			return mod._database.ref(path)
 		}
-		
+
 	}
 
 	mod.listen = function(path, callback) {
@@ -95,7 +99,7 @@ module.exports = function(firebaseApp, firebaseProvider){
 		var defer = libx.newPromise();
 
 		data = mod._fixObj(data);
-		
+
 		if (data._entity == null) data._entity = {};
 		data._entity.id = key;
 		if (!avoidFill) data = mod._fillMissingFields(data, path);
@@ -175,7 +179,7 @@ module.exports = function(firebaseApp, firebaseProvider){
 		if (data == null) return null;
 
 		var date = new Date();
-		
+
 		// Delete 'date' field
 
 		if (typeof data != 'object') return data;
@@ -190,7 +194,7 @@ module.exports = function(firebaseApp, firebaseProvider){
 
 		if (data._entity.createDate == null) data._entity.createDate = date.toISOString();
 		if (data._entity.createDateTime == null) data._entity.createDateTime = date.getTime();
-		
+
 		if (data._entity.entityVersion == null) data._entity.entityVersion = mod.entityVersion;
 
 		if (data._entity.id == null) {
@@ -212,7 +216,7 @@ module.exports = function(firebaseApp, firebaseProvider){
 		mod.isReady = isConnected;
 		if (isConnected) {
 			mod.onReady.trigger();
-			appEvents.broadcast('firebase', { step: 'ready' });
+			if (appEvents != null) appEvents.broadcast('firebase', { step: 'ready' });
 		}
 	})
 

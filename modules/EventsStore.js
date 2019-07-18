@@ -30,18 +30,20 @@ module.exports = (function(){
 				this.channels.history = new this._rx.ReplaySubject()
 				this.channels.state = new this._rx.BehaviorSubject()
 				this.channels.future = new this._rx.Subject()
-				
+
 				this._rx.from(intialEvents || []).pipe().subscribe(i=>this.broadcast(i.type, i.payload));
+
+				libx.di.register('EventsStore', EventsStore);
 			});
-			
+
 		}
-	
+
 		subscribe(action, predicate, channel) {
 			return (channel || this.channels.state).pipe(
 				this._rx.operators.filter(predicate)
 			).subscribe(action);
 		}
-	
+
 		subscribeOnce(action, predicate, channel) {
 			return (channel || this.channels.future).pipe(
 				this._rx.operators.filter(predicate),
@@ -49,7 +51,7 @@ module.exports = (function(){
 			)
 			.subscribe(action);
 		}
-	
+
 		/*
 		subscribe(action, predicate) {
 			this.state.pipe(
@@ -57,7 +59,7 @@ module.exports = (function(){
 			).subscribe(action);
 		}
 		*/
-	
+
 		broadcast(type, payload) {
 			var ev = this.newEvent(type, payload);
 			// libx.log.d('eventsStore:boradcast: ', ev.type, ev.payload);
@@ -65,15 +67,15 @@ module.exports = (function(){
 			this.channels.state.next(ev);
 			this.channels.future.next(ev);
 		}
-	
+
 		unsubscribe(handler) {
 			handler.unsubscribe();
 		}
-	
+
 		newEvent(type, payload) {
 			return { type, payload };
 		}
 	}
 
-	return libx.di.register('EventsStore', EventsStore)
+	return EventsStore;
 })();
