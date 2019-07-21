@@ -445,7 +445,7 @@ module.exports = (function(){
 		return JSON.stringify(obj, printOnceReplacer, indent);
 	};
 
-	mod.getMatches = (string, regex, index)=> {
+	mod.getMatch = (string, regex, index)=> {
 		index || (index = 1); // default to the first capturing group
 		var matches = [];
 		
@@ -455,6 +455,28 @@ module.exports = (function(){
 			matches.push(match[index]);
 			if (rxp.lastIndex == 0) break;
 		}
+
+		return matches;
+	}
+
+	mod.getMatches = (string, regex, grab = null)=> {
+		// var ret = [...string.matchAll(regex)];
+
+		var matches = [];
+
+		var rxp = RegExp(regex, 'g'); // make sure it's set to global, otherwise will cause infinite loop
+		let match;
+		while (match = rxp.exec(string)) {
+			let res = [];
+			matches.push(match);
+			if (rxp.lastIndex == 0) break;
+		}
+
+		if (grab == null) return matches;
+
+		if (typeof grab == "number") return libx._.map(matches, item=> item[grab]);
+		if (typeof grab == "string") return libx._.map(matches, item=> item.groups[grab]);
+		if (typeof grab == "boolean") return libx._.map(matches, item=> item.groups);
 
 		return matches;
 	}
