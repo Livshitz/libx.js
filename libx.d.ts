@@ -59,7 +59,11 @@ declare namespace LibxJS {
 		extend(deep: boolean, targe: Object, ...sources: Object[]): Object;
 		extensions: IExtensions;
 		getCustomProperties(obj: Object): [string];
-		getMatches(string: string, regex: RegExp, index?: number): [string];
+		getMatch(string: string, regex: RegExp, index?: number): [string];
+		getMatches(string: string, regex: RegExp, grab?: any): [any];
+		// getMatches(string: string, regex: RegExp, grab: string): [string];
+		// getMatches(string: string, regex: RegExp, grab: number): [string];
+		// getMatches(string: string, regex: RegExp, grab: boolean): [any];
 		getParamNames(func: Function): [string];
 		getProjectConfig(containingFolder: string, secret: string): JSON;
 		hexc(colorval: string): string;
