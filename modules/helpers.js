@@ -474,9 +474,9 @@ module.exports = (function(){
 
 		if (grab == null) return matches;
 
-		if (typeof grab == "number") return libx._.map(matches, item=> item[grab]);
-		if (typeof grab == "string") return libx._.map(matches, item=> item.groups[grab]);
-		if (typeof grab == "boolean") return libx._.map(matches, item=> item.groups);
+		if (typeof grab == "number") return mod._.map(matches, item=> item[grab]);
+		if (typeof grab == "string") return mod._.map(matches, item=> item.groups[grab]);
+		if (typeof grab == "boolean") return mod._.map(matches, item=> item.groups);
 
 		return matches;
 	}
