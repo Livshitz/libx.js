@@ -115,7 +115,7 @@ module.exports = async function(firebaseModule){
 		return mod.token;
 	}
 
-	mod.onAuthStateChanged = function (user) {
+	mod.onAuthStateChanged = async function (user) {
 		libx.log.debug('userManager:onAuthStateChanged: ', user);
 
 		mod.isReady = true;
@@ -128,7 +128,7 @@ module.exports = async function(firebaseModule){
 			return;
 		}
 
-		mod.refreshToken();
+		await mod.refreshToken();
 
 		if (mod.data == null) mod.data = {};
 
