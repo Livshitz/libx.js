@@ -171,6 +171,10 @@ module.exports = function(firebaseApp, firebaseProvider){
 		});
 	};
 
+	mod.cleanObjectId = (objectId, char = '-') => {
+		objectId.replace(/[\.\#\$\/\[\]]/g, char);
+	}
+
 	mod._fixObj = function(data) {
 		return JSON.parse( JSON.stringify(data)); // In order to clear 'undefined' values
 	}
