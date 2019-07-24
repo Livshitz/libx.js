@@ -638,6 +638,19 @@ module.exports = (function(){
 		return ret;
 	}
 
+	mod._measures = {};
+	mod.measure = function(measureName = '_') {
+		if (mod._measures[measureName] != null) return mod.getMeasure(measureName);
+		mod._measures[measureName] = new Date().getTime();
+		return 0;
+	}
+
+	mod.getMeasure = function(measureName = '_') {
+		if (mod._measures[measureName] == null) return 0;
+		return new Date().getTime() - mod._measures[measureName];
+	}
+
+
 	setTimeout(()=>	{
 		mod.di.register('log', mod.log);
 		mod.di.register('_', mod._);
