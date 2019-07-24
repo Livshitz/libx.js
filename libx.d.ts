@@ -97,9 +97,12 @@ declare namespace LibxJS {
 		throttle(func: Function, wait: number, immediate: Boolean): Function;
 		type(obj: any): string;
 		waitUntil(conditionFn: Function, callback: Function, interval?: number, timeoutSec?: number): Promise<any>;
+		measure(measureName?: string): number;
+		getMeasure(measureName?: string): number;
 	}
 
 	interface IExtensions {
+		
 	}
 
 	interface ILodash extends _.LoDashStatic {
@@ -314,6 +317,9 @@ declare var libx: LibxJS.ILibxJS;
 declare module NodeJS  {
     interface Global {
         libx: LibxJS.ILibxJS;
+	}
+	
+	interface String {
+        capitalize() : string;
     }
 }
-

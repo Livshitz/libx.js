@@ -64,8 +64,8 @@ module.exports = (function(){
 	};
 
 	// see below for better implementation!
-	mod.string.startsWith = function (str) {
-		return this.indexOf(str) == 0;
+	mod.string.startsWith = function (prefix) {
+		return this.indexOf(prefix) == 0;
 	};
 
 	mod.string.isEmpty = function(input) {
@@ -250,6 +250,10 @@ module.exports = (function(){
 		return ret;
 	};
 
+	mod.array.contains = function (item) {
+		return this.indexOf(item) != -1;
+	}
+
 	mod.array.myFilterSingle = function (fn) {
 		var ret = null;
 		this.each(function (x) {
@@ -261,11 +265,12 @@ module.exports = (function(){
 		return ret;
 	};
 
-	mod.array.remove = function (key) {
-		var index = this.indexOf(key);
+	mod.array.remove = function (item) {
+		var index = this.indexOf(item);
 		if (index > -1) {
 			this.splice(index, 1);
 		}
+		return this;
 	}
 
 	mod.applyStringExtensions = () => {
