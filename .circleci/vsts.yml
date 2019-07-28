@@ -1,5 +1,9 @@
 # Build NodeJS Express app using Azure Pipelines
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript?view=vsts
+
+# Useful tutorial:
+# https://www.matcha440.net/posts/npm-ci-cd-with-azure-pipelines/
+
 pool:
   vmImage: 'Ubuntu 16.04'
   
@@ -14,6 +18,10 @@ steps:
     displayName: 'npm install'
     inputs:
       command: install
+  
+  - script: |
+      yarn build
+    displayName: 'build'
 
   - script: yarn test
     displayName: Test
@@ -30,14 +38,10 @@ steps:
       summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/*coverage.xml'
       reportDirectory: '$(System.DefaultWorkingDirectory)/**/coverage'
       
-  # - task: ArchiveFiles@2
-  #   inputs:
-  #     rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
-  #     includeRootFolder: false
-
-  - script: |
-      yarn build
-    displayName: 'build'
+  - task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
+      includeRootFolder: false
 
   - task: PublishBuildArtifacts@1
 
@@ -53,5 +57,6 @@ steps:
   - task: Npm@1
     inputs:
       command: publish
-      publishEndpoint: 'https://registry.npmjs.org/:_authToken=$(npm_TOKEN)'
-      
+      publishEndpoint: 'npm'
+    condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
+    displayName: 'Publish to NPM'
