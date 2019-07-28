@@ -15,28 +15,29 @@ steps:
     inputs:
       command: install
 
-  # - task: Npm@1
-  #   displayName: 'npm test'
-  #   inputs:
-  #     command: custom
-  #     customCommand: 'test'
+  - script: yarn test
+    displayName: Test
 
-  # - task: PublishTestResults@2
-  #   inputs:
-  #     testResultsFiles: '**/TEST-RESULTS.xml'
-  #     testRunTitle: 'Test results for JavaScript'
-  #   condition: succeededOrFailed()
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFiles: '**/TEST-RESULTS.xml'
+      testRunTitle: 'Test results for JavaScript'
+    condition: succeededOrFailed()
 
-  # - task: PublishCodeCoverageResults@1
-  #   inputs: 
-  #     codeCoverageTool: Cobertura
-  #     summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/*coverage.xml'
-  #     reportDirectory: '$(System.DefaultWorkingDirectory)/**/coverage'
+  - task: PublishCodeCoverageResults@1
+    inputs: 
+      codeCoverageTool: Cobertura
+      summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/*coverage.xml'
+      reportDirectory: '$(System.DefaultWorkingDirectory)/**/coverage'
       
   # - task: ArchiveFiles@2
   #   inputs:
   #     rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
   #     includeRootFolder: false
+
+  - script: |
+      yarn build
+    displayName: 'build'
 
   - task: PublishBuildArtifacts@1
 

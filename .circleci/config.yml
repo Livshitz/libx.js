@@ -28,9 +28,9 @@ jobs:
       #       name: Run tests
       #       command: npm test
 
-    #   - run:
-        #   name: Build
-        #   command: node build-libs.js
+      - run:
+          name: Build
+          command: yarn build
 
     #   - persist_to_workspace:
     #       root: ~/repo

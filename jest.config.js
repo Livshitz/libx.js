@@ -20,10 +20,12 @@ module.exports = {
 	  "node"
 	],
 	verbose: true,
-	//[jest-config].globals.ts-jest.tsConfig
 	// globals: {
-	// 	"ts-jest": {
-	// 		tsConfig: "tsconfig.test.json"
-	// 	}
+	// 		'ts-jest': {
+	// 	  		tsConfig: 'tsconfig.json'
+	// 			tsConfig: "tsconfig.test.json"
+	// 		}
 	// }
+	reporters: [ "default", "jest-junit" ],
+	coverageDirectory: ".tmp/coverage"
 }

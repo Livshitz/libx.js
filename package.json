@@ -1,18 +1,20 @@
 {
     "name": "libx.js",
-    "version": "0.2.17",
+    "version": "0.3.0",
     "description": "",
     "main": "entry.js",
     "types": "libx.d.ts",
     "scripts": {
-        "test": "jest"
+        "test": "jest",
+        "build": "tsc",
+        "test:ci": "jest --ci --reporters=default --reporters=jest-junit --coverage"
     },
     "author": "",
     "license": "ISC",
     "dependencies": {
         "@types/jest": "^24.0.15",
         "@types/lodash": "^4.14.136",
-        "@types/node": "^12.6.2",
+        "@types/node": "^12.6.8",
         "buffer": "^5.2.1",
         "crypto-js": "^3.1.9-1",
         "deferred-js": "^1.0.2",
@@ -37,5 +39,24 @@
         "jquery": "^3.3.1",
         "npm": "^6.9.0"
     },
-    "devDependencies": {}
+    "devDependencies": {
+        "jest": "^24.8.0",
+        "jest-junit": "^7.0.0",
+        "jest-junit-reporter": "^1.1.0",
+        "ts-jest": "^24.0.2"
+    },
+    "jest": {
+        "coverageReporters": [
+            "cobertura",
+            "html"
+        ]
+    },
+    "jest-junit": {
+        "suiteName": "jest tests",
+        "output": "./.tmp/test/TEST-RESULTS.xml",
+        "classNameTemplate": "{classname} - {title}",
+        "titleTemplate": "{classname} - {title}",
+        "ancestorSeparator": " > ",
+        "usePathForSuiteName": "true"
+    }
 }
