@@ -53,5 +53,5 @@ steps:
   - task: Npm@1
     inputs:
       command: publish
-      publishEndpoint: 'https://registry.npmjs.org/:_authToken=$npm_TOKEN'
+      publishEndpoint: 'https://registry.npmjs.org/:_authToken=$(npm_TOKEN)'
       
