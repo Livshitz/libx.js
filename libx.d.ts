@@ -1,6 +1,7 @@
 /// <reference path="./libx.extensions.d.ts" />
 /// <reference path="./enums.d.ts" />
 /// <reference path="./enums.d.ts" />
+/// <reference path="node_modules/\@types/lodash/index.d.ts" />
 
 declare namespace LibxJS {
 	interface Base {
@@ -34,7 +35,6 @@ declare namespace LibxJS {
 		pipe(done, fail, progress);
 		getContext();
 		getId();
-
 	}
 
 	interface ILibxJS {
@@ -49,18 +49,22 @@ declare namespace LibxJS {
 		async(callback: Function): Promise<any>;
 		base64ToUint8Array(base64String: string): Uint8Array;
 		Buffer: Buffer;
-		chainTasks(tasks: [any]): void;
+		chainTasks(tasks: (() => Promise<any>)[]): Promise<any>;
 		class2type: {[key: string]: string};
-		clone(target: Object, source:Object): Object;
-		debounce(func: Function, wait: number, immediate: boolean, allowTaillingCall: boolean): Function;
+		clone(source:Object, target?: Object): Object;
+		debounce(func: Function, wait: number, immediate?: boolean, allowTaillingCall?: boolean): Function;
 		deferred: IDeferredJS; //(func :Function): Promise<any>;
-		delay(milliseconds: number);
+		delay(milliseconds: number): Promise<any>;
 		diff(object: Object, base: Object): Object;
 		extend(deep: boolean, targe: Object, ...sources: Object[]): Object;
+		extend(targe: Object, ...sources: Object[]): Object;
 		extensions: IExtensions;
 		getCustomProperties(obj: Object): [string];
 		getMatch(string: string, regex: RegExp, index?: number): [string];
-		getMatches(string: string, regex: RegExp, grab?: any): [any];
+		getMatches(string: string, regex: RegExp): [any];
+		getMatches(string: string, regex: RegExp, grab: number): string;
+		getMatches(string: string, regex: RegExp, grab: string): string;
+		getMatches(string: string, regex: RegExp, grab: true): any;
 		// getMatches(string: string, regex: RegExp, grab: string): [string];
 		// getMatches(string: string, regex: RegExp, grab: number): [string];
 		// getMatches(string: string, regex: RegExp, grab: boolean): [any];
@@ -80,12 +84,13 @@ declare namespace LibxJS {
 		isObject(obj: any): Boolean;
 		isPlainObject(obj: any): Boolean;
 		isWindow(obj: any): Boolean;
-		jsonRecurse(obj, byid, refs, prop, parent): any;
+		jsonRecurse(obj, byid?, refs?, prop?, parent?): any;
 		jsonResolveReferences(json): any;
-		jsonify(obj: any, isCompact: Boolean): string;
+		jsonify(obj: any, isCompact?: Boolean): string;
 		makeEmpty(obj: Object): Object;
+		makeAsync(func: Function): ()=>Promise<any>;
 		modules(): [];
-		newGuid(useDash: Boolean): string;
+		newGuid(useDash?: Boolean): string;
 		parseConfig(contents: string, env: string): Object;
 		parseJsonFileStripComments(content): Object;
 		randomNumber(max?: number, min?: number): number;
@@ -93,10 +98,10 @@ declare namespace LibxJS {
 		shuffle(a: Array<any>): Array<any>;
 		sleep(time: number, callback?: Function): Promise<void>;
 		spawnHierarchy(path: string): any;
-		stringifyOnce(obj: Object, replacer?: (key: string, value: any) => string, indent?: number): string;
-		throttle(func: Function, wait: number, immediate: Boolean): Function;
+		stringifyOnce(obj: Object, replacer?: (key: string, value: any) => any, indent?: number): string;
+		throttle(func: Function, wait: number, immediate?: Boolean): Function;
 		type(obj: any): string;
-		waitUntil(conditionFn: Function, callback: Function, interval?: number, timeoutSec?: number): Promise<any>;
+		waitUntil<T>(conditionFn: Function, callback?: (()=>T), interval?: number, timeout?: number): Promise<T>;
 		measure(measureName?: string): number;
 		getMeasure(measureName?: string): number;
 	}

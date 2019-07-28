@@ -35,6 +35,15 @@ module.exports = (function () {
 		}
 	}
 
+	mod.isCalledDirectly = () => {
+		if (require.main == module.parent) {
+			return true; // required as a module
+		} else {
+			return false; // required as a module
+		}
+
+	}
+
 	mod.exec = async (commands, verbose) => {
 		var cmd = commands;
 		if (Array.isArray(commands)) {
@@ -160,7 +169,7 @@ module.exports = (function () {
 			fs.readdirSync(path).forEach(function (file, index) {
 				var curPath = path + "/" + file;
 				if (fs.lstatSync(curPath).isDirectory()) { // recurse
-					deleteFolderRecursive(curPath);
+					mod.rmdirRecursiveSync(curPath);
 				} else { // delete file
 					fs.unlinkSync(curPath);
 				}

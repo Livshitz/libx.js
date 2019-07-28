@@ -4,7 +4,7 @@ interface Array<T> extends LibxJS.IExtensionsArray<T> { }
 
 declare namespace LibxJS {
 	interface IExtensionsString {
-		format(...params: any[]) : any;
+		format(...params: any[]) : string;
 		capitalize() : string;
 		kebabCase() : string;
 		camelize() : string;
@@ -13,13 +13,13 @@ declare namespace LibxJS {
 		hashCode() : string;
 		endsWith(suffix: string) : boolean;
 		startsWith(prefix: string) : boolean;
-		isEmpty(input: string) : boolean;
+		isEmpty(input?: string) : boolean;
 	}
 
 	interface IExtensionsDate {
 		isValid() : boolean;
-		formatx(mask: string, utc: boolean) : string;
-		format(strFormat: string, utc: boolean) : string;
+		formatx(mask: string, utc?: boolean) : string;
+		format(strFormat: string, utc?: boolean) : string;
 		fromJson(aJsonDate: Object) : Date;
 		toJson() : string;
 		addHours(h: number) :Date;

@@ -17,3 +17,5 @@ psm.sh
 packages/*
 
 .npmrc
+build
+.tmp

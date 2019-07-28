@@ -5,6 +5,7 @@ module.exports = (function(){
 	mod.di = new mod.DependencyInjector();
 
 	mod._ = require('lodash/core');
+	mod._.capitalize = require('lodash/capitalize');
 	mod._.range = require('lodash/range');
 	mod._.countBy = require('lodash/countBy');
 	mod._.toPairs = require('lodash/toPairs');
@@ -20,7 +21,7 @@ module.exports = (function(){
 
 	mod.isBrowser = typeof window !== 'undefined';
 
-	mod.deferred = require('deferred-js');
+	mod.deferred = require('../build/modules/deferred'); //require('deferred-js');
 	mod.log = require('./log.js');
 
 	mod._.mixin({
@@ -57,16 +58,17 @@ module.exports = (function(){
 		}
 	}
 
-	mod.spawnHierarchy = (path)=> {
-		var p = path.split('.')
-		var cur = this;
-		var next = null;
-		for(var i=0;i<p.length;i++) {
+	mod.spawnHierarchy = function (path) {
+		let p = path.split('.')
+		let cur = { };
+		let init = cur;
+		let next = null;
+		for(let i=0;i<p.length;i++) {
 			next = p[i];
 			if (typeof cur[next] == 'undefined') cur[next] = {};
 			cur = cur[next];
 		}	
-		return cur;
+		return init;
 	}
 
 	/**
@@ -155,7 +157,7 @@ module.exports = (function(){
 		return key === undefined || hasOwn.call(obj, key)
 	}
 
-	mod.throttle = (func, wait, immediate) => {
+	mod.throttle = (func, wait, immediate = true) => {
 		var timeout;
 		return function() {
 			var context = this, args = arguments;
@@ -170,7 +172,7 @@ module.exports = (function(){
 		};
 	};
 
-	mod.debounce = (func, wait, immediate, allowTaillingCall) => {
+	mod.debounce = (func, wait, immediate = false, allowTaillingCall = true) => {
 		var timeout;
 		return function() {
 			var context = this, args = arguments;
@@ -194,14 +196,14 @@ module.exports = (function(){
 	}
 	
 	mod.newPromise = () => {
-		var promise = mod.deferred();
+		var promise = new mod.deferred();
 		return promise;
 	}
 	
 	mod.async = (callback) => {
 		var promise = mod.newPromise();
 		callback(promise);
-		return promise.promise();
+		return promise;
 	}
 	
 	mod.chainTasks = async (tasks) => {
@@ -225,10 +227,10 @@ module.exports = (function(){
 		return true;
 	}
 	
-	mod.clone = (target, source) => mod.extend(true, target, source);
+	mod.clone = (source, target = {}) => mod.extend(true, target, source);
 
 	mod.extend = function() {
-		var options, name, src, copy, copyIsArray, clone, target = arguments[0] || {},
+		var options, name, src, copy, copyIsArray, clone, target = arguments[0],
 			i = 1,
 			length = arguments.length,
 			deep = true,
@@ -307,7 +309,7 @@ module.exports = (function(){
 	}
 
 	mod.shallowCopy = function(obj) {
-		return Object.assign({}, obj);
+		return mod.extend(false, {}, obj); // Object.assign({}, obj);
 	}
 
 	mod.hexc = function(colorval) {
@@ -325,62 +327,66 @@ module.exports = (function(){
 		}
 	}
 
-	mod.jsonify = function (obj, isCompact) {
+	mod.jsonify = function (obj, isCompact = false) {
 		// return JSON.stringify(obj, null, "\t");
 
-		if (isCompact) {
-			return JSON.stringify(obj,function(k,v){
-				if(v instanceof Array)
-				   return JSON.stringify(v);
-				return v;
-			 },4);
-			 
-		}
+		if (isCompact) return JSON.stringify(obj);
 
-		return JSON.stringify(obj, null, 4); 
+		return JSON.stringify(obj,function(k,v){
+			if(v instanceof Array)
+				return JSON.stringify(v);
+			return v;
+		},4);
 	}
 	
-	mod.sleep = async (time, callback) => {
+	mod.sleep = async (time, callback = null) => {
 		var stop = new Date().getTime();
 		while(new Date().getTime() < stop + time) {
 			;
 		}
-		callback();
+		if (callback) callback();
 	}
-	
-	mod.waitUntil = async (conditionFn, callback, interval, timeoutSec) => {
-		var interval = interval || 10;
-		var timeoutSec = timeoutSec || 5;
-		var expiry = new Date();
-		expiry.setSeconds(expiry.getSeconds() + timeoutSec);
-	
-		var wrapper = async () => {
-			if (mod.isAsync(conditionFn)) {
-				return await conditionFn();
+
+	mod.makeAsync = (func) => {
+		return async () => {
+			if (mod.isAsync(func)) {
+				return await func();
 			} else {
-				return conditionFn();
+				return func();
 			}
-		};
+		}
+	};
 	
+	mod.waitUntil = async (conditionFn, callback = null, interval = 10, timeout = 5000) => {
+		var expiry = new Date();
+		expiry.setMilliseconds(expiry.getMilliseconds() + timeout);
+
+		var wrapper = mod.makeAsync(conditionFn);
+
+		let p = mod.newPromise();
+
 		// Check before waiting
 		if (await wrapper()) {
-			callback();
-			return;
+			let ret = callback ? callback() : null;
+			return p.resolve(ret);
 		}
-	
+
 		// Wait and check again
 		var i = setInterval(async () => {
 			if (new Date() > expiry) {
 				clearInterval(i);
-				return;
+				return p.reject();
 			}
 			if (await wrapper()) {
 				clearInterval(i);
-				callback();
+				let ret = callback ? callback() : null;
+				return p.resolve(ret);
 			}
 		}, interval);
-	}
-	
+
+		return p;
+	};
+
 	mod.isAsync = function (func) {
 		const string = func.toString().trim();
 	
@@ -388,9 +394,9 @@ module.exports = (function(){
 			// native
 			string.match(/^async /) ||
 			// babel (this may change, but hey...)
-			string.match(/return _ref[^\.]*\.apply/)
+			string.match(/return _ref[^\.]*\.apply/) ||
 			// insert your other dirty transpiler check
-	
+			string.match(/__awaiter/)
 			// there are other more complex situations that maybe require you to check the return line for a *promise*
 		);
 	}
@@ -403,7 +409,7 @@ module.exports = (function(){
 		return s4() + s4() + dash + s4() + dash + s4() + dash + s4() + dash + s4() + s4() + s4();
 	}
 	
-	mod.stringifyOnce = function(obj, replacer, indent){
+	mod.stringifyOnce = function(obj, replacer=null, indent=null){
 		var printedObjects = [];
 		var printedObjectKeys = [];
 	
@@ -431,7 +437,6 @@ module.exports = (function(){
 					return "(see " + ((!!value && !!value.constructor) ? value.constructor.name.toLowerCase()  : typeof(value)) + " with key " + printedObjectKeys[printedObjIndex] + ")";
 				}
 			}else{
-	
 				var qualifiedKey = key || "(empty key)";
 				printedObjects.push(value);
 				printedObjectKeys.push(qualifiedKey);
@@ -595,15 +600,6 @@ module.exports = (function(){
 		return json;
 	};
 
-	mod.delay = function(milliseconds) {
-		var start = window.performance.now();
-		var end = window.performance.now();
-		while (end - start < milliseconds) {
-			end = window.performance.now();
-		}
-		return end - start;
-	}
-
 	var STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
 	var ARGUMENT_NAMES = /([^\s,]+)/g;
 	mod.getParamNames = function(func) { 
@@ -627,7 +623,7 @@ module.exports = (function(){
 	}
 
 	mod.shuffle = function(a) {
-		var ret = a;
+		var ret = mod.clone(a, []);
 		var j, x, i;
 		for (i = ret.length; i; i--) {
 			j = Math.floor(Math.random() * i);
@@ -650,6 +646,11 @@ module.exports = (function(){
 		return new Date().getTime() - mod._measures[measureName];
 	}
 
+	mod.delay = async (milliseconds) => {
+		let p = mod.newPromise();
+		setTimeout(()=>p.resolve(), milliseconds);
+		return p;
+	}
 
 	setTimeout(()=>	{
 		mod.di.register('log', mod.log);

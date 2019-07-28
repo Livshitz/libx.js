@@ -20,8 +20,11 @@ module.exports = (function(){
 		}
 	}
 
+	// [[[[[[[[[[  String Extensions  ]]]]]]]]]]
+
 	mod.string.capitalize = function() {
-		return this.charAt(0).toUpperCase() + this.slice(1);
+		return this.replace(/(\w+)/g, libx._.capitalize).trim();
+		// return this.charAt(0).toUpperCase() + this.slice(1);
 	}
 
 	mod.string.kebabCase = function() {
@@ -68,7 +71,7 @@ module.exports = (function(){
 		return this.indexOf(prefix) == 0;
 	};
 
-	mod.string.isEmpty = function(input) {
+	mod.string.isEmpty = function(input = null) {
 		var v = input || this;
 		return v ? v.trim().length == 0 : true;
 	}
@@ -102,7 +105,7 @@ module.exports = (function(){
 		return ret;
 	};
 
-	
+	// [[[[[[[[[[  Date Extensions  ]]]]]]]]]]
 
 	mod.date.isValid = function () {
 		// An invalid date object returns NaN for getTime() and NaN is the only
@@ -209,7 +212,7 @@ module.exports = (function(){
 	};
 
 	// For convenience...
-	mod.date.formatx = function (mask, utc) {
+	mod.date.formatx = function (mask, utc = null) {
 		if (mask == null) return this;
 		return mod.dateFormat(this, mask, utc);
 	};
@@ -233,9 +236,12 @@ module.exports = (function(){
 	};
 
 	mod.date.addHours = function (h) {
-		this.setTime(this.getTime() + h * 60 * 60 * 1000);
-		return this;
+		let ret = new Date(this);
+		ret.setTime(this.getTime() + h * 60 * 60 * 1000);
+		return ret;
 	};
+
+	// [[[[[[[[[[  Array Extensions  ]]]]]]]]]]
 
 	mod.array.diff = function(a, fn) {
 		return this.filter(function(i) {return a.indexOf(i) < 0;});
@@ -243,10 +249,9 @@ module.exports = (function(){
 
 	mod.array.myFilter = function (fn) {
 		var ret = [];
-		this.each(function (x) {
-			if (fn(x))
-				ret.push(x);
-		});
+		for(var item of this) {
+			if (fn(item)) ret.push(item);
+		}
 		return ret;
 	};
 
@@ -256,12 +261,12 @@ module.exports = (function(){
 
 	mod.array.myFilterSingle = function (fn) {
 		var ret = null;
-		this.each(function (x) {
-			if (fn(x)) {
-				ret = x;
-				return false;
+		for(var item of this) {
+			if (fn(item)) {
+				ret = item;
+				break;
 			}
-		});
+		}
 		return ret;
 	};
 
@@ -272,6 +277,8 @@ module.exports = (function(){
 		}
 		return this;
 	}
+
+	// [[[[[[[[[[  -----------  ]]]]]]]]]]
 
 	mod.applyStringExtensions = () => {
 		libx.extend(String.prototype, mod.string);
