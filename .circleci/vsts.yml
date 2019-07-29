@@ -21,7 +21,7 @@ steps:
     displayName: 'Build'
 
   - script: |
-      yarn test
+      yarn test:ci
     displayName: 'Test'
 
   - task: PublishTestResults@2
