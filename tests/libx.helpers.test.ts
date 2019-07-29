@@ -283,7 +283,7 @@ test('helpers.waitUntil-negative', async () => {
 		clearInterval(interval);
 	}, 10, 50)
 	.catch(()=>{ // expect period to pass
-		expect(counter).toEqual(5);
+		expect(counter).toBeLessThanOrEqual(6);
 	});
 });
 
