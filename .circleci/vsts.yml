@@ -33,7 +33,8 @@ steps:
   - task: PublishCodeCoverageResults@1
     inputs: 
       codeCoverageTool: Cobertura
-      summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/*coverage.xml'
+      summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/*clover.xml'
+      # cobertura-coverage.xml 
       reportDirectory: '$(System.DefaultWorkingDirectory)/**/coverage'
       
   - task: ArchiveFiles@2
