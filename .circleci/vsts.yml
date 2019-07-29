@@ -12,19 +12,17 @@ steps:
     inputs:
       versionSpec: '10.15.3'
 
-  - script: npm install
-    
-  - task: Npm@1
-    displayName: 'npm install'
-    inputs:
-      command: install
+  - script: |
+      yarn install
+    displayName: 'Install'
   
   - script: |
       yarn build
-    displayName: 'build'
+    displayName: 'Build'
 
-  - script: yarn test
-    displayName: Test
+  - script: |
+      yarn test
+    displayName: 'Test'
 
   - task: PublishTestResults@2
     inputs:
