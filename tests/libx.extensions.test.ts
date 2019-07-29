@@ -1,5 +1,5 @@
 var dataset: any = {
-	date: new Date("Thu, 25 Jul 2019 21:00:14 GMT"),
+	date: new Date("2019-07-25T21:00:14.000Z"),
 }
 
 beforeAll(()=> {
@@ -79,6 +79,12 @@ test('string.isEmpty-negative', () => {
 
 // [[[[[[[[[[  Date Extensions  ]]]]]]]]]]
 
+test('date.toUtc-positive', () => {
+	let local = new Date();
+	let global = local.toUTC();
+	expect(global.toISOStringUTC(true)).toBe(local.toISOString());
+});
+
 test('date.isValid-positive', () => {
 	let output = dataset.date.isValid();
 	expect(output).toBe(true);
@@ -90,27 +96,27 @@ test('date.isValid-negative', () => {
 });
 
 test('date.formatx-positive', () => {
-	let output = dataset.date.formatx("HH:MM:ss.l");
-	expect(output).toBe("00:00:14.949");
+	let output = dataset.date.formatx("HH:MM:ss.l", true);
+	expect(output).toBe("21:00:14.000");
 });
 
 test('date.format-positive', () => {
-	let output = dataset.date.format("HH:MM:ss.l");
-	expect(output).toBe("00:00:14.949");
+	let output = dataset.date.format("HH:MM:ss.l", true);
+	expect(output).toBe("21:00:14.000");
 });
 
 test('date.toJSON-positive', () => {
 	let output = dataset.date.toJSON();
-	expect(output).toBe("2019-07-25T21:00:14.949Z");
+	expect(output).toBe("2019-07-25T21:00:14.000Z");
 });
 
 test('date.toJson-positive', () => {
 	let output = dataset.date.toJson();
-	expect(output).toBe("/Date(1564088414949)/");
+	expect(output).toBe("/Date(1564088414000)/");
 });
 
 test('date.fromJson-positive', () => {
-	let output = new Date().fromJson('/Date(1564088414949)/').getTime();
+	let output = new Date().fromJson('/Date(1564088414000)/').getTime();
 	expect(output).toBe(dataset.date.getTime());
 });
 

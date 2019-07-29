@@ -162,9 +162,11 @@ module.exports = (function(){
 				L: mod.dateFormat.pad(L > 99 ? Math.round(L / 10) : L),
 				t: H < 12 ? "a" : "p",
 				tt: H < 12 ? "am" : "pm",
-				T: H < 12 ? "A" : "P",
+				T: "T", //H < 12 ? "A" : "P",
+				TTT: H < 12 ? "A" : "P",
 				TT: H < 12 ? "AM" : "PM",
-				Z: utc ? "UTC" : (String(date).match(timezone) || [""]).pop().replace(timezoneClip, ""),
+				Z: "Z",
+				ZZ: utc ? "UTC" : (String(date).match(timezone) || [""]).pop().replace(timezoneClip, ""),
 				o: (o > 0 ? "-" : "+") + mod.dateFormat.pad(Math.floor(Math.abs(o) / 60) * 100 + Math.abs(o) % 60, 4),
 				S: ["th", "st", "nd", "rd"][d % 10 > 3 ? 0 : (d % 100 - d % 10 != 10) * d % 10]
 			};
@@ -217,7 +219,7 @@ module.exports = (function(){
 		return mod.dateFormat(this, mask, utc);
 	};
 
-	mod.date.format = function (strFormat, utc) {
+	mod.date.format = function (strFormat, utc = null) {
 		if (isNaN( this.getTime() )) return null;
 		// An invalid date object returns NaN for getTime() and NaN is the only
 		// object not strictly equal to itself.
@@ -240,6 +242,23 @@ module.exports = (function(){
 		ret.setTime(this.getTime() + h * 60 * 60 * 1000);
 		return ret;
 	};
+
+	mod.date.toUTC = function () {
+		var date = new Date(this);
+		var gmtRe = /GMT([\-\+]?\d{4})/;
+		var tz = gmtRe.exec(date)[1];
+		var hour=tz/100;
+		var min=tz%100;
+		date.setHours(date.getHours()-hour);
+		date.setMinutes(date.getMinutes()-min); 
+		return date;
+	}
+	
+	mod.date.toISOStringUTC = function (isUTC = false) {
+		let date = this;
+		return date.formatx('yyyy-mm-ddTHH:MM:ss.lZ', !isUTC); // opposite, as if it's UTC, it'll reduce the timezone
+	}
+
 
 	// [[[[[[[[[[  Array Extensions  ]]]]]]]]]]
 

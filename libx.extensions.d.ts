@@ -23,6 +23,8 @@ declare namespace LibxJS {
 		fromJson(aJsonDate: Object) : Date;
 		toJson() : string;
 		addHours(h: number) :Date;
+		toUTC(): Date;
+		toISOStringUTC(isUTC?: Boolean): Date;
 	}
 
 	interface IExtensionsArray<T> {
