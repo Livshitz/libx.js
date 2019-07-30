@@ -56,8 +56,9 @@ steps:
   #   displayName: 'Publish to NPM'
 
   - script: |
-      echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > ~/repo/.npmrc
-      SET sourceBranch=origin/%BUILD_SOURCEBRANCH:refs/heads/=%
+      echo "//registry.npmjs.org/:_authToken=$(npm_TOKEN)" > ~/repo/.npmrc
+      echo "1- $(npm_TOKEN)"
+      echo "2- $npm_TOKEN"
       git checkout master
       git config --global push.default simple
       git config user.email "eli.livshitz@gmail.com"
