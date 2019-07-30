@@ -4,6 +4,7 @@
    // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
    "version": "0.2.0",
    "configurations": [
+
 		{
 			"name": "Node.JS (local)",
 			"type": "node",
@@ -77,6 +78,12 @@
             "runtimeArgs": ["--inspect-brk", "${workspaceRoot}/node_modules/.bin/jest", "--runInBand"],
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen"
-        }
+		},
+		{
+            "name": "Node.JS attach (local)",
+            "type": "node",
+            "request": "attach",
+            "port": 9229
+		},
     ]
 }
