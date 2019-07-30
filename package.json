@@ -9,6 +9,12 @@
         "test": "jest",
         "test:ci": "jest --ci --reporters=default --reporters=jest-junit --coverage --coverageReporters=cobertura --coverageReporters=html"
     },
+    "files": [
+        "build/**",
+        "modules/**",
+        "src/**",
+        "*.js"
+    ],
     "author": "",
     "license": "ISC",
     "dependencies": {
