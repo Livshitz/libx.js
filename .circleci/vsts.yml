@@ -44,13 +44,22 @@ steps:
 
   # - task: PublishBuildArtifacts@1
 
-  - task: Npm@1
-    inputs:
-      command: publish
-      publishEndpoint: 'npm'
+  # - task: Npm@1
+  #   inputs:
+  #     command: publish
+  #     publishEndpoint: 'npm'
+  #   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/master')) #refs/tags/
+  #   displayName: 'Publish to NPM'
+
+  - script: |
+      git config --global push.default simple
+      git config user.email "eli.livshitz@gmail.com"
+      git config user.name "Eli Livshitz"
+      yarn publish --patch
+      git commit --amend -m "^ pkg bump [skip ci]"
+      git push origin
     condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/master')) #refs/tags/
     displayName: 'Publish to NPM'
-
 
 
   # - script: |
