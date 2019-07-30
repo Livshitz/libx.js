@@ -68,8 +68,8 @@ module.exports = (function(){
 			dataType: "json",
 			autoParse: false,
 		};
-		libx.clone(options, _options);
-		options = libx.extend(dest, options);
+		libx.clone(_options, options);
+		libx.clone(dest, options);
 
 		// Fill in missing content type based on dataType:
 		if (options.dataType != null && options.headers['content-type'] == null) {
