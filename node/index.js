@@ -41,7 +41,6 @@ module.exports = (function () {
 		} else {
 			return false; // required as a module
 		}
-
 	}
 
 	mod.exec = async (commands, verbose) => {
