@@ -57,5 +57,5 @@ steps:
     inputs:
       command: publish
       publishEndpoint: 'npm'
-    condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
+    condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/master')) #refs/tags/
     displayName: 'Publish to NPM'
