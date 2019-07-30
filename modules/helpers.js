@@ -21,7 +21,7 @@ module.exports = (function(){
 
 	mod.isBrowser = typeof window !== 'undefined';
 
-	mod.deferred = require('../build/modules/deferred'); //require('deferred-js');
+	mod.deferred = require(__dirname + '/../build/modules/deferred'); //require('deferred-js');
 	mod.log = require('./log.js');
 
 	mod._.mixin({
