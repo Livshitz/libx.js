@@ -56,7 +56,7 @@ steps:
   #   displayName: 'Publish to NPM'
 
   - script: |
-      echo "//registry.npmjs.org/:_authToken=$(npm_TOKEN)" > ~/repo/.npmrc
+      echo "//registry.npmjs.org/:_authToken=$(npm_TOKEN)" > .npmrc
       echo "1- $(npm_TOKEN)"
       echo "2- $npm_TOKEN"
       git checkout master
