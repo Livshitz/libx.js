@@ -51,13 +51,13 @@ declare namespace LibxJS {
 		Buffer: Buffer;
 		chainTasks(tasks: (() => Promise<any>)[]): Promise<any>;
 		class2type: {[key: string]: string};
-		clone(source:Object, target?: Object): Object;
+		clone(source:any, target?: any): any;
 		debounce(func: Function, wait: number, immediate?: boolean, allowTaillingCall?: boolean): Function;
 		deferred: IDeferredJS; //(func :Function): Promise<any>;
 		delay(milliseconds: number): Promise<any>;
 		diff(object: Object, base: Object): Object;
-		extend(deep: boolean, targe: Object, ...sources: Object[]): Object;
-		extend(targe: Object, ...sources: Object[]): Object;
+		extend(deep: boolean, targe: Object, ...sources: Object[]): any;
+		extend(targe: Object, ...sources: Object[]): any;
 		extensions: IExtensions;
 		getCustomProperties(obj: Object): [string];
 		getMatch(string: string, regex: RegExp, index?: number): [string];
@@ -104,6 +104,8 @@ declare namespace LibxJS {
 		waitUntil<T>(conditionFn: Function, callback?: (()=>T), interval?: number, timeout?: number): Promise<T>;
 		measure(measureName?: string): number;
 		getMeasure(measureName?: string): number;
+		node: any;
+		fileStreamToBuffer(readStream): Promise<Buffer>;
 	}
 
 	interface IExtensions {
@@ -305,7 +307,28 @@ declare namespace LibxJS {
 		inject (func: Function);
 		require (func: Function);
 		requireUgly (depsArr: [string], func: Function);
-		modules: any;
+		modules: {[key: string]: any};
+	}
+
+	interface IModuleNetwork {
+		httpGetJson(url: string, _options?: {}): Promise<Object>;
+		httpGetString(url: string, _options?: {}): Promise<String>;
+		httpGet(url: string, _options?: {}): Promise<Buffer>;
+		httpPost(url: string, data: any, _options?: {}): Promise<Buffer>;
+		httpPostJson(url: string, data: any, _options?: {}): Promise<Object>;
+		httpRequest(url: string, data: any, method: string, _options?: {}): Promise<any>;
+		request(method, url, params?, options?): Promise<any>;
+		get(url, params?, options?): Promise<any>;
+		post(url, data?, options?): Promise<any>;
+		upload(url, fileReadStream?, options?): Promise<any>;
+		helpers: {
+			fixUrl(url: string, prefixUrl: string): string;
+			parseUrl(url: string): string;
+			cleanUrl(url: string): string;
+			// getFormData(object: Object): any;
+			formDataToString(formDataObj: Object): string;
+			params(params: any, keys: Object, isArray?: Boolean): any;
+		}
 	}
 
 	type LogColors = { reset, bright, dim, underscore, blink, reverse, hidden, fgBlack, fgRed, fgGreen, fgYellow, fgBlue, fgMagenta, fgCyan, fgWhite, bgBlack, bgRed, bgGreen, bgYellow, bgBlue, bgMagenta, bgCyan, bgWhite };

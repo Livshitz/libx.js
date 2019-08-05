@@ -11,8 +11,6 @@ module.exports = (function(){
 	libx.extensions = require('../modules/extensions.js')();
 	if (!global._libx_avoidExtensions) libx.extensions.applyAllExtensions();
 
-	if (libx.modules == null) libx.modules = () => libx.di.modules;
-
 	libx.Buffer = require('buffer/').Buffer;
 
 	return libx;

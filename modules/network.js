@@ -6,6 +6,10 @@ module.exports = (function(){
 	var http = require('http');
 	var https = require('https');
 	var urlapi = require('url');
+	var request = require('request');
+
+	var querialize = require('../browser/helpers').querialize;
+
 	mod.url = urlapi;
 
 	mod.httpGetJson = async (url, _options)=> {
@@ -31,10 +35,11 @@ module.exports = (function(){
 
 	mod.httpPostJson = async (url, data, _options)=> {
 		let ret = await mod.httpRequest(url, data, 'POST', _options);
-		return JSON.parse(ret);
+		if (ret == null) return null;
+		return JSON.parse(ret.toString());
 	};
 
-	mod.httpRequest = async (url, data, method, _options)=> {
+	mod.httpRequest = async (url, data, method, _options) => {
 		var defer = libx.newPromise();
 
 		url = mod.helpers.fixUrl(url);
@@ -74,13 +79,18 @@ module.exports = (function(){
 		// Fill in missing content type based on dataType:
 		if (options.dataType != null && options.headers['content-type'] == null) {
 			if (options.dataType == 'json') options.headers['content-type'] = 'application/json; charset=UTF-8';
-			else if (options.dataType == 'formData') options.headers['content-type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
+			else if (options.dataType == 'formData') options.headers['content-type'] =  'multipart/form-data'; //'application/x-www-form-urlencoded; charset=UTF-8';
 		}
 
-		var op = http;
-		if (dest.protocol == 'https:') op = https;
+		var operation = http;
+		if (dest.protocol == 'https:') operation = https;
 
-		var request = op.request(options, (res) => {
+		if (options.dataType == "formData") {
+			// dataObj = mod.helpers.params(data);; //JSON.stringify(data); 
+			options.formData = data;
+		}
+
+		var request = operation.request(options, (res) => {
 			if (options.enc) res.setEncoding(options.enc);
 
 			var data = [];
@@ -101,10 +111,11 @@ module.exports = (function(){
 		// post the data
 		if (data != null) {
 			var dataObj = data;
-			if (options.dataType == "json") dataObj = JSON.stringify(data);
-			else if (options.dataType == "formData") dataObj = mod.helpers.params(data);
+			if (options.dataType == "json") {
+				dataObj = JSON.stringify(data);
+				request.write(dataObj);
+			}
 			//if (options.headers['Content-Type'] != null && options.headers['Content-Type'].startsWith("application/x-www-form-urlencoded")) dataObj = mod.helpers.getFormData(data);
-			request.write(dataObj);
 		} 
 
 		request.on('error', function (e) {
@@ -116,7 +127,78 @@ module.exports = (function(){
 		return defer;
 	}
 
+	mod.request = async (method, url, params = null, data = null, options = {}) => {
+		let p = libx.newPromise();
+		let _options = {
+			method: method,
+		}
+		options = libx.extend(options, _options, { url: url });
+		request(options, (err, httpResponse, body) => {
+			if (err) return p.reject(err);
+			p.resolve(body, httpResponse);
+		});
+		return p;
+	}
+
+	mod.get = async (url, params = null, options = {}) => {
+		if (params != null) {
+			let includePrefix = url.contains('?') ? false : true;
+			let queryString = mod.helpers.toQueryString(params, !includePrefix);
+			url += includePrefix ? queryString : '&' + queryString;
+		}
+
+		options = libx.extend(options, { url: url });
+		return await mod.request('GET', url, params, null, options);
+		// request.get(options, (err, httpResponse, body) => {
+		// 	if (err) return p.reject(err);
+		// 	p.resolve(body, httpResponse);
+		// });
+		// return p;
+	}
+
+	mod.post = async (url, data = null, options = {}) => {
+		let p = libx.newPromise();
+
+		// wrap data with 'body' in case it's not including predefined keyword
+		if (data != null) {
+			let props = libx.getCustomProperties(data);
+			let keywords = ['body', 'form', 'formData', 'multipart', 'json'];
+			if (libx._.intersection(keywords, props).length == 0) {
+				data = { body: data };
+			}
+		}
+
+		options = libx.extend(options, data, { url: url });
+		
+		return await mod.request('POST', url, null, null, options);
+		// request.post(options, (err, httpResponse, body) => {
+		// 	if (err) return p.reject(err);
+		// 	p.resolve(body, httpResponse);
+		// });
+		// return p;
+	}
+
+	mod.upload = async (url, fileReadStream, options = {}) => {
+		let p = libx.newPromise();
+
+		let formData = {
+			file: fileReadStream,
+		}
+
+		options = libx.extend(options, { formData: formData }, { url: url });
+
+		request.post(options, (err, httpResponse, body) => {
+			if (err) return p.reject(err);
+			p.resolve(body, httpResponse);
+		});
+		return p;
+	}
+
 	mod.helpers = {};
+
+	mod.helpers.toQueryString = (obj, excludePrefix = false) => {
+		return querialize(obj, excludePrefix);
+	}
 
 	mod.helpers.fixUrl = function(url, prefixUrl) {
 		var sep = "://";
@@ -153,6 +235,7 @@ module.exports = (function(){
 		return url.replace(new RegExp("([^:]\/)\/+", "g"), "$1");
 	};
 
+	/*
 	mod.helpers.getFormData = object => {
 		const formData = new FormData();
 		Object.keys(object).forEach(key => {
@@ -163,10 +246,7 @@ module.exports = (function(){
 		});
 		return formData;
 	}
-	// object => Object.keys(object).reduce((formData, key) => {
-	// 	formData.append(key, object[key]);
-	// 	return formData;
-	// }, new FormData());
+	*/
 
 	mod.helpers.formDataToString = formDataObj => [...formDataObj.entries()] // expand the elements from the .entries() iterator into an actual array
 		.map(e => encodeURIComponent(e[0]) + "=" + encodeURIComponent(e[1]));  // transform the elements into encoded key-value-pairs
@@ -198,7 +278,7 @@ module.exports = (function(){
 		}).join('&')
 		
 		keys.pop()
-		return p
+		return p;
 	}
 	
 	return mod;

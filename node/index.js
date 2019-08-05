@@ -177,6 +177,60 @@ module.exports = (function () {
 		}
 	};
 
+	mod.catchErrors = (handler = null, shouldExit = true) => {
+		process
+			.on("unhandledRejection", (reason, p) => {
+				var err = reason.response != null ? Buffer.from(reason.response).toString() : reason.message;
+				if (handler) handler(err, reason.statusCode || reason);
+				else {
+					console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+					console.error("[Unhandled Rejection at Promise] Error:", err, reason.statusCode || '', reason);
+					console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+				}
+				if (shouldExit) process.exit(1);
+			})
+			.on("uncaughtException", err => {
+				if (handler) handler(err.stack, err);
+				else {
+					console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+					console.error("Uncaught Exception thrown", err.stack || err);
+					console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+				}
+				if (shouldExit) process.exit(1);
+			});
+	}
+
+	mod.onExit = (exitHandler = null)=> {
+		process.stdin.resume();//so the program will not close instantly
+
+		function wrapper(options, exitCode) {
+			// if (options.cleanup) console.log('clean');
+			// if (exitCode || exitCode === 0) console.log(exitCode);
+			if (options.exit) {
+				try {
+					if (exitHandler) exitHandler(options, exitCode);
+				} catch(ex) {
+					console.error('libx.node:onExit: Failed to run handler. ex: ', ex);
+				} finally {
+					process.exit();
+				}
+			}
+		}
+
+		//do something when app is closing
+		process.on('exit', wrapper.bind(null,{cleanup:true}));
+
+		//catches ctrl+c event
+		process.on('SIGINT', wrapper.bind(null, {exit:true}));
+
+		// catches "kill pid" (for example: nodemon restart)
+		process.on('SIGUSR1', wrapper.bind(null, {exit:true}));
+		process.on('SIGUSR2', wrapper.bind(null, {exit:true}));
+
+		//catches uncaught exceptions
+		process.on('uncaughtException', wrapper.bind(null, {exit:true}));
+	}
+
 	return mod;
 })();
 
