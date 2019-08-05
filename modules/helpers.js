@@ -13,6 +13,7 @@ module.exports = (function(){
 	mod._.repeat = require('lodash/repeat');
 	mod._.transform = require('lodash/transform');
 	mod._.uniq = require('lodash/uniq');
+	mod._.intersection = require('lodash/intersection');
 
 	// mod.fp.map = require("lodash/fp/map");
 	// mod.fp.flatten = require("lodash/fp/flatten");
@@ -649,6 +650,32 @@ module.exports = (function(){
 	mod.delay = async (milliseconds) => {
 		let p = mod.newPromise();
 		setTimeout(()=>p.resolve(), milliseconds);
+		return p;
+	}
+
+	mod.fileStreamToBuffer =  async (readStream) => {
+		let p = mod.newPromise();
+		let chunks = [];
+
+		if (!readStream.readable) p.reject('fileStreamToBuffer: ex: stream no readable!');
+	
+		// Handle any errors while reading
+		readStream.on('error', err => {
+			// File could not be read
+			p.reject(err);
+		});
+	
+		// Listen for data
+		readStream.on('data', chunk => {
+			chunks.push(chunk);
+		});
+	
+		// File is done being read
+		readStream.on('close', () => {
+			// Create a buffer of the image from the stream
+			p.resolve(Buffer.concat(chunks));
+		});
+
 		return p;
 	}
 

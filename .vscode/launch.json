@@ -72,18 +72,31 @@
 			"console": "internalConsole",
 		},
 		{
-            "name": "Jest Tests",
-            "type": "node",
-            "request": "launch",
-            "runtimeArgs": ["--inspect-brk", "${workspaceRoot}/node_modules/.bin/jest", "--runInBand"],
-            "console": "integratedTerminal",
-            "internalConsoleOptions": "neverOpen"
-		},
-		{
             "name": "Node.JS attach (local)",
             "type": "node",
             "request": "attach",
             "port": 9229
 		},
+		{
+            "name": "Jest Tests",
+            "type": "node",
+            "request": "launch",
+            "runtimeArgs": ["--inspect-brk", "${workspaceRoot}/node_modules/.bin/jest", "--runInBand"],
+            "console": "internalConsole", //integratedTerminal",
+			"internalConsoleOptions": "neverOpen",
+            "port": 9229			
+		},
+		{
+            "type": "node",
+            "request": "launch",
+            "name": "Typescript",
+            "program": "${workspaceFolder}/tests/mockServer.ts",
+            // "program": "${workspaceFolder}/src/main.ts",
+            "preLaunchTask": "tsc: build - tsconfig.json",
+            "outFiles": [
+                "${workspaceFolder}/.tmp/**/*.js"
+			],
+            "port": 9229			
+        },
     ]
 }

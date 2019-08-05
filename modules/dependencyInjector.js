@@ -15,6 +15,8 @@ module.exports = (function(){ // dependencyInjector.js
 		constructor() {
 			this.modules = {};
 			this.pendingFunctions = {};
+
+			libx.modules = this.modules;
 		}
 
 		register(name, instance) {
