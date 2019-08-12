@@ -104,7 +104,7 @@ declare namespace LibxJS {
 		waitUntil<T>(conditionFn: Function, callback?: (()=>T), interval?: number, timeout?: number): Promise<T>;
 		measure(measureName?: string): number;
 		getMeasure(measureName?: string): number;
-		node: any;
+		node: IModuleNode;
 		fileStreamToBuffer(readStream): Promise<Buffer>;
 	}
 
@@ -329,6 +329,22 @@ declare namespace LibxJS {
 			formDataToString(formDataObj: Object): string;
 			params(params: any, keys: Object, isArray?: Boolean): any;
 		}
+	}
+
+	interface IModuleNode {
+		isCalledDirectly(): boolean;
+		exec(commands: string, verbose: boolean): Promise<any>;
+		getLibxVersion(): string;
+		readPackageJson(path: string): any;
+		readConfig(_path: string, secretsKey: string): any;
+		bumpNpmVersion(file: string, releaseType: string): { original, updated };
+		readJsonFileStripComments(file: string): any;
+		encryptFile(file: string, key: string, newFile?: string): string;
+		decryptFile(file: string, key: string, newFile?: string): string;
+		mkdirRecursiveSync(path: string): void;
+		rmdirRecursiveSyncfunction(path: string): void;
+		catchErrors(handler?: Function, shouldExit?: boolean): void;
+		onExit(exitHandler?: Function): void;
 	}
 
 	type LogColors = { reset, bright, dim, underscore, blink, reverse, hidden, fgBlack, fgRed, fgGreen, fgYellow, fgBlue, fgMagenta, fgCyan, fgWhite, bgBlack, bgRed, bgGreen, bgYellow, bgBlue, bgMagenta, bgCyan, bgWhite };

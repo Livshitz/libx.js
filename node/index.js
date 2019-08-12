@@ -130,7 +130,7 @@ module.exports = (function () {
 		return obj;
 	}
 
-	mod.encryptFile = (file, key, newFile) => {
+	mod.encryptFile = (file, key, newFile = null) => {
 		var content = fs.readFileSync(file).toString();
 		var crypto = require('../modules/crypto.js');
 		var encrypted = crypto.encrypt(content, key);
@@ -138,7 +138,7 @@ module.exports = (function () {
 		return encrypted;
 	}
 
-	mod.decryptFile = (file, key, newFile) => {
+	mod.decryptFile = (file, key, newFile = null) => {
 		var content = fs.readFileSync(file);
 		var crypto = require('../modules/crypto.js');
 		var data = crypto.decrypt(content.toString(), key);

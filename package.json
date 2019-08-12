@@ -16,7 +16,8 @@
         "node/**",
         "modules/**",
         "src/**",
-        "*.js"
+        "*.js",
+        "*.ts"
     ],
     "author": "",
     "license": "ISC",
