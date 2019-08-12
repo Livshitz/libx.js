@@ -1,7 +1,7 @@
 /// <reference path="./libx.extensions.d.ts" />
 /// <reference path="./enums.d.ts" />
 /// <reference path="./enums.d.ts" />
-/// <reference path="node_modules/\@types/lodash/index.d.ts" />
+/// <reference types="lodash" />
 
 declare namespace LibxJS {
 	interface Base {
