@@ -15,9 +15,19 @@ test('helpers.spawnHierarchy-positive', () => {
 });
 
 test('helpers.diff-positive', () => {
-	let param = { a: 1, b: 2 , c: { ca: 11, cb: 22 }};
+	let param = { a: 1, b: 2 , c: { ca: 11, cb: 22 }, empty: {}};
 	let output = libx.diff(param, { a: 1, c: { cb:22 } });
+	expect(output).toEqual({ b: 2, c: { ca: 11 }, empty: {}});
+});
+test('helpers.diff-skipEmpty-positive', () => {
+	let param = { a: 1, b: 2 , c: { ca: 11, cb: 22 }, empty: {} };
+	let output = libx.diff(param, { a: 1, c: { cb:22 } }, true);
 	expect(output).toEqual({ b: 2, c: { ca: 11 }});
+});
+test('helpers.diff-skipEmpty-negative', () => {
+	let param = { a: 1, b: 2 , c: { ca: 11, cb: 22 }, empty: {} };
+	let output = libx.diff(param, { a: 1, c: { cb:22 } }, false);
+	expect(output).toEqual({ b: 2, c: { ca: 11 }, empty: {} });
 });
 
 test('helpers.isObject-positive', () => {
