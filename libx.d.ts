@@ -332,6 +332,7 @@ declare namespace LibxJS {
 	}
 
 	interface IModuleNode {
+		args:any;
 		isCalledDirectly(): boolean;
 		exec(commands: string, verbose: boolean): Promise<any>;
 		getLibxVersion(): string;
