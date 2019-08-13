@@ -1,6 +1,6 @@
 {
     "name": "libx.js",
-    "version": "0.3.10",
+    "version": "0.3.11",
     "description": "",
     "main": "entry.js",
     "types": "libx.d.ts",
