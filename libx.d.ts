@@ -55,7 +55,7 @@ declare namespace LibxJS {
 		debounce(func: Function, wait: number, immediate?: boolean, allowTaillingCall?: boolean): Function;
 		deferred: IDeferredJS; //(func :Function): Promise<any>;
 		delay(milliseconds: number): Promise<any>;
-		diff(object: Object, base: Object): Object;
+		diff(object: Object, base: Object, skipEmpty?: boolean): Object;
 		extend(deep: boolean, targe: Object, ...sources: Object[]): any;
 		extend(targe: Object, ...sources: Object[]): any;
 		extensions: IExtensions;

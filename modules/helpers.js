@@ -78,15 +78,26 @@ module.exports = (function(){
 	 * @param  {Object} base   Object to compare with
 	 * @return {Object}        Return a new object who represent the diff
 	*/
-	mod.diff = (object, base)=>{
-		function changes(object, base) {
-			return mod._.transform(object, function(result, value, key) {
+	mod.diff = (object, base, skipEmpty = false)=>{
+		function changes(object, base, skipEmpty = false) {
+			let ret = mod._.transform(object, function(result, value, key) {
 				if (!mod._.isEqual(value, base[key])) {
-					result[key] = (mod._.isObject(value) && mod._.isObject(base[key])) ? changes(value, base[key]) : value;
+					if (skipEmpty && mod.isEmpty(value)) {
+						result = null;
+						return;
+					}
+					result[key] = (mod._.isObject(value) && mod._.isObject(base[key])) ? changes(value, base[key], skipEmpty) : value;
+					if (skipEmpty && mod.isEmpty(result[key])) {
+						delete result[key];
+					}
 				}
 			});
+			
+			if (skipEmpty && mod.isEmpty(ret)) return null;
+			else return ret;
 		}
-		return changes(object, base);
+		return changes(object, base, skipEmpty);
+		
 	}
 
 	mod.bufferToArrayBuffer = (buf) => {

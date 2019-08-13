@@ -36,10 +36,18 @@ module.exports = (function () {
 	}
 
 	mod.isCalledDirectly = () => {
-		if (require.main == module.parent) {
-			return true; // required as a module
-		} else {
-			return false; // required as a module
+		try {
+			// generate a stack trace
+			const stack = (new Error()).stack;
+			// the third line refers to our caller
+			const stackLine = stack.split("\n")[2];
+			// extract the module name from that line
+			const callerModuleName = /\((.*):\d+:\d+\)$/.exec(stackLine)[1];
+		
+			return require.main.filename === callerModuleName;
+		} catch(ex) {
+			libx.log.w('libx.node.isCalledDirectly: Error: ', ex);
+			return false;
 		}
 	}
 
