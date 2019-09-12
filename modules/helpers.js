@@ -342,6 +342,7 @@ module.exports = (function(){
 	mod.jsonify = function (obj, isCompact = false) {
 		// return JSON.stringify(obj, null, "\t");
 
+		// if (!isCompact) return JSON.stringify(obj, null, 2);
 		if (isCompact) return JSON.stringify(obj);
 
 		return JSON.stringify(obj,function(k,v){

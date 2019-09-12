@@ -253,7 +253,8 @@ test('helpers.jsonify-compact-positive', () => {
 test('helpers.jsonify-notcompact-positive', () => {
 	let param = { a : 1, b : { c : 3 } };
 	let output = libx.jsonify(param);
-	expect(output.replace(/[\t\s]/g, '')).toEqual('{"a":1,"b":{"c":3}}');
+	// expect(output.replace(/[\t\s]/g, '')).toEqual('{"a":1,"b":{"c":3}}');
+	expect(output).toEqual("{\n    \"a\": 1,\n    \"b\": {\n        \"c\": 3\n    }\n}");
 });
 
 test('helpers.sleep-positive', async () => {
