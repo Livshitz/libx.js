@@ -124,6 +124,14 @@ test('date.addHours-positive', () => {
 	let output = dataset.date.addHours(6);
 	expect(output.getHours()).toBe((dataset.date.getHours() + 6) % 24);
 });
+test('date.addMinutes-positive', () => {
+	let output = dataset.date.addMinutes(6);
+	expect(output.getMinutes()).toBe((dataset.date.getMinutes() + 6) % 60);
+});
+test('date.addMilliseconds-positive', () => {
+	let output = dataset.date.addMilliseconds(6);
+	expect(output.getMilliseconds()).toBe((dataset.date.getMilliseconds() + 6) % 1000);
+});
 
 // [[[[[[[[[[  Array Extensions  ]]]]]]]]]]
 

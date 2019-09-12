@@ -238,8 +238,16 @@ module.exports = (function(){
 	};
 
 	mod.date.addHours = function (h) {
+		return this.addMilliseconds(h * 60 * 60 * 1000);
+	};
+
+	mod.date.addMinutes = function (m) {
+		return this.addMilliseconds(m * 60 * 1000);
+	};
+
+	mod.date.addMilliseconds = function (ms) {
 		let ret = new Date(this);
-		ret.setTime(this.getTime() + h * 60 * 60 * 1000);
+		ret.setTime(ret.getTime() + ms);
 		return ret;
 	};
 

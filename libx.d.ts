@@ -114,7 +114,7 @@ declare namespace LibxJS {
 
 	interface ILodash extends _.LoDashStatic {
 		VERSION: string;
-		camelCase(): any;
+		// camelCase(str: string): string;
 		// forEach(): any;
 		// assignIn(): any;
 		// bind(): any;
@@ -343,7 +343,7 @@ declare namespace LibxJS {
 		encryptFile(file: string, key: string, newFile?: string): string;
 		decryptFile(file: string, key: string, newFile?: string): string;
 		mkdirRecursiveSync(path: string): void;
-		rmdirRecursiveSyncfunction(path: string): void;
+		rmdirRecursiveSync(path: string): void;
 		catchErrors(handler?: Function, shouldExit?: boolean): void;
 		onExit(exitHandler?: Function): void;
 	}

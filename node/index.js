@@ -42,7 +42,9 @@ module.exports = (function () {
 			// the third line refers to our caller
 			const stackLine = stack.split("\n")[2];
 			// extract the module name from that line
-			const callerModuleName = /\((.*):\d+:\d+\)$/.exec(stackLine)[1];
+			const caller = /(?!\s*at\s*)?\(?(\/.*):\d+:\d+\)?$/.exec(stackLine); ///\((.*):\d+:\d+\)$/.exec(stackLine);
+			if (caller == null || caller.length == 0) return true;
+			const callerModuleName = caller[caller.length-1];
 		
 			return require.main.filename === callerModuleName;
 		} catch(ex) {

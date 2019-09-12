@@ -3,5 +3,9 @@ module.exports = (function(){
 
 	var EventsStore = require('./EventsStore');
 
-	return libx.di.register('appEvents', global.appEvents = new EventsStore());
+	console.log('appEvents-pre resolve');
+	return libx.di.registerResolve('appEvents', (rxjs) => {
+		console.log('appEvents-resolved');
+		return global.appEvents = new EventsStore();
+	});
 })();

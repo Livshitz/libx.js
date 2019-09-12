@@ -1,6 +1,5 @@
 // Playground test:
 
-
 class A {
 	prop: number = 0;
 

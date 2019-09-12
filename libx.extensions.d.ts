@@ -22,7 +22,9 @@ declare namespace LibxJS {
 		format(strFormat: string, utc?: boolean) : string;
 		fromJson(aJsonDate: Object) : Date;
 		toJson() : string;
-		addHours(h: number) :Date;
+		addHours(h: number) : Date;
+		addMinutes(m: number) : Date;
+		addMilliseconds(ms: number) : Date;
 		toUTC(): Date;
 		toISOStringUTC(isUTC?: Boolean): Date;
 	}
