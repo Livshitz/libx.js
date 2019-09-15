@@ -4,7 +4,10 @@ module.exports = async function(firebaseModule){
 	var libx = __libx;
 	// var libx = require('../bundles/browser.essentials');
 
-	var appEvents = await require('../modules/appEvents');
+	var appEvents = null;
+	require('../modules/appEvents').then(_appEvents=>{
+		appEvents = _appEvents;
+	});
 
 	mod.firebaseModule = firebaseModule;
 	mod.firebase = firebaseModule.firebaseApp;
@@ -16,7 +19,7 @@ module.exports = async function(firebaseModule){
 	mod.onDataChanged = new libx.Callbacks();
 	mod.onProfileChanged = new libx.Callbacks();
 
-	appEvents.broadcast('user', { step:'init' });
+	if (appEvents) appEvents.broadcast('user', { step:'init' });
 
 	//#region Signin methods
 	mod.signInGoogle = function () {
@@ -124,7 +127,7 @@ module.exports = async function(firebaseModule){
 		if (!user) {
 			mod.data = null;
 			mod.onSignOut.trigger(mod.data);
-			appEvents.broadcast('user', { step:'signed-out' });
+			if (appEvents) appEvents.broadcast('user', { step:'signed-out' });
 			return;
 		}
 
@@ -144,7 +147,7 @@ module.exports = async function(firebaseModule){
 		// mod.writeData();
 		//mod.observeUser();
 
-		appEvents.broadcast('user', { step:'signed-in' });
+		if (appEvents) appEvents.broadcast('user', { step:'signed-in' });
 		mod.onSignIn.trigger(mod.data);
 	}
 
@@ -153,7 +156,7 @@ module.exports = async function(firebaseModule){
 			if (data != null && data.length == 1) data = data[0];
 			libx.log.verbose('> user: user data changed', data)
 			libx.extend(mod.data, data);
-			appEvents.broadcast('user', { step:'user-updated' });
+			if (appEvents) if (appEvents) appEvents.broadcast('user', { step:'user-updated' });
 			mod.onDataChanged.trigger(mod.data);
 		});
 	}
@@ -174,7 +177,7 @@ module.exports = async function(firebaseModule){
 				mod.profile.profilePicUrl = mod.data.profilePicUrl;
 			}
 
-			appEvents.broadcast('user', { step:'profile-updated' });
+			if (appEvents) appEvents.broadcast('user', { step:'profile-updated' });
 			mod.onProfileChanged.trigger(mod.profile);
 		});
 	}
@@ -182,7 +185,7 @@ module.exports = async function(firebaseModule){
 	mod.writeData = function() {
 		firebaseModule.update('/users/' + mod.data.id, mod.data);
 		firebaseModule.update('/profiles/' + mod.data.id, mod.profile);
-		appEvents.broadcast('user', { step:'wrote-data' });
+		if (appEvents) appEvents.broadcast('user', { step:'wrote-data' });
 	}
 
 	// if ($rootScope.app == null) $rootScope.app = {};
