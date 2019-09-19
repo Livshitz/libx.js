@@ -13,6 +13,10 @@ declare namespace LibxJS {
 		(): IDeferred<any>;
 	}
 
+	interface Map<T> {
+		[K: string]: T;
+	}
+
 	interface IDeferred<T>  extends Promise<any> {
 		resolveWith(ctx);
 		rejectWith(ctx);
@@ -106,6 +110,7 @@ declare namespace LibxJS {
 		getMeasure(measureName?: string): number;
 		node: IModuleNode;
 		fileStreamToBuffer(readStream): Promise<Buffer>;
+		getDeep(obj: any, path: string): any;
 	}
 
 	interface IExtensions {
@@ -283,6 +288,7 @@ declare namespace LibxJS {
 		dictToArray(dict: any);
 		parseKeyDate(key: string);
 		onPresent(path: string, value: any, onDisconnectValue: any);
+		cleanObjectId(objectId: string, char?: string): string;
 	}
 
 	interface ICallbacks {
@@ -346,6 +352,8 @@ declare namespace LibxJS {
 		rmdirRecursiveSync(path: string): void;
 		catchErrors(handler?: Function, shouldExit?: boolean): void;
 		onExit(exitHandler?: Function): void;
+		getFilenameWithoutExtension(filePath: string): string;
+		getProjectConfig(containingFolder: string, secret: string): any; 
 	}
 
 	type LogColors = { reset, bright, dim, underscore, blink, reverse, hidden, fgBlack, fgRed, fgGreen, fgYellow, fgBlue, fgMagenta, fgCyan, fgWhite, bgBlack, bgRed, bgGreen, bgYellow, bgBlue, bgMagenta, bgCyan, bgWhite };

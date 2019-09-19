@@ -254,7 +254,7 @@ test('helpers.jsonify-notcompact-positive', () => {
 	let param = { a : 1, b : { c : 3 } };
 	let output = libx.jsonify(param);
 	// expect(output.replace(/[\t\s]/g, '')).toEqual('{"a":1,"b":{"c":3}}');
-	expect(output).toEqual("{\n    \"a\": 1,\n    \"b\": {\n        \"c\": 3\n    }\n}");
+	expect(output).toEqual("{\n  \"a\": 1,\n  \"b\": {\n    \"c\": 3\n  }\n}");
 });
 
 test('helpers.sleep-positive', async () => {
@@ -488,6 +488,17 @@ test('helpers.getMeasure-positive', async () => {
 	await libx.delay(100);
 	let output = libx.getMeasure('test2');
 	expect(output).toBeLessThanOrEqual(120);
+});
+
+test('helpers.getDeep-positive', async () => {
+	let param = { a: { b: { c: 2 } }};
+	let output = libx.getDeep(param, 'a/b/c');
+	expect(output).toEqual(2);
+});
+test('helpers.getDeep-positive-slashAtStart', async () => {
+	let param = { a: { b: { c: 2 } }};
+	let output = libx.getDeep(param, '/a/b/c');
+	expect(output).toEqual(2);
 });
 
 // test('helpers.-positive', () => {
