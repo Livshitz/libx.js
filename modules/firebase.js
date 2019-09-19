@@ -172,7 +172,7 @@ module.exports = function(firebaseApp, firebaseProvider){
 	};
 
 	mod.cleanObjectId = (objectId, char = '-') => {
-		objectId.replace(/[\.\#\$\/\[\]]/g, char);
+		return objectId.replace(/[\.\#\$\/\[\]\&]/g, char);
 	}
 
 	mod._fixObj = function(data) {

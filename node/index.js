@@ -134,6 +134,11 @@ module.exports = (function () {
 		return bump(file, { obj })
 	}
 
+	mod.getFilenameWithoutExtension = (path) => {
+		if (path == null || path.length <= 1) return null;
+		return path.split('.').slice(0, -1).join('.');
+	}
+
 	mod.readJsonFileStripComments = (file) => {
 		var content = fs.readFileSync(file);
 		var obj = libx.parseJsonFileStripComments(content);

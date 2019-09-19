@@ -342,7 +342,7 @@ module.exports = (function(){
 	mod.jsonify = function (obj, isCompact = false) {
 		// return JSON.stringify(obj, null, "\t");
 
-		// if (!isCompact) return JSON.stringify(obj, null, 2);
+		if (!isCompact) return JSON.stringify(obj, null, 2);
 		if (isCompact) return JSON.stringify(obj);
 
 		return JSON.stringify(obj,function(k,v){
@@ -351,7 +351,7 @@ module.exports = (function(){
 			return v;
 		},4);
 	}
-	
+
 	mod.sleep = async (time, callback = null) => {
 		var stop = new Date().getTime();
 		while(new Date().getTime() < stop + time) {
@@ -511,6 +511,18 @@ module.exports = (function(){
 		function findDuplicate( propName ) {
 			return mod._globalProps.indexOf( propName ) === -1;
 		}
+	}
+
+	mod.getDeep = (obj, path)=>{
+		let parts = path.split('/');
+		let ret = obj;
+		do {
+			if (parts.length == 0) return ret;
+			let curPart = parts.shift();
+			if (curPart == "") continue;
+			ret = ret[curPart];
+		} while(ret != null);
+		return ret;
 	}
 
 	mod.isNull = (obj) => obj == undefined || obj == null;
