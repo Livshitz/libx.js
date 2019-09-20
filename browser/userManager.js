@@ -16,6 +16,7 @@ module.exports = async function(firebaseModule){
 
 	mod.onSignIn = new libx.Callbacks();
 	mod.onSignOut = new libx.Callbacks();
+	mod.onStatusChanged = new libx.Callbacks();
 	mod.onDataChanged = new libx.Callbacks();
 	mod.onProfileChanged = new libx.Callbacks();
 
@@ -144,6 +145,8 @@ module.exports = async function(firebaseModule){
 
 		mod.isReady = true;
 		mod._fbUser = user;
+
+		mod.onStatusChanged.trigger(user);
 
 		if (!user) {
 			mod.data = null;

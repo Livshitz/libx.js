@@ -298,6 +298,8 @@ declare namespace LibxJS {
 		clear(id: string): any;
 		clearAll(): any;
 		subscribe(callback: Function): any;
+		once(callback: Function): any;
+		until(callback: Function): Function;
 		trigger(... params : any[]): any;
 	}
 
