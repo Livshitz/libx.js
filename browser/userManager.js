@@ -22,41 +22,50 @@ module.exports = async function(firebaseModule){
 	if (appEvents) appEvents.broadcast('user', { step:'init' });
 
 	//#region Signin methods
-	mod.signInGoogle = function () {
+	mod.signInGoogle = async () => {
+		let p = libx.newPromise();
 		// Sign in Firebase using popup auth and Google as the identity provider.
 		var provider = new mod.firebaseModule.firebaseProvider.auth.GoogleAuthProvider();
 		
 		if (mod.auth.currentUser != null && mod.auth.currentUser.isAnonymous)
-			mod.auth.currentUser.linkWithPopup(provider)
+			mod.auth.currentUser.linkWithPopup(provider).then(()=>p.resolve()).catch(ex=>p.reject(ex));
 		else
-			mod.auth.signInWithPopup(provider);
+			mod.auth.signInWithPopup(provider).then(()=>p.resolve()).catch(ex=>p.reject(ex));
+		return p;
 	};
 
-	mod.signInGithub = function () {
+	mod.signInGithub = async () => {
+		let p = libx.newPromise();
 		// Sign in Firebase using popup auth and Google as the identity provider.
 		var provider = new mod.firebaseModule.firebaseProvider.auth.GithubAuthProvider();
 		
 		if (mod.auth.currentUser != null && mod.auth.currentUser.isAnonymous)
-			mod.auth.currentUser.linkWithPopup(provider)
+			mod.auth.currentUser.linkWithPopup(provider).then(()=>p.resolve()).catch(ex=>p.reject(ex));
 		else
-			mod.auth.signInWithPopup(provider);
+			mod.auth.signInWithPopup(provider).then(()=>p.resolve()).catch(ex=>p.reject(ex));
+		return p;
 	};
 
-	mod.signInAnon = function(displayName) {
+	mod.signInAnon = async (displayName) => {
+		let p = libx.newPromise();
 		if (mod.data == null) mod.data = {};
 
 		if (mod.profile == null) mod.profile = {};
 		mod.profile.displayName = displayName;
 		mod.auth.signInAnonymously().then(function (u) {
 			libx.log.verbose(' > app:user: Got anon user');
+			p.resolve();
 		}).catch(function (error) {
 			libx.log.verbose(' ! app:user: Failed to get anon user', error);
+			p.reject(error);
 			// var errorCode = error.code;
 			// var errorMessage = error.message;
 		});
+		return p;
 	}
 
-	mod.signInFacebook = function () {
+	mod.signInFacebook = async () => {
+		let p = libx.newPromise();
 		// Sign in Firebase using popup auth and Google as the identity provider.
 		var provider = new mod.firebaseModule.firebaseProvider.auth.FacebookAuthProvider();
 		provider.addScope("email");
@@ -67,36 +76,47 @@ module.exports = async function(firebaseModule){
 		provider.setCustomParameters({ 'display': 'popup' });
 
 		if (mod.auth.currentUser != null && mod.auth.currentUser.isAnonymous)
-			mod.auth.currentUser.linkWithPopup(provider)
+			mod.auth.currentUser.linkWithPopup(provider).then(()=>p.resolve()).catch(ex=>p.reject(ex));
 		else
-			mod.auth.signInWithPopup(provider);
+			mod.auth.signInWithPopup(provider).then(()=>p.resolve()).catch(ex=>p.reject(ex));
+
+		return p;
 	};
 	
-	mod.signUpEmail = function (email, password) {
-		mod.auth.createUserWithEmailAndPassword(email, password).catch(function(error) {
+	mod.signUpEmail = async (email, password) => {
+		let p = libx.newPromise();
+		mod.auth.createUserWithEmailAndPassword(email, password).then(()=>p.resolve()).catch(function(error) {
 			libx.log.error('app:user:signInEmail: Error- ', error);
 			var errorCode = error.code;
 			var errorMessage = error.message;
+			p.reject(error);
 		});
+		return p;
 	};
 
-	mod.signInEmail = function (email, password) {
+	mod.signInEmail = async (email, password) => {
+		let p = libx.newPromise();
 		if (mod.auth.currentUser != null && mod.auth.currentUser.isAnonymous) {
 			var credential = mod.auth.EmailAuthProvider.credential(email, password);
 			mod.auth.currentUser.linkWithCredential(credential).then(function(user) {
 				libx.log.verbose("Account linking success", user);
 				mod.onAuthStateChanged(user);
+				p.resolve(user);
 			}, function(error) {
 				libx.log.verbose("Account linking error", error);
+				p.reject(error)
 			});
 			return;
 		}
 		
-		mod.auth.signInWithEmailAndPassword(email, password).catch(function(error) {
+		mod.auth.signInWithEmailAndPassword(email, password).then(()=>p.resolve()).catch(function(error) {
 			libx.log.verbose(' ! app:user:signInEmail: Error- ', error);
+			p.reject(error);
 			var errorCode = error.code;
 			var errorMessage = error.message;
 		});
+
+		return p;
 	}
 	//#endregion
 	
@@ -153,7 +173,7 @@ module.exports = async function(firebaseModule){
 	}
 
 	mod.observeUser = function() {
-		firebaseModule.listen('/users/' + mod.data.id, data => {
+		return firebaseModule.listen('/users/' + mod.data.id, data => {
 			if (data != null && data.length == 1) data = data[0];
 			libx.log.verbose('> user: user data changed', data)
 			libx.extend(mod.data, data);
@@ -163,7 +183,7 @@ module.exports = async function(firebaseModule){
 	}
 	
 	mod.observeProfile = function() {
-		firebaseModule.listen('/profiles/' + mod.data.id, data => {
+		return firebaseModule.listen('/profiles/' + mod.data.id, data => {
 			if (data != null && data.length == 1) data = data[0];
 			libx.log.verbose('> user: profile data changed', data)
 
@@ -183,10 +203,14 @@ module.exports = async function(firebaseModule){
 		});
 	}
 
-	mod.writeData = function() {
-		firebaseModule.update('/users/' + mod.data.id, mod.data);
-		firebaseModule.update('/profiles/' + mod.data.id, mod.profile);
+	mod.writeData = function() {		
+		let p1 = firebaseModule.update('/users/' + mod.data.id, mod.data);
+		let p2 = firebaseModule.update('/profiles/' + mod.data.id, mod.profile);
 		if (appEvents) appEvents.broadcast('user', { step:'wrote-data' });
+
+		Promise.all([p1, p2]);
+
+		return;
 	}
 
 	// if ($rootScope.app == null) $rootScope.app = {};
