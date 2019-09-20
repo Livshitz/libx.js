@@ -1,7 +1,7 @@
 module.exports = async function(firebaseModule){
 	var mod = {};
 
-	var libx = __libx;
+	// var libx = __libx;
 	// var libx = require('../bundles/browser.essentials');
 
 	var appEvents = null;
@@ -104,9 +104,10 @@ module.exports = async function(firebaseModule){
 		return mod.auth.currentUser != null;
 	}
 
-	mod.signOut = function () {
+	mod.signOut = async function () {
 		// Sign out of Firebase.
-		mod.auth.signOut();
+		await mod.auth.signOut();
+
 		libx.browser.helpers.reload();
 	};
 
@@ -144,8 +145,8 @@ module.exports = async function(firebaseModule){
 		} 
 		mod.data.isAnonymous = user.isAnonymous;
 		mod.data.id = user.uid;
-		// mod.writeData();
-		//mod.observeUser();
+		mod.writeData();
+		mod.observeUser();
 
 		if (appEvents) appEvents.broadcast('user', { step:'signed-in' });
 		mod.onSignIn.trigger(mod.data);

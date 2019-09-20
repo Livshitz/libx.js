@@ -57,10 +57,12 @@ module.exports = function(firebaseApp, firebaseProvider){
 		path = mod._fixPath(path);
 		libx.log.debug('api.firebase.get: Getting \"' + path + '\"');
 		var defer = libx.newPromise();
-		mod._database.ref(path).once('value').then(function(snp) {
-			var obj = snp.val();
-			defer.resolve(obj);
-		});
+		mod._database.ref(path).once('value')
+			.then(function(snp) {
+				var obj = snp.val();
+				defer.resolve(obj);
+			})
+			.catch(ex=>defer.reject(ex));
 		return defer.promise();
 	}
 
@@ -72,9 +74,11 @@ module.exports = function(firebaseApp, firebaseProvider){
 		data = mod._fixObj(data);
 
 		if (!avoidFill) data = mod._fillMissingFields(data, path);
-		mod._database.ref(path).update(data).then(function() {
-			defer.resolve(path);
-		});
+		mod._database.ref(path).update(data)
+			.then(function() {
+				defer.resolve(path);
+			})
+			.catch(ex=>defer.reject(ex));
 		return defer.promise();
 	}
 
@@ -86,9 +90,11 @@ module.exports = function(firebaseApp, firebaseProvider){
 		data = mod._fixObj(data);
 
 		if (!avoidFill) data = mod._fillMissingFields(data, path);
-		mod._database.ref(path).set(data).then(function() {
-			defer.resolve(path);
-		});
+		mod._database.ref(path).set(data)
+			.then(function() {
+				defer.resolve(path);
+			})
+			.catch(ex=>defer.reject(ex));
 		return defer.promise();
 	}
 
@@ -103,9 +109,11 @@ module.exports = function(firebaseApp, firebaseProvider){
 		if (data._entity == null) data._entity = {};
 		data._entity.id = key;
 		if (!avoidFill) data = mod._fillMissingFields(data, path);
-		mod._database.ref(path + '/' + key).set(data).then(function() {
-			defer.resolve(key, path + '/' + key);
-		});
+		mod._database.ref(path + '/' + key).set(data)
+			.then(function() {
+				defer.resolve(key, path + '/' + key);
+			})
+			.catch(ex=>defer.reject(ex));
 		return defer.promise();
 	}
 
@@ -113,9 +121,11 @@ module.exports = function(firebaseApp, firebaseProvider){
 		path = mod._fixPath(path);
 		libx.log.debug('api.firebase.delete: Removing data to \"' + path + '\"');
 		var defer = libx.newPromise();
-		mod._database.ref(path).remove().then(function() {
-			defer.resolve(path);
-		});
+		mod._database.ref(path).remove()
+			.then(function() {
+				defer.resolve(path);
+			})
+			.catch(ex=>defer.reject(ex));
 		return defer.promise();
 	}
 
@@ -123,11 +133,13 @@ module.exports = function(firebaseApp, firebaseProvider){
 		path = mod._fixPath(path);
 		libx.log.debug('api.firebase.filter: Querying data from "{0}", by child "{1}", by value "{2}"'.format(path, byChild, byValue));
 		var defer = libx.newPromise();
-		mod._database.ref(path).orderByChild(byChild).equalTo(byValue).once('value').then(function(snp) {
-			var obj = snp.val();
-			if (obj != null) obj = mod.dictToArray(obj);
-			defer.resolve(obj);
-		});
+		mod._database.ref(path).orderByChild(byChild).equalTo(byValue).once('value')
+			.then(function(snp) {
+				var obj = snp.val();
+				if (obj != null) obj = mod.dictToArray(obj);
+				defer.resolve(obj);
+			})
+			.catch(ex=>defer.reject(ex));
 		return defer.promise();
 	}
 
