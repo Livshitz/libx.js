@@ -4,11 +4,9 @@ export default class LinkedNode<T> {
 	public content: T;
 	public parent: LinkedNode<T>;
 	public children: LinkedNode<T>[] = [];
-	public id: string;
 
 	public constructor(_content?: T) {
 		this.content = _content;
-		this.id = libx.newGuid();
 	}
 
 	public addChild(_content: T) {
@@ -93,7 +91,6 @@ export default class LinkedNode<T> {
 
 	public serialize(): LibxJS.JSONObject {
 		let ret = {
-			id: this.id,
 			content: <any>this.content,
 			children: [],
 		};
@@ -106,7 +103,6 @@ export default class LinkedNode<T> {
 
 	public static deserialize<T>(jsObject): LinkedNode<T> {
 		let node = new LinkedNode<T>(jsObject.content);
-		node.id = jsObject.id;
 		if (jsObject.children != null) {
 			for(let child of jsObject.children) {
 				node.children.push(LinkedNode.deserialize(child))
