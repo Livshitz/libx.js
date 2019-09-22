@@ -1,6 +1,6 @@
 // helpers.getMeasure-positive
 // import iMyModule from '../interfaces/IMyModule';
-import LinkedNode from '../modules/LinkedNode';
+import LinkedNode from '../compiled/LinkedNode';
 
 let testNode: LinkedNode<string>;
 
@@ -75,26 +75,13 @@ test('root.crawl()', () => {
 	expect(foundNodes[2].content).toBe('c2');
 });
 test('root.serialize()', () => {
-	let expected = {"children": [{"content": "b", "id": ""}, {"children": [{"children": [{"content": "c2", "id": ""}], "content": "c1", "id": ""}], "content": "c", "id": ""}], "content": "a", "id": ""};
-	
-	// remove ids, as they're randomly generated
-	testNode.crawl(node=>{
-		node.id = '';
-		return true;
-	});
+	let expected = {"children": [{"content": "b"}, {"children": [{"children": [{"content": "c2"}], "content": "c1"}], "content": "c"}], "content": "a"};
 	let serialized = testNode.serialize();
-
 	expect(serialized).toStrictEqual(expected);
 });
 test('root.deserialize()', () => {
-	let input = {"children": [{"content": "b", "id": ""}, {"children": [{"children": [{"content": "c2", "id": ""}], "content": "c1", "id": ""}], "content": "c", "id": ""}], "content": "a", "id": ""};
-	
+	let input = {"children": [{"content": "b"}, {"children": [{"children": [{"content": "c2"}], "content": "c1"}], "content": "c"}], "content": "a"};
 	let deserialized = LinkedNode.deserialize<string>(input);
-	testNode.crawl(node=>{
-		node.id = '';
-		return true;
-	});
-
 	expect(deserialized.toStringDeep()).toBe(testNode.toStringDeep());
 });
 

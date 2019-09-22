@@ -1,6 +1,6 @@
 {
     "name": "libx.js",
-    "version": "0.3.22",
+    "version": "0.4.0",
     "description": "",
     "main": "entry.js",
     "types": "libx.d.ts",
@@ -12,6 +12,7 @@
     "files": [
         "build/**",
         "bundles/**",
+        "compiled/**",
         "browser/**",
         "node/**",
         "modules/**",

@@ -1,0 +1,13 @@
+{
+	"extends": "../tsconfig.base.json",
+	"files": [
+		"../compiled/index.ts"
+	],
+	"include": [
+		"../**/*.ts"
+	],
+	"exclude": [
+		"node_modules",
+		"dist"
+	]
+}

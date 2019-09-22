@@ -1,6 +1,6 @@
 // Run: ts-node tests/mockServer.ts
 
-/// <reference path="../libx.d.ts" />
+/// <reference path="../compiled/libx.d.ts" />
 const libx: LibxJS.ILibxJS = require('../bundles/essentials');
 
 libx.node = require('../node');
