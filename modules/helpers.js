@@ -551,6 +551,10 @@ module.exports = (function(){
 				obj[prop] = [];
 			} else if (typeof obj[prop] == "object") {
 				hasContent = true;			
+				if (obj[prop] == null) {
+					obj[prop] = null;
+					return;
+				}
 				mod.makeEmpty(obj[prop]);
 			} else {
 				obj[prop] = '';

@@ -413,6 +413,11 @@ test('helpers.makeEmpty-positive', () => {
 	let output = libx.makeEmpty(param);
 	expect(output).toEqual({ a : "" });
 });
+test('helpers.makeEmpty-positive-withNull', () => {
+	let param = { a : 1, b: null};
+	let output = libx.makeEmpty(param);
+	expect(output).toEqual({ a : "", b: null });
+});
 
 test('helpers.base64ToUint8Array-positive', () => {
 	let param = 'YWJj';
