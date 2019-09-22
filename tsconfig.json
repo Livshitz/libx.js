@@ -10,7 +10,7 @@
 	"exclude": [
 		"node_modules",
 		"dist",
-		// "tests"
+		"tests"
 	],
 	"compilerOptions": {
 		/* Basic Options */

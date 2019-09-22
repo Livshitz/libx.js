@@ -361,6 +361,18 @@ declare namespace LibxJS {
 	type LogColors = { reset, bright, dim, underscore, blink, reverse, hidden, fgBlack, fgRed, fgGreen, fgYellow, fgBlue, fgMagenta, fgCyan, fgWhite, bgBlack, bgRed, bgGreen, bgYellow, bgBlue, bgMagenta, bgCyan, bgWhite };
 
 	type LogSeverities = { debug, verbose, info, warning, error, fatal }
+
+	export type Serializable =
+		| number
+		| string
+		| boolean
+		| null
+		| JSONArray
+		| JSONObject;
+	export interface JSONArray extends Array<Serializable> { }
+	export interface JSONObject {
+		[key: string]: Serializable;
+	}
 }
 
 // --------------------------------------------------------------------------------
