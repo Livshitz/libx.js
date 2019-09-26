@@ -319,11 +319,11 @@ declare namespace LibxJS {
 	}
 
 	interface IModuleNetwork {
-		httpGetJson(url: string, _options?: {}): Promise<Object>;
+		httpGetJson(url: string, _options?: {}): Promise<LibxJS.JSONObject>;
 		httpGetString(url: string, _options?: {}): Promise<String>;
 		httpGet(url: string, _options?: {}): Promise<Buffer>;
 		httpPost(url: string, data: any, _options?: {}): Promise<Buffer>;
-		httpPostJson(url: string, data: any, _options?: {}): Promise<Object>;
+		httpPostJson(url: string, data: any, _options?: {}): Promise<LibxJS.JSONObject>;
 		httpRequest(url: string, data: any, method: string, _options?: {}): Promise<any>;
 		request(method, url, params?, options?): Promise<any>;
 		get(url, params?, options?): Promise<any>;
@@ -347,7 +347,8 @@ declare namespace LibxJS {
 		readPackageJson(path: string): any;
 		readConfig(_path: string, secretsKey: string): any;
 		bumpNpmVersion(file: string, releaseType: string): { original, updated };
-		readJsonFileStripComments(file: string): any;
+		readJsonStripComments(file: string): any;
+		readJson(file: string): any;
 		encryptFile(file: string, key: string, newFile?: string): string;
 		decryptFile(file: string, key: string, newFile?: string): string;
 		mkdirRecursiveSync(path: string): void;
@@ -356,6 +357,7 @@ declare namespace LibxJS {
 		onExit(exitHandler?: Function): void;
 		getFilenameWithoutExtension(filePath: string): string;
 		getProjectConfig(containingFolder: string, secret: string): any; 
+		getFiles(query?: string, options?: JSONObject): string[];
 	}
 
 	type LogColors = { reset, bright, dim, underscore, blink, reverse, hidden, fgBlack, fgRed, fgGreen, fgYellow, fgBlue, fgMagenta, fgCyan, fgWhite, bgBlack, bgRed, bgGreen, bgYellow, bgBlue, bgMagenta, bgCyan, bgWhite };
@@ -372,6 +374,10 @@ declare namespace LibxJS {
 	export interface JSONArray extends Array<Serializable> { }
 	export interface JSONObject {
 		[key: string]: Serializable;
+	}
+
+	interface ISerializable {
+		toJSON(): string;
 	}
 }
 

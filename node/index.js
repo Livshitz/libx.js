@@ -5,6 +5,7 @@ module.exports = (function () {
 	const argv = require('yargs').argv;
 	const bump = require('json-bump')
 	const exec = require('child_process').exec;
+	const glob = require('glob')
 
 	var libx = require('../bundles/essentials.js');
 
@@ -33,6 +34,15 @@ module.exports = (function () {
 			if (ret != null && ret.private == null) ret.private = {};
 			return ret;
 		}
+	}
+
+	mod.getFiles = (query = '**/*', options)=>{
+		let p = libx.newPromise();
+		glob(query, options, function (err, files) {
+			if (err) return p.reject(err);
+			p.resolve(files);
+		})
+		return p;
 	}
 
 	mod.isCalledDirectly = () => {
@@ -134,12 +144,20 @@ module.exports = (function () {
 		return bump(file, { obj })
 	}
 
-	mod.getFilenameWithoutExtension = (path) => {
-		if (path == null || path.length <= 1) return null;
-		return path.split('.').slice(0, -1).join('.');
+	mod.getFilenameWithoutExtension = (_path) => {
+		_path = path.basename(_path);
+		if (_path == null || _path.length <= 1) return null;
+		return _path.split('.').slice(0, -1).join('.');
 	}
 
-	mod.readJsonFileStripComments = (file) => {
+	mod.readJson = (file) => {
+		var content = fs.readFileSync(file);
+		return JSON.parse(content);
+	}
+	
+	mod.readJsonFileStripComments = (file) => mod.readJsonStripComments(file);
+
+	mod.readJsonStripComments = (file) => {
 		var content = fs.readFileSync(file);
 		var obj = libx.parseJsonFileStripComments(content);
 		return obj;
