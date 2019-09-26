@@ -9,14 +9,19 @@ export default class LinkedNode<T> {
 		this.content = _content;
 	}
 
-	public addChild(_content: T) {
+	public addChild(_content: T): LinkedNode<T> {
 		let newNode = new LinkedNode<T>(_content);
 		newNode.parent = this;
 		this.children.push(newNode);
 		return newNode;
 	}
 
-	public addChildren(_contents: T[]) {
+	public addSibling(_content: T): LinkedNode<T> {
+		if (this.parent == null) return null;
+		return this.parent.addChild(_content);
+	}
+
+	public addChildren(_contents: T[]): LinkedNode<T>[] {
 		let ret: LinkedNode<T>[] = [];
 		for(let item of _contents) {
 			let newChild = this.addChild(item);
@@ -55,29 +60,55 @@ export default class LinkedNode<T> {
 		return ret;
 	}
 
-	public firstChild(): LinkedNode<T> {
+	public getPrev(): LinkedNode<T> {
+		if (this.parent == null) return null;
+		if (this.parent.children == null || this.parent.children.length <= 1) return null;
+		let index = this.parent.children.indexOf(this);
+		if (index == 0) return null;
+		return this.parent.children[index-1];
+	}
+
+	public getNext(): LinkedNode<T> {
+		if (this.parent == null) return null;
+		if (this.parent.children == null || this.parent.children.length <= 1) return null;
+		let index = this.parent.children.indexOf(this);
+		if (index+1 == this.parent.children.length) return null;
+		return this.parent.children[index+1];
+	}
+
+	public getFirstChild(): LinkedNode<T> {
 		if (this.children.length > 0) return this.children[0];
 		return null;
 	}
 
-	public crawl(predicate?: (node: LinkedNode<T>, level?: number)=>boolean, level: number = 0): LinkedNode<T>[] {
+	public crawl(predicate?: (node: LinkedNode<T>, level?: number)=>boolean, breakOnFind: boolean = false, level: number = 0): LinkedNode<T>[] {
 		let ret = [];
-		if (predicate == null || predicate(this, level)) ret.push(this);
+		if (predicate == null || predicate(this, level)) {
+			ret.push(this);
+			if (breakOnFind) return ret;
+		}
 		++level;
 		for(let child of this.children) {
-			ret.push(...child.crawl(predicate, level));
+			ret.push(...child.crawl(predicate, breakOnFind, level));
+			if (ret.length > 0 && breakOnFind) break;
 		}
 		return ret;
 	}
 
 	public toString() {
-		return this.content.toString();
+		let content: any = this.content;
+		if (content == null) return null;
+		let ret = content.toString();
+		if (ret == '[object Object]') ret = libx.jsonify(content);
+		return ret;
 	}
 
 	public toStringDeep(): string {
 		let ret = '';
 		this.crawl((node, level)=>{
-			ret += node.print(level) + '\n';
+			let cur =  node.print(level);
+			if (cur == null) return false;
+			ret += cur + '\n';
 			return true;
 		});
 		return ret;
@@ -85,7 +116,9 @@ export default class LinkedNode<T> {
 
 	public print(level: number = 0) : string {
 		let prefix = '-'.repeat(level) + (level > 0 ? ' '  : '');
-		let str = prefix + this.toString();
+		let str = this.toString();
+		if (str == null) return null;
+		str = prefix + str;
 		return str;
 	}
 
@@ -101,11 +134,17 @@ export default class LinkedNode<T> {
 		return ret;
 	}
 
+	public toJSON() {
+		return this.serialize();
+	}
+
 	public static deserialize<T>(jsObject): LinkedNode<T> {
 		let node = new LinkedNode<T>(jsObject.content);
 		if (jsObject.children != null) {
 			for(let child of jsObject.children) {
-				node.children.push(LinkedNode.deserialize(child))
+				let newChild = LinkedNode.deserialize<T>(child);
+				newChild.parent = node;
+				node.children.push(newChild)
 			}
 		}
 		return node;
