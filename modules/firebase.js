@@ -149,6 +149,10 @@ module.exports = function(firebaseApp, firebaseProvider){
 		return tmp[1];
 	}
 
+	mod.arrayToDic = function(arr) {
+		return libx._.transform(arr, (agg, x)=> agg[x] = true, {});
+	}
+
 	mod.dictToArray = function(dict) {
 		var pairs = libx._.toPairs(dict);
 		var ret = [];
