@@ -18,6 +18,11 @@ test('string.capitalize-positive', () => {
 	let output = source.capitalize();
 	expect(output).toBe('Abc Def');
 });
+test('string.ellipsis-positive', () => {
+	let source = 'abc def ghi';
+	let output = source.ellipsis(5);
+	expect(output).toBe('abc d...');
+});
 
 test('string.kebabCase-positive', () => {
 	let source = 'aBc Def';

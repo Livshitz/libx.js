@@ -27,6 +27,15 @@ module.exports = (function(){
 		// return this.charAt(0).toUpperCase() + this.slice(1);
 	}
 
+	mod.string.ellipsis = function (maxLength) {
+		let ret = this;
+		if (ret.length > maxLength) {
+			ret = ret.substr(0, maxLength);
+			ret += '...';
+		}
+		return ret;
+	};
+
 	mod.string.kebabCase = function() {
 		return this.replace(/([a-z])([A-Z])/g, '$1-$2')    // get all lowercase letters that are near to uppercase ones
 		.replace(/[\s_]+/g, '-')                // replace all spaces and low dash
