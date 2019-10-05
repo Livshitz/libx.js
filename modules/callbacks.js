@@ -32,7 +32,7 @@ module.exports = (function(){
 
 		trigger() {
 			libx._.each(this.list, (cb)=> {
-				cb.apply(null, arguments)
+				if (cb != null) cb.apply(null, arguments)
             });
         }
 

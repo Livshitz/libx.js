@@ -339,6 +339,10 @@ module.exports = (function(){
 		}
 	}
 
+	mod.parse = function (str) {
+		return JSON.parse(str)
+	}
+
 	mod.jsonify = function (obj, isCompact = false) {
 		// return JSON.stringify(obj, null, "\t");
 

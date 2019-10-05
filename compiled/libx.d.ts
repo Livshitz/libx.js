@@ -91,6 +91,7 @@ declare namespace LibxJS {
 		jsonRecurse(obj, byid?, refs?, prop?, parent?): any;
 		jsonResolveReferences(json): any;
 		jsonify(obj: any, isCompact?: Boolean): string;
+		parse(str: string): any;
 		makeEmpty(obj: Object): Object;
 		makeAsync(func: Function): ()=>Promise<any>;
 		modules(): [];
@@ -278,6 +279,7 @@ declare namespace LibxJS {
 		makeKey(givenTimestamp: Date);
 		getRef(path: string, type: string, callback: Function);
 		listen(path: string, callback: Function);
+		unlisten(path: string);
 		get(path: string): Promise<any>;
 		update(path: string, data: Object, avoidFill?: Boolean);
 		set(path: string, data: Object, avoidFill?: Boolean);
@@ -286,6 +288,7 @@ declare namespace LibxJS {
 		filter(path: string, byChild: string, byValue: any);
 		getIdFromPath(path: string);
 		dictToArray(dict: any);
+		arrayToDic(arr: any);
 		parseKeyDate(key: string);
 		onPresent(path: string, value: any, onDisconnectValue: any);
 		cleanObjectId(objectId: string, char?: string): string;

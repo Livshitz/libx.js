@@ -53,6 +53,12 @@ module.exports = function(firebaseApp, firebaseProvider){
 		});
 	}
 
+	mod.unlisten = (path) => {
+		path = mod._fixPath(path);
+		libx.log.debug('api.firebase.unlisten: Stopping listening to \"' + path + '\"');
+		mod._database.ref(path).off('value');
+	}
+
 	mod.get = function(path) {
 		path = mod._fixPath(path);
 		libx.log.debug('api.firebase.get: Getting \"' + path + '\"');

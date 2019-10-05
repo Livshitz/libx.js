@@ -257,6 +257,12 @@ test('helpers.jsonify-notcompact-positive', () => {
 	expect(output).toEqual("{\n  \"a\": 1,\n  \"b\": {\n    \"c\": 3\n  }\n}");
 });
 
+test('helpers.parse-positive', () => {
+	let param = "{\n  \"a\": 1,\n  \"b\": {\n    \"c\": 3\n  }\n}";
+	let output = libx.parse(param);
+	expect(output).toEqual({ a : 1, b : { c : 3 } });
+});
+
 test('helpers.sleep-positive', async () => {
 	let start = new Date();
 	let output = await libx.sleep(100);

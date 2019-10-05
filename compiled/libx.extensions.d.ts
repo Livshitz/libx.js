@@ -6,6 +6,7 @@ declare namespace LibxJS {
 	interface IExtensionsString {
 		format(...params: any[]) : string;
 		capitalize() : string;
+		ellipsis(maxLength: number) : string;
 		kebabCase() : string;
 		camelize() : string;
 		padNumber(width: number, z: string) : string;
