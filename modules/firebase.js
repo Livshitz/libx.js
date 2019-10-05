@@ -156,20 +156,11 @@ module.exports = function(firebaseApp, firebaseProvider){
 	}
 
 	mod.arrayToDic = function(arr) {
-		return libx._.transform(arr, (agg, x)=> agg[x] = true, {});
+		return libx.arrayToDic(arr);
 	}
 
 	mod.dictToArray = function(dict) {
-		var pairs = libx._.toPairs(dict);
-		var ret = [];
-		libx._.each(pairs, function(pair) {
-			if (pair[1].id == null) pair[1].id = pair[0];
-			else pair[1]._id = pair[0];
-
-			ret.push(pair[1]);
-		});
-
-		return ret;
+		return libx.dictToArray(dict);
 	}
 
 	mod.parseKeyDate = function(key) {

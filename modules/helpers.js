@@ -711,6 +711,23 @@ module.exports = (function(){
 		return p;
 	}
 
+	mod.dictToArray = function(dict) {
+		var pairs = mod._.toPairs(dict);
+		var ret = [];
+		mod._.each(pairs, function(pair) {
+			if (pair[1].id == null) pair[1].id = pair[0];
+			else pair[1]._id = pair[0];
+
+			ret.push(pair[1]);
+		});
+
+		return ret;
+	}
+
+	mod.arrayToDic = function(arr) {
+		return mod._.transform(arr, (agg, x)=> agg[x] = true, {});
+	}
+
 	setTimeout(()=>	{
 		mod.di.register('log', mod.log);
 		mod.di.register('_', mod._);
