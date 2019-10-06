@@ -728,6 +728,16 @@ module.exports = (function(){
 		return mod._.transform(arr, (agg, x)=> agg[x] = true, {});
 	}
 
+	mod.keys = (obj)=>{
+		if (obj == null) return null;
+		return Object.keys(obj);
+	}
+
+	mod.values = (obj)=>{
+		if (obj == null) return null;
+		return Object.values(obj);
+	}
+
 	setTimeout(()=>	{
 		mod.di.register('log', mod.log);
 		mod.di.register('_', mod._);
