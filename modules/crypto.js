@@ -22,7 +22,7 @@ module.exports = (function(){
 	}
 
 	mod.base64_decode = (ciphertext) => {
-		const encryptedWord = mod.lib.enc.Base64.parse(encrypted); // encryptedWord via Base64.parse()
+		const encryptedWord = mod.lib.enc.Base64.parse(ciphertext); // encryptedWord via Base64.parse()
 		const decrypted = mod.lib.enc.Utf8.stringify(encryptedWord); // decrypted encryptedWord via Utf8.stringify() '75322541'
 		return decrypted;
 	}
