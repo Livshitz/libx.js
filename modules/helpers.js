@@ -729,12 +729,12 @@ module.exports = (function(){
 	}
 
 	mod.keys = (obj)=>{
-		if (obj == null) return null;
+		if (obj == null) return [];
 		return Object.keys(obj);
 	}
 
 	mod.values = (obj)=>{
-		if (obj == null) return null;
+		if (obj == null) return [];
 		return Object.values(obj);
 	}
 
