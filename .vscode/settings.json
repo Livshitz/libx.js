@@ -6,7 +6,10 @@
 		"base/**/*.css": true,
 		"base/source/*": true,
 		"test/api/build/": true,
-		"test/lib-cache/": true
+		"test/lib-cache/": true,
+		"compiled/**/*.js": true,
+		"compiled/**/*.js.map": true
+
 	},
 	"debug.node.autoAttach": "on"
 }
