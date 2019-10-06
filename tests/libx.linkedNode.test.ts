@@ -1,6 +1,6 @@
 // helpers.getMeasure-positive
 // import iMyModule from '../interfaces/IMyModule';
-import LinkedNode from '../compiled/LinkedNode';
+import LinkedNode from '../compiled/modules/LinkedNode';
 
 let testNode: LinkedNode<string>;
 
