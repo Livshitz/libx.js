@@ -232,6 +232,13 @@ module.exports = (function(){
 		else return null;
 	}
 
+	mod.getDomain = ()=> { 
+		var p = window.location.host.split('.');
+		if ( p.length>2 ) return p[1];
+		else if ( p.length>1 ) return p[0];
+		else return null;
+	}
+
 	mod.localDownload = (data, fileName) => {
 		var a = document.createElement("a");
 		document.body.appendChild(a);
