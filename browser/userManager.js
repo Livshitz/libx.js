@@ -155,7 +155,7 @@ module.exports = async function(firebaseModule){
 			return;
 		}
 
-		await mod.refreshToken();
+		// await mod.refreshToken();
 
 		if (mod.data == null) mod.data = {};
 
