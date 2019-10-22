@@ -1,3 +1,5 @@
+var FileSaver = require('file-saver');
+
 module.exports = (function(){
 	var mod = {};
 	var libx = __libx;
@@ -239,7 +241,8 @@ module.exports = (function(){
 		else return null;
 	}
 
-	mod.localDownload = (data, fileName) => {
+	mod.localDownload = (data, fileName, type="octet/stream") => {
+		/*
 		var a = document.createElement("a");
 		document.body.appendChild(a);
 		a.style = "display: none";
@@ -247,12 +250,16 @@ module.exports = (function(){
 		if (libx.isObject(data)) {
 			data = JSON.stringify(data);
 		}
-		var blob = new Blob([data], {type: "octet/stream"});
+		var blob = new Blob([data], {type: type});
 		var url = window.URL.createObjectURL(blob);
 		a.href = url;
 		a.download = fileName;
 		a.click();
 		window.URL.revokeObjectURL(url);
+		*/
+
+		var blob = new Blob([data], {type: "text/plain;charset=utf-8"});
+		FileSaver.saveAs(blob, fileName);
 	};
 
 	// urlParams
@@ -437,6 +444,28 @@ module.exports = (function(){
 		img.src = url;
 		return defer.promise();
 	};
+
+	mod.imgToBase64 = async (src, outputFormat) => {
+		var p = libx.newPromise();
+		var img = new Image();
+		img.crossOrigin = 'Anonymous';
+		img.onload = function() {
+			var canvas = document.createElement('CANVAS');
+			var ctx = canvas.getContext('2d');
+			var dataURL;
+			canvas.height = this.naturalHeight;
+			canvas.width = this.naturalWidth;
+			ctx.drawImage(this, 0, 0);
+			dataURL = canvas.toDataURL(outputFormat);
+			p.resolve(dataURL);
+		};
+		img.src = src;
+		if (img.complete || img.complete === undefined) {
+			img.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
+			img.src = src;
+		}
+		return p.promise();
+	}
 
 	mod.queryString = function (name) {
 		name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
