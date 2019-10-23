@@ -241,8 +241,20 @@ module.exports = (function(){
 		else return null;
 	}
 
-	mod.localDownload = (data, fileName, type="octet/stream") => {
-		/*
+	mod.localDownload = (data, fileName, type="data:text/plain;charset=utf-8") => {
+		// var blob = new Blob([data], {type: type}); // "text/plain"
+		// FileSaver.saveAs(blob, fileName);
+
+		var uri = type + ',' + data;
+		var downloadLink = document.createElement("a");
+		downloadLink.href = uri;
+		downloadLink.download = fileName;
+		document.body.appendChild(downloadLink);
+		downloadLink.click();
+		document.body.removeChild(downloadLink);
+	};
+
+	mod.localDownloadBlob = (data, fileName, type="octet/stream;charset=utf-8") => {
 		var a = document.createElement("a");
 		document.body.appendChild(a);
 		a.style = "display: none";
@@ -256,10 +268,6 @@ module.exports = (function(){
 		a.download = fileName;
 		a.click();
 		window.URL.revokeObjectURL(url);
-		*/
-
-		var blob = new Blob([data], {type: "text/plain;charset=utf-8"});
-		FileSaver.saveAs(blob, fileName);
 	};
 
 	// urlParams
