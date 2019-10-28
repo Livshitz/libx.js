@@ -1,4 +1,4 @@
-var FileSaver = require('file-saver');
+// var FileSaver = require('file-saver');
 
 module.exports = (function(){
 	var mod = {};
@@ -493,6 +493,23 @@ module.exports = (function(){
 		return parseInt(matches[1]);
 	};
 
+	(console || {}).watch = function(oObj, sProp) {
+		var sPrivateProp = "$_"+sProp+"_$"; // to minimize the name clash risk
+		oObj[sPrivateProp] = oObj[sProp];
+
+		// overwrite with accessor
+		Object.defineProperty(oObj, sProp, {
+			get: function () {
+				return oObj[sPrivateProp];
+			},
+
+			set: function (value) {
+				//console.log("setting " + sProp + " to " + value); 
+				debugger; // sets breakpoint
+				oObj[sPrivateProp] = value;
+			}
+		});
+	}
 
 
 	return mod;
