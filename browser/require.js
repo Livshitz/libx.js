@@ -259,20 +259,24 @@ module.exports = (function(){
 			arguments[2].unshift(module);
 			Object.defineProperty(arguments[1], '$'+module.id, {'get':function(){return exports;}});
 
+			var content = arguments[3];
 			var extra = 'var __moduleUri = "' + module.uri + '";\n'; 
-			var script = 'function(){\n'+extra+arguments[3]+'\n}';
-			var wrapper = '('+script+')();\n//# sourceURL='+module.uri;
+			if (!module.uri.endsWith('.js')) {
+				content = "module.exports = " + content;
+			}
+			var script = 'function(){\n'+ extra + content +'\n}';
+			let wrapper = '('+script+')();\n//# sourceURL='+module.uri;
+
+			eval(wrapper);
+			
 			// var script = '(function(__moduleUri){\n ('+arguments[3]+')}(); \n'
 			// arguments[3] = '(' + extra + script+')("' + module.uri + '");\nsourceURL="'+module.uri+'"';
 
 			// load(descriptor, cache, pwd, 'function(){\n'+source+'\n}');
 			// arguments[3] = '('+arguments[3]+')();\n//# sourceURL='+module.uri;
-
-
 			
 			// if (typeof Function != "undefined") new Function(arguments[3]);
 			// else 
-			eval(wrapper);
 			// NOTE Store module code in the cache if the loaded file is a bundle
 			if (typeof module.id !== 'string')
 				for (id in module)
