@@ -104,7 +104,7 @@ module.exports = (function(){
 					else buffer = libx.Buffer.concat(data); //  data; 
 				}
 				if (res.statusCode == 200) return defer.resolve(buffer);
-				else defer.reject({ statusCode: res.statusCode, response: buffer});
+				else defer.reject({ statusCode: res.statusCode, response: buffer.toString()});
 			});
 		});
 
