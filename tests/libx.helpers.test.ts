@@ -489,9 +489,9 @@ test('helpers.measure-positive', async () => {
 	await libx.delay(100);
 	let output = libx.measure('test');
 	await libx.delay(100);
-	expect(output).toBeLessThanOrEqual(120);
+	expect(output).toBeLessThanOrEqual(150);
 	output = libx.measure('test');
-	expect(output).toBeLessThanOrEqual(240);
+	expect(output).toBeLessThanOrEqual(250);
 });
 
 test('helpers.getMeasure-positive', async () => {
