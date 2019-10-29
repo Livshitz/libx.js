@@ -26,14 +26,15 @@
   * User management (firebase)
 * Node-only support:
   * CLI helpers
-  * Bundler - Watcher, bundler, transformer, and more ([moved to pax.libx.js](https://github.com/Livshitz/libx.js))
+  * Bundler - Watcher, bundler, transformer, and more ([moved to pax.libx.js](https://github.com/Livshitz/pax.libx.js))
 
 ## Description:
 Different projects usually have a shared portion of infrastructural or helpers code. Libx.js is intended to bring a broad of useful tools, shaped and sharpened to be easily used, hiding the complex or troublesome routines usually needed. <br/>
 
 
 ## Usage
-> npm install --save libx.js
+> npm install --save libx.js   
+or
 > yarn add libx.js
 
 __For browser:__ <br/>
