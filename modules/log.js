@@ -1,7 +1,7 @@
 module.exports = (function(){
 	var mod = {};
 
-	mod.isBrowser = typeof window !== 'undefined';
+	mod.isBrowser = typeof window !== 'undefined' && window.document != null && typeof process === 'undefined';
 
 	mod.isDebug = false;
 	mod.isShowStacktrace = true;

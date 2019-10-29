@@ -251,6 +251,7 @@ declare namespace LibxJS {
 		isShowStacktrace;
 		isShowTime;
 		isShowPrefix;
+		isBrowser;
 		severities: LogSeverities;
 		filterLevel: LogSeverities;
 		
