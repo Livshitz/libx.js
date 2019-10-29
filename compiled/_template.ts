@@ -1,5 +1,5 @@
-const libx: LibxJS.ILibxJS = require('../bundles/essentials');
+// const libx: LibxJS.ILibxJS = require('../bundles/essentials');
 
-export default class Module<T> {
+// export default class Module<T> {
 	
-}
+// }

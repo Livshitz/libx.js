@@ -356,12 +356,13 @@ module.exports = (function(){
 		},4);
 	}
 
-	mod.sleep = async (time, callback = null) => {
-		var stop = new Date().getTime();
-		while(new Date().getTime() < stop + time) {
-			;
-		}
-		if (callback) callback();
+	mod.sleep = async (millis) => {
+		return new Promise(resolve => setTimeout(resolve, millis));
+
+		// var stop = new Date().getTime();
+		// while(new Date().getTime() < stop + millis) {
+		// 	;
+		// }
 	}
 
 	mod.makeAsync = (func) => {
@@ -677,6 +678,12 @@ module.exports = (function(){
 	mod.getMeasure = function(measureName = '_') {
 		if (mod._measures[measureName] == null) return 0;
 		return new Date().getTime() - mod._measures[measureName];
+	}
+
+	mod.getMeasureAndReset = function(measureName = '_') {
+		let ret = mod.getMeasure(measureName);
+		mod._measures[measureName] = null;
+		return ret;
 	}
 
 	mod.delay = async (milliseconds) => {

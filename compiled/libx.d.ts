@@ -109,6 +109,7 @@ declare namespace LibxJS {
 		waitUntil<T>(conditionFn: Function, callback?: (()=>T), interval?: number, timeout?: number): Promise<T>;
 		measure(measureName?: string): number;
 		getMeasure(measureName?: string): number;
+		getMeasureAndReset(measureName?: string): number;
 		node: IModuleNode;
 		fileStreamToBuffer(readStream): Promise<Buffer>;
 		getDeep(obj: any, path: string): any;
