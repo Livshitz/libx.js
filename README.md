@@ -3,10 +3,11 @@
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](/LICENSE)
 [![npm](https://img.shields.io/npm/v/libx.js.svg?maxAge=1000)](https://www.npmjs.com/package/libx.js)
 [![Build Status](https://livshitz.visualstudio.com/libx/_apis/build/status/libx-CI?branchName=master)](https://livshitz.visualstudio.com/libx/_build/latest?definitionId=1&branchName=master)
+[![npm](https://img.shields.io/github/languages/code-size/livshitz/libx.js.svg?label=source%20code%20size)](https://www.github.com/livshitz/libx.js)
 <!--- [![npm](https://img.shields.io/bundlephobia/minzip/libx.js.svg?style=plastic)](https://www.npmjs.com/package/libx.js)
 [![npm](https://img.shields.io/bundlephobia/min/libx.js.svg?style=plastic)](https://www.npmjs.com/package/libx.js)
 -->
-[![npm](https://img.shields.io/github/languages/code-size/livshitz/libx.js.svg?label=source%20code%20size)](https://www.github.com/livshitz/libx.js)
+
 
 > 🛠 libx.js is a carefully crafted toolbelt full of useful modules and helpers for node & web apps
 
