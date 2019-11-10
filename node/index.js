@@ -217,7 +217,7 @@ module.exports = (function () {
 				if (handler) handler(err, reason.statusCode || reason);
 				else {
 					console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-					console.error("[Unhandled Rejection at Promise] Error:", err, reason.statusCode || '', reason);
+					console.error("[Unhandled Rejection at Promise] Error:", err, reason.statusCode || '', reason, p);
 					console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 				}
 				if (shouldExit) process.exit(1);

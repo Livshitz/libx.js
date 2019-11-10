@@ -105,6 +105,8 @@ module.exports = (function(){
 			var _msg = `${prefix}${time} ${msg} ${trace}`; //${color != null ? '%c' : ''}
 			console[func].call(console, _msg, (args.length == 0) ? '' : args );
 		}
+
+		return msg;
 	}
 
 	mod.getStackTrace = () => {
