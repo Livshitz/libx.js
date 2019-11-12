@@ -6,6 +6,7 @@
     "types": "./compiled/libx.d.ts",
     "scripts": {
         "start": "tsc -w",
+        "watch": "tsc -w",
         "build": "tsc",
         "test": "jest",
         "test:ci": "jest --ci --reporters=default --reporters=jest-junit --coverage --coverageReporters=cobertura --coverageReporters=html"

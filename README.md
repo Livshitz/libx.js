@@ -75,7 +75,7 @@ Different projects usually have a shared portion of infrastructural or helpers c
     - Events and Messages managers
     - Helpers for download, upload, inject and many more helpers
 
-** See [`example`](./examples) folder for practical uses and examples.
+** See [unit-tests](./tests) and [example](./examples) folder for practical uses and examples.
 
 ## Usage
 ```

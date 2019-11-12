@@ -8,7 +8,9 @@
 		"test/api/build/": true,
 		"test/lib-cache/": true,
 		"compiled/**/*.js": true,
-		"compiled/**/*.js.map": true
+		"compiled/**/*.js.map": true,
+		"examples/ts/**/*.js": true,
+		"examples/ts/**/*.js.map": true
 
 	},
 	"debug.node.autoAttach": "on",
