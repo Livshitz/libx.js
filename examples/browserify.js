@@ -1,1 +1,1 @@
-// In order to browserify use gulp, webpack or pax.libx.js, which is based on libx.js. See more here: https://github.com/Livshitz/pax.libx.js.
+// In order to browserify use gulp, webpack or pax.libx.js, which is based on libx.js. See more here: https://github.com/Livshitz/pax.libx.js/blob/master/examples/browserify.js).
