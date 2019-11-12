@@ -1,5 +1,3 @@
-// helpers.getMeasure-positive
-// import iMyModule from '../interfaces/IMyModule';
 import BinaryHeap, { BinaryHeapType } from '../compiled/modules/BinaryHeap';
 
 let obj: BinaryHeap;
