@@ -56,6 +56,11 @@ steps:
   #   displayName: 'Publish to NPM'
 
   - script: |
+    yarn bundle
+    condition: succeeded()
+    displayName: 'Bundle browserified version of libx.js (into /dist/libx.min.js)'
+
+  - script: |
       echo "//registry.npmjs.org/:_authToken=$(npm_TOKEN)" > .npmrc
       git checkout master
       git config --global push.default simple
