@@ -56,7 +56,7 @@ steps:
   #   displayName: 'Publish to NPM'
 
   - script: |
-    yarn bundle
+      yarn bundle
     condition: succeeded()
     displayName: 'Bundle browserified version of libx.js (into /dist/libx.min.js)'
 
