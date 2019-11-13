@@ -87,6 +87,11 @@ $ npm install --save libx.js
 __For browser:__ <br/>
 Create a dedicated file, include (e.g: require) the needed modules into `global` (window) scope and browserify it. See [pax.libx.js](https://github.com/Livshitz/pax.libx.js) for more details how to efficiently browserify and bundle files for browser use.
 
+Grab from CDN:
+```
+https://cdn.jsdelivr.net/npm/libx.js@latest/dist/libx.min.js
+```
+
 ## Contributing
 
 Fork into your own repo, run locally, make changes and submit PullRequests to the main repository.
