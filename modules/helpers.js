@@ -1,6 +1,6 @@
 module.exports = (function(){
 	var mod = {};
-	global.__libx = mod;
+	global.__libx = global.__libx || mod;
 	mod.DependencyInjector = require('./dependencyInjector');
 	mod.di = new mod.DependencyInjector();
 
