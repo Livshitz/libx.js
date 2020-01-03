@@ -208,7 +208,7 @@ declare namespace LibxJS {
 	}
 
 	interface IBrowser {
-		require(identifier: string, callback?: Function, compiler?: any): Promise<any>;
+		require<T>(identifier: string, callback?: Function, compiler?: any): Promise<T>;
 		helpers: IBrowserHelpers;
 	}
 	
