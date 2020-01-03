@@ -1,8 +1,8 @@
 {
     "name": "libx.js",
-    "version": "0.4.29",
+    "version": "0.5.0",
     "description": "",
-    "main": "entry.js",
+    "main": "./bundles/essentials",
     "types": "./compiled/libx.d.ts",
     "scripts": {
         "start": "tsc -w",
