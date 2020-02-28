@@ -235,9 +235,12 @@ module.exports = (function () {
 
 	mod.onExit = (exitHandler = null)=> {
 		process.stdin.resume();//so the program will not close instantly
+		var __alreadyHandledExit = false;
 
 		function wrapper(options, exitCode) {
 			try {
+				if (__alreadyHandledExit) return;
+				__alreadyHandledExit  = true;
 				if (exitHandler) exitHandler(options, exitCode);
 			} catch(ex) {
 				console.error('libx.node:onExit: Failed to run handler. ex: ', ex);
