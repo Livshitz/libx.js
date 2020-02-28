@@ -237,16 +237,12 @@ module.exports = (function () {
 		process.stdin.resume();//so the program will not close instantly
 
 		function wrapper(options, exitCode) {
-			// if (options.cleanup) console.log('clean');
-			// if (exitCode || exitCode === 0) console.log(exitCode);
-			if (options.exit) {
-				try {
-					if (exitHandler) exitHandler(options, exitCode);
-				} catch(ex) {
-					console.error('libx.node:onExit: Failed to run handler. ex: ', ex);
-				} finally {
-					process.exit();
-				}
+			try {
+				if (exitHandler) exitHandler(options, exitCode);
+			} catch(ex) {
+				console.error('libx.node:onExit: Failed to run handler. ex: ', ex);
+			} finally {
+				process.exit();
 			}
 		}
 
