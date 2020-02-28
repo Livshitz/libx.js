@@ -251,17 +251,17 @@ module.exports = (function () {
 		}
 
 		//do something when app is closing
-		process.on('exit', wrapper.bind(null,{cleanup:true}));
+		process.on('exit', wrapper.bind(exitHandler, {cleanup:true}));
 
 		//catches ctrl+c event
-		process.on('SIGINT', wrapper.bind(null, {exit:true}));
+		process.on('SIGINT', wrapper.bind(exitHandler, {exit:true}));
 
 		// catches "kill pid" (for example: nodemon restart)
-		process.on('SIGUSR1', wrapper.bind(null, {exit:true}));
-		process.on('SIGUSR2', wrapper.bind(null, {exit:true}));
+		process.on('SIGUSR1', wrapper.bind(exitHandler, {exit:true}));
+		process.on('SIGUSR2', wrapper.bind(exitHandler, {exit:true}));
 
 		//catches uncaught exceptions
-		process.on('uncaughtException', wrapper.bind(null, {exit:true}));
+		process.on('uncaughtException', wrapper.bind(exitHandler, {exit:true}));
 	}
 
 	return mod;
