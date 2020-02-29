@@ -593,9 +593,9 @@ module.exports = (function(){
 				if (typeof obj[i] !== 'object' || !obj[i])
 					return obj[i];
 				else if ("$ref" in obj[i])
-					obj[i] = window.jsonRecurse(obj[i], byid, refs, i, obj);
+					obj[i] = mod.jsonRecurse(obj[i], byid, refs, i, obj);
 				else
-					obj[i] = window.jsonRecurse(obj[i], byid, refs, prop, obj);
+					obj[i] = mod.jsonRecurse(obj[i], byid, refs, prop, obj);
 			return obj;
 		}
 		if ("$ref" in obj) {
@@ -610,10 +610,10 @@ module.exports = (function(){
 			var id = obj.$id;
 			delete obj.$id;
 			if ("$values" in obj)
-				obj = obj.$values.map(window.jsonRecurse);
+				obj = obj.$values.map(mod.jsonRecurse);
 			else
 				for (var prop in obj)
-					obj[prop] = window.jsonRecurse(obj[prop], byid, refs, prop, obj);
+					obj[prop] = mod.jsonRecurse(obj[prop], byid, refs, prop, obj);
 			byid[id] = obj;
 		}
 		return obj;
@@ -624,7 +624,7 @@ module.exports = (function(){
 			json = JSON.parse(json);
 
 		var byid = {}, refs = [];
-		json = window.jsonRecurse(json, byid, refs); // run it!
+		json = mod.jsonRecurse(json, byid, refs); // run it!
 
 		for (var i = 0; i < refs.length; i++) {
 			var ref = refs[i];
