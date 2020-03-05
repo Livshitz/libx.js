@@ -4,7 +4,7 @@ import { QueueWorker } from "../compiled/modules/QueueWorker";
 
 // private async processItem(item: PackageInfo): Promise<PackageInfo> {
 
-const delay = 1000;
+const delay = 200;
 const delayPadded = delay+100;
 
 const processItem = (input: string, id: string): Promise<string> => {
@@ -28,6 +28,25 @@ test('queue new', async () => {
 	// p.then((res)=>{
 	// 	expect(res).toBe('aaa-xxx');
 	// })
+});
+
+test('queue with maxConcurrent 1 & serial', async () => {
+	const queueWorker = new QueueWorker<string, string>(processItem, 1);
+	const startDate = new Date().getTime();
+	let p1 = queueWorker.enqueue("aa1", "1");
+	p1.then((res)=> { expect(new Date().getTime()-startDate).toBeLessThanOrEqual(delayPadded) })
+	await p1;
+	let p2 = queueWorker.enqueue("aa2", "2");
+	await p2;
+	let p3 = queueWorker.enqueue("aa3", "3");
+	await p3;
+	
+	let res = await Promise.all([p1,p2,p3]);
+	expect(res).toEqual([
+		'aa1-xxx',
+		'aa2-xxx',
+		'aa3-xxx',
+	])
 });
 
 test('queue with maxConcurrent 1', async () => {
