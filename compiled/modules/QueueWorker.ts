@@ -5,16 +5,20 @@ class QueueWorkerItem<T> {
 
 export class QueueWorker<TIn, TOut> {
 	private queue: LibxJS.Map<QueueWorkerItem<TIn>> = {};
-	private faultsCountDown = 3;
-	private processor: (item: TIn) => Promise<TOut> = null;
+	private current: LibxJS.Map<QueueWorkerItem<TIn>> = {};
+	private faultsCountDown: number;
+	private processor: (item: TIn, id?: string) => Promise<TOut> = null;
+	private maxConcurrent: number;
 
-	constructor(_processor: (item: TIn) => Promise<TOut>, _faultsCountDown?: number) {
+	constructor(_processor: (item: TIn, id?: String) => Promise<TOut>, _maxConcurrent=1, _faultsCountDown=3) {
 		this.processor = _processor;
 		this.faultsCountDown = _faultsCountDown;
+		this.maxConcurrent = _maxConcurrent;
 	}
 
-	public async enqueue(item: TIn, id: string): Promise<TOut> {
+	public async enqueue(item: TIn, id?: string): Promise<TOut> {
 		let p = libx.newPromise();
+		id = id || libx.randomNumber().toString();
 		let handler = this.queue[id];
 		if (handler == null)
 			handler = this.queue[id] = { item: item, promises: [] };
@@ -28,10 +32,15 @@ export class QueueWorker<TIn, TOut> {
 		if (keys.length == 0) {
 			return;
 		}
+		if (this.maxConcurrent > 0 && Object.keys(this.current).length >= this.maxConcurrent) {
+			return;
+		}
+
 		let id = keys[0];
 		let job = this.queue[id];
 		delete this.queue[id];
-		this.processor(job.item).catch(ex => {
+		this.current[id] = job;
+		this.processor(job.item, id).catch(ex => {
 			libx.log.w('QueueWorker:cycle: Error processing item', job.item ,ex);
 			this.faultsCountDown--;
 			if (this.faultsCountDown == 0) {
@@ -40,10 +49,16 @@ export class QueueWorker<TIn, TOut> {
 			}
 			this.enqueue(job.item, id); // push it back to the queue
 		}).then(out => {
+			delete this.current[id];
 			job.promises.forEach(x => x.resolve(out));
+		}).finally(()=>{
+			this.tickNext();
 		});
 		
-		// Don't wait for processing to finish, as it will be blocked on network IO, just continue and bloat the network pipeline
+		this.tickNext();
+	}
+
+	private async tickNext() {
 		if (typeof setImmediate != 'undefined') setImmediate(this.cycle.bind(this)); 
 		else setTimeout(this.cycle.bind(this), 1);
 	}
