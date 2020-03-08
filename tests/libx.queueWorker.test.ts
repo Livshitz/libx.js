@@ -4,8 +4,8 @@ import { QueueWorker } from "../compiled/modules/QueueWorker";
 
 // private async processItem(item: PackageInfo): Promise<PackageInfo> {
 
-const delay = 200;
-const delayPadded = delay+100;
+const delay = 100;
+const delayPadded = delay+delay*0.10+50;
 
 const processItem = (input: string, id: string): Promise<string> => {
 	let p = libx.newPromise();
