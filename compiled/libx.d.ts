@@ -112,6 +112,7 @@ declare namespace LibxJS {
 		getMeasureAndReset(measureName?: string): number;
 		node: IModuleNode;
 		fileStreamToBuffer(readStream): Promise<Buffer>;
+		enumToArray(_enum: any): string[];
 		getDeep(obj: any, path: string): any;
 	}
 
@@ -291,7 +292,6 @@ declare namespace LibxJS {
 		getIdFromPath(path: string);
 		dictToArray(dict: any);
 		arrayToDic(arr: any);
-		enumToArray(_enum: any): string[];
 		parseKeyDate(key: string);
 		onPresent(path: string, value: any, onDisconnectValue: any);
 		cleanObjectId(objectId: string, char?: string): string;
