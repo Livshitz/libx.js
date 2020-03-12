@@ -745,6 +745,11 @@ module.exports = (function(){
 		return Object.values(obj);
 	}
 
+	mod.enumToArray = (_enum)=>{
+		return Object.keys(_enum).map(key => _enum[key]).filter(value => typeof value === 'string');
+	};
+
+
 	setTimeout(()=>	{
 		mod.di.register('log', mod.log);
 		mod.di.register('_', mod._);

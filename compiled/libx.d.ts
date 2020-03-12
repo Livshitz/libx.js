@@ -291,6 +291,7 @@ declare namespace LibxJS {
 		getIdFromPath(path: string);
 		dictToArray(dict: any);
 		arrayToDic(arr: any);
+		enumToArray(_enum: any): string[];
 		parseKeyDate(key: string);
 		onPresent(path: string, value: any, onDisconnectValue: any);
 		cleanObjectId(objectId: string, char?: string): string;
