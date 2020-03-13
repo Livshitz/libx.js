@@ -116,7 +116,7 @@ declare namespace LibxJS {
 		getDeep(obj: any, path: string): any;
 		dictToArray(dict: any);
 		arrayToDic(arr: any);
-		getObjectByPath(obj: any, s: string);
+		getObjectByPath(s: string, obj?: any);
 		keys(obj: any): string[];
 		values(obj: any): string[];
 	}
