@@ -114,6 +114,11 @@ declare namespace LibxJS {
 		fileStreamToBuffer(readStream): Promise<Buffer>;
 		enumToArray(_enum: any): string[];
 		getDeep(obj: any, path: string): any;
+		dictToArray(dict: any);
+		arrayToDic(arr: any);
+		getObjectByPath(obj: any, s: string);
+		keys(obj: any): string[];
+		values(obj: any): string[];
 	}
 
 	interface IExtensions {
