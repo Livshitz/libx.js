@@ -280,7 +280,7 @@ test('helpers.delay-positive', async () => {
 	let p = libx.delay(100);
 	await p;
 	let end = new Date();
-	expect(end.getTime()-start.getTime()).toBeLessThanOrEqual(120);
+	expect(end.getTime()-start.getTime()).toBeLessThanOrEqual(130);
 });
 
 test('helpers.waitUntil-positive', async () => {
