@@ -13,7 +13,7 @@ export class QueueWorker<TIn, TOut> {
 	private maxConcurrent: number;
 	private context: any;
 
-	constructor(_processor: (item: TIn, id?: String) => Promise<TOut>, context:any, _maxConcurrent=1, _faultsCountDown=3) {
+	constructor(_processor: (item: TIn, id?: String) => Promise<TOut>, context?: any, _maxConcurrent=1, _faultsCountDown=3) {
 		this.processor = _processor;
 		this.context = context;
 		this.faultsCountDown = _faultsCountDown;
