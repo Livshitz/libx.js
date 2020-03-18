@@ -11,9 +11,11 @@ export class QueueWorker<TIn, TOut> {
 	private faultsCountDown: number;
 	private processor: (item: TIn, id?: string) => Promise<TOut> = null;
 	private maxConcurrent: number;
+	private context: any;
 
-	constructor(_processor: (item: TIn, id?: String) => Promise<TOut>, _maxConcurrent=1, _faultsCountDown=3) {
+	constructor(_processor: (item: TIn, id?: String) => Promise<TOut>, context:any, _maxConcurrent=1, _faultsCountDown=3) {
 		this.processor = _processor;
+		this.context = context;
 		this.faultsCountDown = _faultsCountDown;
 		this.maxConcurrent = _maxConcurrent;
 	}
@@ -42,7 +44,7 @@ export class QueueWorker<TIn, TOut> {
 		let job = this.queue[id];
 		delete this.queue[id];
 		this.current[id] = job;
-		this.processor(job.item, id).catch(ex => {
+		this.processor.apply(this.context, [job.item, id]).catch(ex => {
 			libx.log.w('QueueWorker:cycle: Error processing item', job.item ,ex);
 			this.faultsCountDown--;
 			if (this.faultsCountDown == 0) {
