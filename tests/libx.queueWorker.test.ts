@@ -1,5 +1,6 @@
 // helpers.getMeasure-positive
 // import iMyModule from '../interfaces/IMyModule';
+const libx: LibxJS.ILibxJS = require('../bundles/essentials');
 import { QueueWorker } from "../compiled/modules/QueueWorker";
 
 // private async processItem(item: PackageInfo): Promise<PackageInfo> {
