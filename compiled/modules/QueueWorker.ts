@@ -1,3 +1,5 @@
+const libx: LibxJS.ILibxJS = require('../../bundles/essentials');
+
 class QueueWorkerItem<T> {
 	item: T;
 	promises: LibxJS.IDeferred<any>[];
