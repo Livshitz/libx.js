@@ -6,7 +6,7 @@ module.exports = (function(){
 	var http = require('http');
 	var https = require('https');
 	var urlapi = require('url');
-	var request = require('request');
+	var axios = require('axios').default;
 
 	var querialize = require('../browser/helpers').querialize;
 
