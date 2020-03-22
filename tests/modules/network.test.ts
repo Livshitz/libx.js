@@ -29,6 +29,12 @@ describe('libx:modules:network tests', () => {
 		done();
 	});
 
+	test('module-network-echoParams-get-positive', async (done) => {
+		let res: Buffer = await networkModule.get(url + '/echoParams/' + '?a=1&b=2');
+		expect(Buffer.compare(res, Buffer.from('{\"a\":\"1\",\"b\":\"2\"}'))).toBe(0);
+		done();
+	});
+
 	test('module-network-echoParams-httpGet-positive', async (done) => {
 		let res: Buffer = await networkModule.httpGet(url + '/echoParams/' + '?a=1&b=2');
 		expect(Buffer.compare(res, Buffer.from('{\"a\":\"1\",\"b\":\"2\"}'))).toBe(0);
@@ -67,8 +73,8 @@ describe('libx:modules:network tests', () => {
 			b: '2',
 		}
 
-		let res = await networkModule.post(url + 'echoFormdata', { formData }, { dataType: 'formData' });
-		expect(JSON.parse(res)).toEqual({ a:"1", b:"2" });
+		let res = await networkModule.post(url + 'echoFormdata', formData);
+		expect(JSON.parse(res.toString())).toEqual({ a:"1", b:"2" });
 		done();
 	});
 	test('module-network-echoFormData-get-positive', async (done) => {
@@ -86,10 +92,9 @@ describe('libx:modules:network tests', () => {
 			'a': '1', 
 			'b': '2', 
 		};
-		
+
 		let res = await networkModule.upload(url + 'echoUpload', buffer, {
-			formData: params,
-			json:true,
+			data: params,
 		});
 		
 		let content = (await libx.fileStreamToBuffer(fs.createReadStream(filePath))).toString();
