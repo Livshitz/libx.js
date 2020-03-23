@@ -5917,10 +5917,10 @@ levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-libx.js@^0.6.10:
-  version "0.6.10"
-  resolved "https://registry.yarnpkg.com/libx.js/-/libx.js-0.6.10.tgz#df81b93b5c694a18fba1f7a8ce083b4519ea77a7"
-  integrity sha512-Kglp1/M5tfABbN9qO/YvL0Rfnp+8I4RNCxseKTXZJ5Z6JDgYs8RS2422Xz5qyas/73kNS4sxdrDp2eiPB9nvgA==
+libx.js@^0.6.11:
+  version "0.6.11"
+  resolved "https://registry.yarnpkg.com/libx.js/-/libx.js-0.6.11.tgz#609e5095d4950f598bbb5d6da611a1bc75b77375"
+  integrity sha512-UTGDUiXNUV7pc/6/BKK8gnRkwydKmbtwcqKZxcTgpW91z7yTJglKK9ObZRHT827/0bqJwOkcXKVLl6SslS+qEw==
   dependencies:
     "@types/jest" "^24.0.15"
     "@types/lodash" "^4.14.136"
@@ -5929,13 +5929,13 @@ libx.js@^0.6.10:
     buffer "^5.2.1"
     crypto-js "^3.2.1"
     file-saver "^2.0.2"
+    form-data "^3.0.0"
     glob "^7.1.4"
     json-bump "^0.1.3"
     lodash "^4.17.15"
     redux "^4.0.1"
     rxjs "^6.4.0"
     rxjs-compat "^6.4.0"
-    typescript "^3.4.5"
     yargs "^12.0.5"
 
 liftoff@^2.1.0:
@@ -7173,10 +7173,10 @@ pause-stream@^0.0.11:
   dependencies:
     through "~2.3"
 
-pax.libx.js@^0.1.16:
-  version "0.1.16"
-  resolved "https://registry.yarnpkg.com/pax.libx.js/-/pax.libx.js-0.1.16.tgz#1f212e7cbd685864a641233a2dc825bc8bc4ba75"
-  integrity sha512-KXkR+U6PDxM+PoPj+cvYYW/xumSjoRpbayF5q/nCNNoQ9d+UI3G5XcR3/yElHxROvKI2Zzmpd5WN2RFaeREwZw==
+pax.libx.js@^0.1.17:
+  version "0.1.17"
+  resolved "https://registry.yarnpkg.com/pax.libx.js/-/pax.libx.js-0.1.17.tgz#e1c88e9293769d896edeb9c342967abc33e08ed7"
+  integrity sha512-Av1tjcfSPjkZBpmG4WpWIobSCjgGWeswQM2qgVHhNGmTHVBEJi2Czh9Zk87Rxi6YJivWcf67czYrnEVn7Y+kNA==
   dependencies:
     "@babel/cli" "^7.4.4"
     "@babel/core" "^7.4.4"
@@ -7220,7 +7220,7 @@ pax.libx.js@^0.1.16:
     into-stream "^4.0.0"
     jest "^24.8.0"
     less-plugin-sass2less "^1.2.0"
-    libx.js "^0.6.10"
+    libx.js "^0.6.11"
     readable-stream "^3.3.0"
     through "^2.3.8"
     through2 "^3.0.0"
