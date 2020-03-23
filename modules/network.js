@@ -199,7 +199,7 @@ module.exports = (function(){
 			headers: formData.getHeaders()
 		}).post(url, formData).then(response => {
 			p.resolve(response.data);
-		}).catch(error => {
+		}).catch(err => {
 			return p.reject(err);
 		});
 

@@ -54,12 +54,6 @@ test('helpers.isArray-positive', () => {
 	expect(output).toEqual(true);
 });
 
-test('helpers.isWindow-positive', () => {
-	let param = [ 1 ];
-	let output = libx.isArray(param);
-	expect(output).toEqual(true);
-});
-
 // test('helpers.bufferToArrayBuffer-positive', () => {
 // 	let param = libx.Buffer.from('abc');
 // 	let output = libx.isArray(param);

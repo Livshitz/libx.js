@@ -131,10 +131,10 @@ module.exports = (function(){
 	};
 
 	mod.isArray = Array.isArray || function (obj) {
-		return mod.type(obj) === "array"
+		return mod.type(obj) === "array";
 	};
 	mod.isWindow = function (obj) {
-		return obj != null && obj == obj.window
+		return obj != null && (obj == obj.window || (typeof global != 'undefined' && obj == global));
 	};
 	mod.isNumeric = function (obj) {
 		return !isNaN(parseFloat(obj)) && isFinite(obj)
@@ -575,7 +575,8 @@ module.exports = (function(){
 			.replace(/\-/g, '+')
 			.replace(/_/g, '/');
 
-		var rawData = window.atob(base64);
+		// var rawData = window.atob(base64);
+		var rawData = new Buffer(base64, 'base64').toString('binary');
 		var outputArray = new Uint8Array(rawData.length);
 
 		for (var i = 0; i < rawData.length; ++i) {
