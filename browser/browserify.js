@@ -1,6 +1,6 @@
 const libx = require('../entry.js');
 libx.pax = require("pax.libx.js");
-libx.node = require("libx.js/node");
+libx.node = require("./../node");
 
 (async ()=>{ /* init */
 	var src = __dirname + "/";
