@@ -767,10 +767,8 @@ module.exports = (function(){
 	};
 
 
-	setTimeout(()=>	{
-		mod.di.register('log', mod.log);
-		mod.di.register('_', mod._);
-	}, 0);
+	mod.di.register('log', mod.log);
+	mod.di.register('_', mod._);
 
 	return mod;
 })();
