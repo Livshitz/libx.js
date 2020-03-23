@@ -149,7 +149,7 @@ module.exports = (function(){
 			request.open('GET', descriptor.uri, !!callback);
 
 			try{
-				request.setRequestHeader("Origin", window.location.hostname);
+				// request.setRequestHeader("Origin", window.location.hostname);
 				request.setRequestHeader("Access-Control-Allow-Origin", "*");
 				request.setRequestHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS");
 				request.setRequestHeader("Access-Control-Allow-Headers", "Origin, Content-Type, X-Auth-Token");
