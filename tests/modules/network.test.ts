@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 import mockServer = require('../mockServer');
 
 describe('libx:modules:network tests', () => {
@@ -12,7 +16,7 @@ describe('libx:modules:network tests', () => {
 
 		networkModule = libx.di.get<LibxJS.IModuleNetwork>('network');
 
-		url = await server.run()
+		url = await server.run();
 		
 		done();
 	});

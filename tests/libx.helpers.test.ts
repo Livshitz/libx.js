@@ -112,7 +112,8 @@ test('helpers.throttle-positive', async () => {
 	}, tickEachMs * ticksToCount)
 
 	let expected = await p;
-	expect(track.length).toEqual(expected);
+	expect(track.length).toBeGreaterThanOrEqual(expected-1);
+	expect(track.length).toBeLessThan(expected+1);
 	expect(track.length).toEqual(counter);
 });
 
