@@ -6,8 +6,10 @@ module.exports = (function(){
 	var http = require('http');
 	var https = require('https');
 	var urlapi = require('url');
-	var request = require('request');
+	var axios = require('axios');
 
+	var FormData = require('form-data');
+	
 	var querialize = require('../browser/helpers').querialize;
 
 	mod.url = urlapi;
@@ -132,10 +134,14 @@ module.exports = (function(){
 		let _options = {
 			method: method,
 		}
+		url = mod.helpers.fixUrl(url);
 		options = libx.extend(options, _options, { url: url });
-		request(options, (err, httpResponse, body) => {
-			if (err) return p.reject(err);
-			p.resolve(body, httpResponse);
+		options.data = data;
+		if (options.responseType == null) options.responseType = 'arraybuffer';
+		axios(options).then(response=> {
+			p.resolve(response.data);
+		}).catch(err=> {
+			return p.reject(err);
 		});
 		return p;
 	}
@@ -149,28 +155,25 @@ module.exports = (function(){
 
 		options = libx.extend(options, { url: url });
 		return await mod.request('GET', url, params, null, options);
-		// request.get(options, (err, httpResponse, body) => {
-		// 	if (err) return p.reject(err);
-		// 	p.resolve(body, httpResponse);
-		// });
-		// return p;
 	}
 
 	mod.post = async (url, data = null, options = {}) => {
 		let p = libx.newPromise();
 
 		// wrap data with 'body' in case it's not including predefined keyword
-		if (data != null) {
-			let props = libx.getCustomProperties(data);
-			let keywords = ['body', 'form', 'formData', 'multipart', 'json'];
-			if (libx._.intersection(keywords, props).length == 0) {
-				data = { body: data };
-			}
-		}
+		// if (data != null) {
+		// 	let props = libx.getCustomProperties(data);
+		// 	let keywords = ['body', 'form', 'formData', 'multipart', 'json'];
+		// 	if (libx._.intersection(keywords, props).length == 0) {
+		// 		data = { body: data };
+		// 	}
+		// }
 
-		options = libx.extend(options, data, { url: url });
+		// data = mod.helpers.getFormData(data);
+
+		options = libx.extend(options, { url: url });
 		
-		return await mod.request('POST', url, null, null, options);
+		return await mod.request('POST', url, null, data, options);
 		// request.post(options, (err, httpResponse, body) => {
 		// 	if (err) return p.reject(err);
 		// 	p.resolve(body, httpResponse);
@@ -181,16 +184,25 @@ module.exports = (function(){
 	mod.upload = async (url, fileReadStream, options = {}) => {
 		let p = libx.newPromise();
 
-		let formData = {
-			file: fileReadStream,
+		let formData = new FormData();
+		formData.append("file", fileReadStream);
+
+		if (options.data != null) {
+			let props = libx.getCustomProperties(options.data);
+
+			for(let prop of props) {
+				formData.append(prop, options.data[prop]);
+			}
 		}
 
-		options = libx.extend(options, { formData: formData }, { url: url });
-
-		request.post(options, (err, httpResponse, body) => {
-			if (err) return p.reject(err);
-			p.resolve(body, httpResponse);
+		axios.create({
+			headers: formData.getHeaders()
+		}).post(url, formData).then(response => {
+			p.resolve(response.data);
+		}).catch(err => {
+			return p.reject(err);
 		});
+
 		return p;
 	}
 
@@ -235,7 +247,6 @@ module.exports = (function(){
 		return url.replace(new RegExp("([^:]\/)\/+", "g"), "$1");
 	};
 
-	/*
 	mod.helpers.getFormData = object => {
 		const formData = new FormData();
 		Object.keys(object).forEach(key => {
@@ -246,7 +257,6 @@ module.exports = (function(){
 		});
 		return formData;
 	}
-	*/
 
 	mod.helpers.formDataToString = formDataObj => [...formDataObj.entries()] // expand the elements from the .entries() iterator into an actual array
 		.map(e => encodeURIComponent(e[0]) + "=" + encodeURIComponent(e[1]));  // transform the elements into encoded key-value-pairs

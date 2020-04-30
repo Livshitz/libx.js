@@ -1,5 +1,6 @@
 // helpers.getMeasure-positive
 // import iMyModule from '../interfaces/IMyModule';
+const libx: LibxJS.ILibxJS = require('../bundles/essentials');
 import { QueueWorker } from "../compiled/modules/QueueWorker";
 
 // private async processItem(item: PackageInfo): Promise<PackageInfo> {
@@ -31,7 +32,7 @@ test('queue new', async () => {
 });
 
 test('queue with maxConcurrent 1 & serial', async () => {
-	const queueWorker = new QueueWorker<string, string>(processItem, 1);
+	const queueWorker = new QueueWorker<string, string>(processItem, null, 1);
 	const startDate = new Date().getTime();
 	let p1 = queueWorker.enqueue("aa1", "1");
 	p1.then((res)=> { expect(new Date().getTime()-startDate).toBeLessThanOrEqual(delayPadded) })
@@ -50,7 +51,7 @@ test('queue with maxConcurrent 1 & serial', async () => {
 });
 
 test('queue with maxConcurrent 1', async () => {
-	const queueWorker = new QueueWorker<string, string>(processItem, 1);
+	const queueWorker = new QueueWorker<string, string>(processItem, null, 1);
 	const startDate = new Date().getTime();
 	let p1 = queueWorker.enqueue("aa1", "1");
 	p1.then((res)=> { expect(new Date().getTime()-startDate).toBeLessThanOrEqual(delayPadded) })
@@ -68,7 +69,7 @@ test('queue with maxConcurrent 1', async () => {
 });
 
 test('queue with maxConcurrent 2', async () => {
-	const queueWorker = new QueueWorker<string, string>(processItem, 2);
+	const queueWorker = new QueueWorker<string, string>(processItem, null, 2);
 	const startDate = new Date().getTime();
 	let p1 = queueWorker.enqueue("aa1", "1");
 	let p2 = queueWorker.enqueue("aa2", "2");
@@ -86,7 +87,7 @@ test('queue with maxConcurrent 2', async () => {
 });
 
 test('queue with maxConcurrent 3', async () => {
-	const queueWorker = new QueueWorker<string, string>(processItem, 3);
+	const queueWorker = new QueueWorker<string, string>(processItem, null, 3);
 	const startDate = new Date().getTime();
 	let p1 = queueWorker.enqueue("aa1", "1");
 	let p2 = queueWorker.enqueue("aa2", "2");

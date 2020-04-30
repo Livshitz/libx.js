@@ -400,7 +400,7 @@ declare var libx: LibxJS.ILibxJS;
 // enables access with 'global.libx' (sometimes you want to make sure the scope)
 declare module NodeJS  {
     interface Global {
-        libx: LibxJS.ILibxJS;
+		libx: LibxJS.ILibxJS;
 	}
 	
 	interface String {

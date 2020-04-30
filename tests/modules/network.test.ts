@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 import mockServer = require('../mockServer');
 
 describe('libx:modules:network tests', () => {
@@ -12,7 +16,7 @@ describe('libx:modules:network tests', () => {
 
 		networkModule = libx.di.get<LibxJS.IModuleNetwork>('network');
 
-		url = await server.run()
+		url = await server.run();
 		
 		done();
 	});
@@ -26,6 +30,12 @@ describe('libx:modules:network tests', () => {
 	test('module-network-httpGetString-positive', async (done) => {
 		let res = await networkModule.httpGetString(url);
 		expect(res).toBe('OK');
+		done();
+	});
+
+	test('module-network-echoParams-get-positive', async (done) => {
+		let res: Buffer = await networkModule.get(url + '/echoParams/' + '?a=1&b=2');
+		expect(Buffer.compare(res, Buffer.from('{\"a\":\"1\",\"b\":\"2\"}'))).toBe(0);
 		done();
 	});
 
@@ -67,8 +77,8 @@ describe('libx:modules:network tests', () => {
 			b: '2',
 		}
 
-		let res = await networkModule.post(url + 'echoFormdata', { formData }, { dataType: 'formData' });
-		expect(JSON.parse(res)).toEqual({ a:"1", b:"2" });
+		let res = await networkModule.post(url + 'echoFormdata', formData);
+		expect(JSON.parse(res.toString())).toEqual({ a:"1", b:"2" });
 		done();
 	});
 	test('module-network-echoFormData-get-positive', async (done) => {
@@ -86,10 +96,9 @@ describe('libx:modules:network tests', () => {
 			'a': '1', 
 			'b': '2', 
 		};
-		
+
 		let res = await networkModule.upload(url + 'echoUpload', buffer, {
-			formData: params,
-			json:true,
+			data: params,
 		});
 		
 		let content = (await libx.fileStreamToBuffer(fs.createReadStream(filePath))).toString();

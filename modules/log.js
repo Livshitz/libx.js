@@ -125,7 +125,5 @@ module.exports = (function(){
 })();
 
 (()=>{ // Dependency Injector auto module registration
-	setTimeout(()=>	{
-		__libx.di.register('log', module.exports);
-	}, 0);
+	__libx.di.register('log', module.exports);
 })();
