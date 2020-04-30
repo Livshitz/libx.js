@@ -87,6 +87,25 @@
 		{
 			"type": "node",
 			"request": "launch",
+			"name": "Jest Current File",
+			"program": "${workspaceFolder}/node_modules/.bin/jest",
+			"args": [
+			  "${file}",
+			  "--runInBand",
+			  "--detectOpenHandles",
+			//   "--config",
+			//   "jest.config.js"
+			],
+			"smartStep": true,
+			"skipFiles": [
+				"${workspaceFolder}/node_modules/**/*.js",
+				"${workspaceFolder}/lib/**/*.js",
+				"<node_internals>/**/*.js"
+			],
+		},
+		{
+			"type": "node",
+			"request": "launch",
 			"name": "Typescript",
 			"program": "${workspaceFolder}/tests/mockServer.ts",
 			// "program": "${workspaceFolder}/src/main.ts",

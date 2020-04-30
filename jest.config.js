@@ -27,5 +27,6 @@ module.exports = {
 	// 		}
 	// }
 	reporters: [ "default", "jest-junit" ],
+	// testEnvironment: 'node',
 	coverageDirectory: ".tmp/coverage"
 }

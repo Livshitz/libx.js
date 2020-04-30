@@ -54,12 +54,6 @@ test('helpers.isArray-positive', () => {
 	expect(output).toEqual(true);
 });
 
-test('helpers.isWindow-positive', () => {
-	let param = [ 1 ];
-	let output = libx.isArray(param);
-	expect(output).toEqual(true);
-});
-
 // test('helpers.bufferToArrayBuffer-positive', () => {
 // 	let param = libx.Buffer.from('abc');
 // 	let output = libx.isArray(param);
@@ -118,7 +112,8 @@ test('helpers.throttle-positive', async () => {
 	}, tickEachMs * ticksToCount)
 
 	let expected = await p;
-	expect(track.length).toEqual(expected);
+	expect(track.length).toBeGreaterThanOrEqual(expected-1);
+	expect(track.length).toBeLessThan(expected+1);
 	expect(track.length).toEqual(counter);
 });
 
@@ -280,7 +275,7 @@ test('helpers.delay-positive', async () => {
 	let p = libx.delay(100);
 	await p;
 	let end = new Date();
-	expect(end.getTime()-start.getTime()).toBeLessThanOrEqual(120);
+	expect(end.getTime()-start.getTime()).toBeLessThanOrEqual(150);
 });
 
 test('helpers.waitUntil-positive', async () => {
