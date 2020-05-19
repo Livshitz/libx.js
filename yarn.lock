@@ -7388,6 +7388,11 @@ promise@^7.0.1, promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
+promisify.libx.js@^0.2.10:
+  version "0.2.10"
+  resolved "https://registry.yarnpkg.com/promisify.libx.js/-/promisify.libx.js-0.2.10.tgz#56f1b1efbe7fb73b163629bf29ec32ff01b1feaf"
+  integrity sha512-83CTqtEVLkfeb9Gx/sKiSw+XSnUfMx7F3N/tjnYjtRtqN//fVeMpvKPOkdaM8P9SGkPRYQtvPca7UwJ9f7mHfA==
+
 prompts@^2.0.1:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/prompts/-/prompts-2.3.1.tgz#b63a9ce2809f106fa9ae1277c275b167af46ea05"

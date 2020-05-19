@@ -24,8 +24,8 @@
         "*.js",
         "*.ts"
     ],
-    "author": "",
-    "license": "ISC",
+    "author": "Elya Livshitz",
+    "license": "MIT",
     "dependencies": {
         "@types/jest": "^24.0.15",
         "@types/lodash": "^4.14.136",
@@ -38,6 +38,7 @@
         "glob": "^7.1.4",
         "json-bump": "^0.1.3",
         "lodash": "^4.17.15",
+        "promisify.libx.js": "^0.2.10",
         "redux": "^4.0.1",
         "rxjs": "^6.4.0",
         "rxjs-compat": "^6.4.0",
