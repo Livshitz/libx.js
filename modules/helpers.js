@@ -14,6 +14,8 @@ module.exports = (function(){
 	mod._.transform = require('lodash/transform');
 	mod._.uniq = require('lodash/uniq');
 	mod._.intersection = require('lodash/intersection');
+	
+	mod.Promisify = require('promisify.libx.js');
 
 	// mod.fp.map = require("lodash/fp/map");
 	// mod.fp.flatten = require("lodash/fp/flatten");
@@ -208,7 +210,7 @@ module.exports = (function(){
 	}
 	
 	mod.newPromise = () => {
-		var promise = new mod.deferred();
+		var promise = mod.Promisify.new();
 		return promise;
 	}
 	
