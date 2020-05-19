@@ -1,6 +1,6 @@
 {
     "name": "libx.js",
-    "version": "0.6.11",
+    "version": "0.6.14",
     "description": "",
     "main": "./bundles/essentials",
     "types": "./compiled/libx.d.ts",
@@ -42,7 +42,7 @@
         "redux": "^4.0.1",
         "rxjs": "^6.4.0",
         "rxjs-compat": "^6.4.0",
-        "yargs": "^12.0.5"
+        "yargs": "^13.1.0"
     },
     "devDependencies": {
         "pax.libx.js": "*",
