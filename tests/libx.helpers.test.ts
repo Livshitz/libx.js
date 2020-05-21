@@ -95,51 +95,6 @@ test('helpers.isPlainObject-positive', () => {
 	expect(output).toEqual(true);
 });
 
-test('helpers.throttle-positive', async () => {
-	let track = [];
-	let counter = 0;
-	let throttle = 50;
-	let func = libx.throttle(()=>{
-		track.push(counter++)
-	}, throttle, true);
-	let tickEachMs = 10;
-	let ticksToCount = 10;
-	let interval = setInterval(func, tickEachMs);
-	let p = libx.newPromise();
-	setTimeout(()=>{ // stop after a while
-		clearInterval(interval); // stop ticking
-		p.resolve(tickEachMs * ticksToCount / throttle); // expect calls to be interval / throttle
-	}, tickEachMs * ticksToCount)
-
-	let expected = await p;
-	expect(track.length).toBeGreaterThanOrEqual(expected-1);
-	expect(track.length).toBeLessThan(expected+1);
-	expect(track.length).toEqual(counter);
-});
-
-test('helpers.debounce-positive', async () => {
-	let track = [];
-	let counter = 0;
-	let debounce = 50;
-	let func = libx.debounce(()=>{
-		track.push(counter++)
-	}, debounce);
-	let tickEachMs = 10;
-	let ticksToCount = 10;
-	let interval = setInterval(func, tickEachMs);
-	let p = libx.newPromise();
-	setTimeout(()=>{ // stop after a while
-		clearInterval(interval); // stop ticking
-
-		setTimeout(()=>{ // let debounce period pass and expect 1 call
-			p.resolve();
-		}, debounce);
-	}, tickEachMs * ticksToCount)
-
-	await p;
-	expect(track.length).toEqual(1);
-});
-
 test('helpers.newGuid-positive', () => {
 	let guid = libx.newGuid(true);
 	expect(guid.replace(/[\d\w]/g, '')).toEqual('----');
@@ -149,23 +104,6 @@ test('helpers.newPromise-positive', () => {
 	let p = libx.newPromise();
 	p.resolve(true);
 	expect(p).resolves.toEqual(true);
-});
-
-test('helpers.async-positive', async () => {
-	let counter = 0
-	let p = libx.async((promise)=>{
-		counter = 1;
-		promise.resolve();
-	});
-	await p;
-	expect(counter).toEqual(1);
-});
-
-test('helpers.chainTasks-positive', async () => {
-	let counter = 0
-	let tasks = [async ()=>counter=1, async ()=>counter=2];
-	await libx.chainTasks(tasks);
-	expect(counter).toEqual(2);
 });
 
 test('helpers.isDefined-positive', () => {
@@ -256,73 +194,6 @@ test('helpers.parse-positive', () => {
 	let param = "{\n  \"a\": 1,\n  \"b\": {\n    \"c\": 3\n  }\n}";
 	let output = libx.parse(param);
 	expect(output).toEqual({ a : 1, b : { c : 3 } });
-});
-
-test('helpers.sleep-positive', async () => {
-	let start = new Date();
-	let output = await libx.sleep(100);
-	let end = new Date();
-	expect(end.getTime() - start.getTime()).toBeLessThanOrEqual(200);
-});
-
-test('helpers.delay-positive', async () => {
-	let p2 = libx.newPromise();
-	p2.reject();
-	p2.catch(()=>{
-		console.log('p2')
-	})
-	let start = new Date();
-	let p = libx.delay(100);
-	await p;
-	let end = new Date();
-	expect(end.getTime()-start.getTime()).toBeLessThanOrEqual(150);
-});
-
-test('helpers.waitUntil-positive', async () => {
-	let counter = 0;
-	let interval = setInterval(()=>counter++, 10);
-	await libx.waitUntil(()=>{
-		return counter == 10;
-	}, ()=> {
-		clearInterval(interval);
-	}, 10);
-	expect(counter).toBeLessThanOrEqual(11);
-});
-test('helpers.waitUntil-negative', async () => {
-	let counter = 0;
-	let interval = setInterval(()=>counter++, 10);
-	await libx.waitUntil(()=>counter == 10, ()=> {
-		clearInterval(interval);
-	}, 10, 50)
-	.catch(()=>{ // expect period to pass
-		expect(counter).toBeLessThanOrEqual(6);
-	});
-});
-
-test('helpers.makeAsync-positive', async () => {
-	let track = false;
-	let param = ()=>track=true;
-	let wrapper = libx.makeAsync(param);
-	await wrapper();
-	expect(track).toEqual(true);
-});
-test('helpers.makeAsync-positive-2', async () => {
-	let track = false;
-	let param = async ()=>track=true;
-	let wrapper = libx.makeAsync(param);
-	await wrapper();
-	expect(track).toEqual(true);
-});
-
-test('helpers.isAsync-positive', () => {
-	let param = async ()=>true;
-	let output = libx.isAsync(param);
-	expect(output).toEqual(true);
-});
-test('helpers.isAsync-negative', () => {
-	let param = ()=>true;
-	let output = libx.isAsync(param);
-	expect(output).toEqual(false);
 });
 
 test('helpers.stringifyOnce-positive', () => {
