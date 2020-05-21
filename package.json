@@ -27,7 +27,7 @@
     "author": "Elya Livshitz",
     "license": "MIT",
     "dependencies": {
-        "promisify.libx.js": "*",
+        "concurrency.libx.js": "*",
         "@types/jest": "^24.0.15",
         "@types/lodash": "^4.14.136",
         "@types/node": "^12.6.8",
@@ -45,13 +45,13 @@
         "yargs": "^13.1.0"
     },
     "devDependencies": {
-        "pax.libx.js": "*",
         "body-parser": "^1.19.0",
         "express": "^4.17.1",
         "express-formidable": "^1.2.0",
         "jest": "^24.8.0",
         "jest-junit": "^7.0.0",
         "jest-junit-reporter": "^1.1.0",
+        "pax.libx.js": "*",
         "ts-jest": "^24.0.2",
         "typescript": "^3.4.5"
     },

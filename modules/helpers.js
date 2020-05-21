@@ -1,3 +1,5 @@
+const concurrency = require('concurrency.libx.js');
+
 module.exports = (function(){
 	var mod = {};
 	global.__libx = global.__libx || mod;
@@ -14,13 +16,27 @@ module.exports = (function(){
 	mod._.transform = require('lodash/transform');
 	mod._.uniq = require('lodash/uniq');
 	mod._.intersection = require('lodash/intersection');
-	
-	mod.Promisify = require('promisify.libx.js');
-
 	// mod.fp.map = require("lodash/fp/map");
 	// mod.fp.flatten = require("lodash/fp/flatten");
 	// mod.fp.sortBy = require("lodash/fp/sortBy");
 	// mod.fp.flow = require("lodash/fp/flow");
+	
+	mod.concurrency = concurrency;
+	mod.Deferred = concurrency.Deferred;
+	mod.throttle = concurrency.throttle;
+	mod.debounce = concurrency.debounce;
+	mod.delay = concurrency.delay;
+	mod.async = concurrency.async;
+	mod.isAsync = concurrency.isAsync;
+	mod.makeAsync = concurrency.forceAsync;
+	mod.forceAsync = concurrency.async;
+	mod.waitUntil = concurrency.waitUntil;
+	mod.measurements = concurrency.measurements;
+	mod.measure = mod.measurements.measure;
+	mod.getMeasure = mod.measurements.getMeasure;
+	mod.getMeasureAndReset = mod.measurements.getMeasureAndReset;
+	mod.chainTasks = concurrency.chain.chainTasks;
+	mod.sleep = concurrency.sleep;
 
 	mod.isBrowser = typeof window !== 'undefined';
 
@@ -169,36 +185,6 @@ module.exports = (function(){
 		for (key in obj) {}
 		return key === undefined || hasOwn.call(obj, key)
 	}
-
-	mod.throttle = (func, wait, immediate = true) => {
-		var timeout;
-		return function() {
-			var context = this, args = arguments;
-			var later = function() {
-				timeout = null;
-				if (!immediate) func.apply(context, args);
-			};
-			
-			if (timeout != null) return;
-			timeout = setTimeout(later, wait);
-			if (immediate) func.apply(context, args);
-		};
-	};
-
-	mod.debounce = (func, wait, immediate = false, allowTaillingCall = true) => {
-		var timeout;
-		return function() {
-			var context = this, args = arguments;
-			var later = function() {
-				timeout = null;
-				if (allowTaillingCall) func.apply(context, args);
-			};
-			var callNow = immediate && !timeout;
-			clearTimeout(timeout);
-			timeout = setTimeout(later, wait);
-			if (callNow) func.apply(context, args);
-		};
-	};
 	
 	mod.newGuid = (useDash) => {
 		var dash = useDash ? '-' : '';
@@ -209,25 +195,8 @@ module.exports = (function(){
 	}
 	
 	mod.newPromise = () => {
-		var promise = mod.Promisify.new();
+		var promise = mod.Deferred.new();
 		return promise;
-	}
-	
-	mod.async = (callback) => {
-		var promise = mod.newPromise();
-		callback(promise);
-		return promise;
-	}
-	
-	mod.chainTasks = async (tasks) => {
-		var counter = 0;
-	
-		for(var i=0; i<tasks.length; i++) {
-			var t = tasks[i];
-			await t().then(()=> {
-				mod.log.debug('chain: done #' + counter++);
-			});
-		}
 	}
 	
 	mod.isDefined = (obj, prop) => {
@@ -355,69 +324,6 @@ module.exports = (function(){
 				return JSON.stringify(v);
 			return v;
 		},4);
-	}
-
-	mod.sleep = async (millis) => {
-		return new Promise(resolve => setTimeout(resolve, millis));
-
-		// var stop = new Date().getTime();
-		// while(new Date().getTime() < stop + millis) {
-		// 	;
-		// }
-	}
-
-	mod.makeAsync = (func) => {
-		return async () => {
-			if (mod.isAsync(func)) {
-				return await func();
-			} else {
-				return func();
-			}
-		}
-	};
-	
-	mod.waitUntil = async (conditionFn, callback = null, interval = 10, timeout = 5000) => {
-		var expiry = new Date();
-		expiry.setMilliseconds(expiry.getMilliseconds() + timeout);
-
-		var wrapper = mod.makeAsync(conditionFn);
-
-		let p = mod.newPromise();
-
-		// Check before waiting
-		if (await wrapper()) {
-			let ret = callback ? callback() : null;
-			return p.resolve(ret);
-		}
-
-		// Wait and check again
-		var i = setInterval(async () => {
-			if (new Date() > expiry) {
-				clearInterval(i);
-				return p.reject();
-			}
-			if (await wrapper()) {
-				clearInterval(i);
-				let ret = callback ? callback() : null;
-				return p.resolve(ret);
-			}
-		}, interval);
-
-		return p;
-	};
-
-	mod.isAsync = function (func) {
-		const string = func.toString().trim();
-	
-		return !!(
-			// native
-			string.match(/^async /) ||
-			// babel (this may change, but hey...)
-			string.match(/return _ref[^\.]*\.apply/) ||
-			// insert your other dirty transpiler check
-			string.match(/__awaiter/)
-			// there are other more complex situations that maybe require you to check the return line for a *promise*
-		);
 	}
 	
 	mod.newGuid = (useDash) => {
@@ -670,29 +576,6 @@ module.exports = (function(){
 		return ret;
 	}
 
-	mod._measures = {};
-	mod.measure = function(measureName = '_') {
-		if (mod._measures[measureName] != null) return mod.getMeasure(measureName);
-		mod._measures[measureName] = new Date().getTime();
-		return 0;
-	}
-
-	mod.getMeasure = function(measureName = '_') {
-		if (mod._measures[measureName] == null) return 0;
-		return new Date().getTime() - mod._measures[measureName];
-	}
-
-	mod.getMeasureAndReset = function(measureName = '_') {
-		let ret = mod.getMeasure(measureName);
-		mod._measures[measureName] = null;
-		return ret;
-	}
-
-	mod.delay = async (milliseconds) => {
-		let p = mod.newPromise();
-		setTimeout(()=>p.resolve(), milliseconds);
-		return p;
-	}
 
 	mod.fileStreamToBuffer =  async (readStream) => {
 		let p = mod.newPromise();
