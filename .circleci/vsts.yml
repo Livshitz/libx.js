@@ -63,6 +63,7 @@ steps:
   - script: |
       echo "//registry.npmjs.org/:_authToken=$(npm_TOKEN)" > .npmrc
       git checkout master
+      git pull
       git config --global push.default simple
       git config user.email "eli.livshitz@gmail.com"
       git config user.name "Eli Livshitz"
