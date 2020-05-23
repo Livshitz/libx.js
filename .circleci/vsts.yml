@@ -22,11 +22,8 @@ steps:
   
   - script: |
       yarn build
-    displayName: 'Build'
-
-  - script: |
       yarn test:ci
-    displayName: 'Test'
+    displayName: 'Build & test'
 
   - task: PublishTestResults@2
     inputs:
