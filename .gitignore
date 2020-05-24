@@ -22,5 +22,5 @@ build
 
 compiled/**/*.js
 compiled/**/*.js.map
-examples/ts/**/*.js
-examples/ts/**/*.js.map
+**/ts/**/*.js
+**/ts/**/*.js.map
