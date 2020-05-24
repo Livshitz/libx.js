@@ -7,10 +7,9 @@ const mod: any = {};
 mod.confirm = async (
     question: string, 
     pattern: string = 'yes|no|y|n', 
-    defaultAnswer: string = 'no'): Promise<Boolean> => 
-    {
+    defaultAnswer: string = 'no'): Promise<Boolean> => {
     
-        // Example:
+    // Example:
     // (async()=>{
     //     let res = await mod.confirm('Do you really want to format the filesystem and delete all file ?');
     //     console.log('result: ', res);
@@ -35,7 +34,7 @@ mod.confirm = async (
             }
         }
     }, function (err, result){
-        if (err) return p.reject(err);
+        if (err) return p.resolve(err);
 
         var c = result.confirm.toLowerCase();
         if (c!='y' && c!='yes'){
