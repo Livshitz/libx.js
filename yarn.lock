@@ -2724,10 +2724,10 @@ concat-with-sourcemaps@^1.0.0, concat-with-sourcemaps@^1.1.0:
   dependencies:
     source-map "^0.6.1"
 
-concurrency.libx.js@0.2.19:
-  version "0.2.19"
-  resolved "https://registry.yarnpkg.com/concurrency.libx.js/-/concurrency.libx.js-0.2.19.tgz#7efad302b54e83b9518b9bfb340db2abeda28f35"
-  integrity sha512-2DpSCEVZE4NBnVEgWJvO0AkA2mQfp7/z9ezHHt4wAv0SuvFtVchOx61MYP28P61ukbuGq7auf1Zl00IPblw1UQ==
+concurrency.libx.js@*:
+  version "0.2.24"
+  resolved "https://registry.yarnpkg.com/concurrency.libx.js/-/concurrency.libx.js-0.2.24.tgz#c0471fd504ffdbe50c957c00d8f74a03c3d9d93a"
+  integrity sha512-Q60PWQ4En3EjwBmO1Tf4MpwEMwHoI1JvfoUi4JUOkwC8SQw/9z71grbyKJsWlUHk1io9LDCHNvQ4PouBgm2xBw==
 
 connect-livereload@^0.6.0:
   version "0.6.1"
@@ -6199,6 +6199,11 @@ lodash@^4.0.0, lodash@^4.15.0, lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.14
   version "4.17.15"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
   integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
+
+lodash@^4.17.16:
+  version "4.17.19"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.19.tgz#e48ddedbe30b3321783c5b4301fbd353bc1e4a4b"
+  integrity sha512-JNvd8XER9GQX0v2qJgsaN/mzFCNA5BRe/j8JN9d+tWyGLSodKQHKFicdwNYzWwI3wjRnaKPsGj1XkBjx/F96DQ==
 
 lodash@~1.0.1:
   version "1.0.2"
