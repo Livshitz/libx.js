@@ -5,7 +5,8 @@
 	// ],
 	"include": [
 		"./compiled/**/*.ts",
-		"./examples/ts/**/*.ts"
+		"./examples/ts/**/*.ts",
+		"./node/**/*.ts"
 		// "./**/*.ts",
 		// "./compiled/libx.d.ts"
 		// "./modules/**/*.ts"

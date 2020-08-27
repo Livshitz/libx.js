@@ -6,6 +6,7 @@ module.exports = {
 		"^.+\\.jsx?$": "babel-jest",
 	  	"^.+\\.ts?$": "ts-jest"
 	},
+	transformIgnorePatterns: ['<rootDir>/node_modules/'],
 	// globalSetup: './tests/setup.ts',
 	setupFiles: [
 		"<rootDir>/tests/setup.ts"

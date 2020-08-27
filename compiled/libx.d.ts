@@ -369,7 +369,13 @@ declare namespace LibxJS {
 		getFilenameWithoutExtension(filePath: string): string;
 		getProjectConfig(containingFolder: string, secret: string): any; 
 		getFiles(query?: string, options?: JSONObject): string[];
+		prompts: IModulePrompts;
 	}
+
+	interface IModulePrompts {
+		confirm(question: string, pattern?: string, defaultAnswer?: string): Promise<Boolean>;
+	}
+
 
 	type LogColors = { reset, bright, dim, underscore, blink, reverse, hidden, fgBlack, fgRed, fgGreen, fgYellow, fgBlue, fgMagenta, fgCyan, fgWhite, bgBlack, bgRed, bgGreen, bgYellow, bgBlue, bgMagenta, bgCyan, bgWhite };
 
