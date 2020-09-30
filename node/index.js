@@ -214,7 +214,10 @@ module.exports = (function () {
 	mod.catchErrors = (handler = null, shouldExit = true) => {
 		process
 			.on("unhandledRejection", (reason, p) => {
-				var err = reason.response != null ? Buffer.from(reason.response).toString() : reason.message;
+				var err = {
+					message: reason.response != null ? Buffer.from(reason.response).toString() : reason.message,
+					stack: reason.stack != null ? Buffer.from(reason.stack).toString() : reason.stack,
+				};
 				if (handler) handler(err, reason.statusCode || reason);
 				else {
 					console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -224,7 +227,7 @@ module.exports = (function () {
 				if (shouldExit) process.exit(1);
 			})
 			.on("uncaughtException", err => {
-				if (handler) handler(err.stack, err);
+				if (handler) handler(err);
 				else {
 					console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 					console.error("Uncaught Exception thrown", err.stack || err);
