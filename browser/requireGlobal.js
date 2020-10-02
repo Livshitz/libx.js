@@ -1,6 +1,4 @@
-module.exports = (function(){
-	// var require = libx.browser.require;
-
+window.require = require = (function(){
 	if (typeof window == 'undefined') return require;
 
 	var mod = {};
@@ -110,85 +108,75 @@ module.exports = (function(){
 		//      and the module exports are passed to the callback function after the
 		//      module has been loaded.
 
-		mod = async function (identifier, callback, compiler) {
-			return new Promise((resolvePromise, rejectPromise)=>{
-				if (identifier instanceof Array) {
-					var modules = new Array();
-					var modcount = identifier.length;
-					for (var index = 0; index < identifier.length; index++) {
-						(function(id, i) {
-							modules.push(mod(id, callback&&function(mod) {
-								modules[i] = mod;
-								(--modcount==0) && callback(modules);
-							}, compiler));
-						})(identifier[index], index);
-					}
-					return modules;
+		mod = function (identifier, callback, compiler) {
+			if (identifier instanceof Array) {
+				var modules = new Array();
+				var modcount = identifier.length;
+				for (var index = 0; index < identifier.length; index++) {
+					(function(id, i) {
+						modules.push(mod(id, callback&&function(mod) {
+							modules[i] = mod;
+							(--modcount==0) && callback(modules);
+						}, compiler));
+					})(identifier[index], index);
 				}
+				return modules;
+			}
 
-				compiler = compiler!==undefined ? compiler : requireCompiler;
-				var descriptor = resolve(identifier);
-				var cacheid = '$'+descriptor.id;
+			compiler = compiler!==undefined ? compiler : requireCompiler;
+			var descriptor = resolve(identifier);
+			var cacheid = '$'+descriptor.id;
 
-				if (cache[cacheid]) {
-					if (typeof cache[cacheid] === 'string')
-						load(descriptor, cache, pwd, cache[cacheid]);
-					// NOTE The callback should always be called asynchronously to ensure
-					//      that a cached call won't differ from an uncached one.
-					callback && setTimeout(function(){callback(cache[cacheid])}, 0);
-					return resolvePromise(cache[cacheid]);
+			if (cache[cacheid]) {
+				if (typeof cache[cacheid] === 'string')
+					load(descriptor, cache, pwd, cache[cacheid]);
+				// NOTE The callback should always be called asynchronously to ensure
+				//      that a cached call won't differ from an uncached one.
+				callback && setTimeout(function(){callback(cache[cacheid])}, 0);
+				return cache[cacheid];
+			}
+
+			var request = new XMLHttpRequest();
+
+			// NOTE IE8 doesn't support the onload event, therefore we use
+			//      onreadystatechange as a fallback here. However, onreadystatechange
+			//      shouldn't be used for all browsers, since at least mobile Safari
+			//      seems to have an issue where onreadystatechange is called twice for
+			//      readyState 4.
+			callback && (request[request.onload===null?'onload':'onreadystatechange'] = onLoad);
+			request.open('GET', descriptor.uri, false);
+
+			try{
+				// request.setRequestHeader("Origin", window.location.hostname);
+				request.setRequestHeader("Access-Control-Allow-Origin", "*");
+				request.setRequestHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS");
+				request.setRequestHeader("Access-Control-Allow-Headers", "Origin, Content-Type, X-Auth-Token");
+			}catch(ex) {
+				console.warn('libx.require: Error setting CORS headers. ', ex);
+			}
+
+			lock[cacheid] = lock[cacheid]++||1;
+			request.send();
+			lock[cacheid]--;
+			!callback && onLoad();
+			return cache[cacheid];
+
+			function onLoad() {
+				if (request.readyState != 4)
+					return;
+				if (request.status != 200)
+					throw new RequireError("unable to load "+descriptor.id+" ("+request.status+" "+request.statusText+")");
+				if (lock[cacheid]) {
+					console.warn("module locked: "+descriptor.id);
+					callback && setTimeout(onLoad, 0);
+					return;
 				}
-				
-				var request = new XMLHttpRequest();
-
-				// NOTE IE8 doesn't support the onload event, therefore we use
-				//      onreadystatechange as a fallback here. However, onreadystatechange
-				//      shouldn't be used for all browsers, since at least mobile Safari
-				//      seems to have an issue where onreadystatechange is called twice for
-				//      readyState 4.
-				callback && (request[request.onload===null?'onload':'onreadystatechange'] = onLoad);
-				request.addEventListener("load", onLoad);
-				request.open('GET', descriptor.uri, true); //!!callback);
-
-				try{
-					// request.setRequestHeader("Origin", window.location.hostname);
-					request.setRequestHeader("Access-Control-Allow-Origin", "*");
-					request.setRequestHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS");
-					request.setRequestHeader("Access-Control-Allow-Headers", "Origin, Content-Type, X-Auth-Token");
-				}catch(ex) {
-					console.warn('libx.require: Error setting CORS headers. ', ex);
+				if (!cache[cacheid]) {
+					var source = compiler ? compiler(request.responseText) : request.responseText;
+					load(descriptor, cache, pwd, source);
 				}
-
-				lock[cacheid] = lock[cacheid]++||1;
-				request.send();
-				!callback && onLoad();
-				
-				function onLoad() {
-					try {
-						if (request.readyState != 4) return;
-						if (request.status != 200) new RequireError("unable to load "+descriptor.id+" ("+request.status+" "+request.statusText+")");
-						if (request.status == 200)  lock[cacheid]--;
-						if (lock[cacheid]) {
-							console.warn("module locked: "+descriptor.id);
-							callback && setTimeout(onLoad, 0);
-							return;
-						}
-						if (!cache[cacheid]) {
-							var source = compiler ? compiler(request.responseText) : request.responseText;
-							load(descriptor, cache, pwd, source);
-						}
-
-						!callback && onLoad();
-						
-						callback && callback(cache[cacheid]);
-						resolvePromise(cache[cacheid]);
-					} catch (err) {
-						rejectPromise(err);
-					}
-				}
-
-			});
-
+				callback && callback(cache[cacheid]);
+			}
 		}
 
 		// INFO Module resolver
@@ -297,8 +285,4 @@ module.exports = (function(){
 	);
 
 	return mod;
-})();
-
-(()=>{ // Dependency Injector auto module registration
-	__libx.di.register('require', module.exports);
 })();
