@@ -1,84 +1,88 @@
 {
-    "name": "libx.js",
-    "version": "0.6.19",
-    "description": "",
-    "main": "./bundles/essentials",
-    "types": "./compiled/libx.d.ts",
-    "scripts": {
-        "start": "tsc -w",
-        "watch": "tsc -w",
-        "bundle": "node browser/browserify.js --minify",
-        "build": "tsc",
-        "test": "jest --detectOpenHandles --runInBand",
-        "test:ci": "jest --ci --reporters=default --reporters=jest-junit --coverage --coverageReporters=cobertura --coverageReporters=html"
-    },
-    "files": [
-        "dist/**",
-        "build/**",
-        "bundles/**",
-        "compiled/**",
-        "browser/**",
-        "node/**",
-        "modules/**",
-        "src/**",
-        "*.js",
-        "*.ts"
-    ],
-    "author": "Elya Livshitz",
-    "license": "MIT",
-    "dependencies": {
-        "@types/jest": "^24.0.15",
-        "@types/lodash": "^4.14.136",
-        "@types/node": "^12.6.8",
-        "axios": "^0.19.2",
-        "buffer": "^5.2.1",
-        "concurrency.libx.js": "*",
-        "crypto-js": "^3.2.1",
-        "file-saver": "^2.0.2",
-        "form-data": "^3.0.0",
-        "glob": "^7.1.4",
-        "json-bump": "^0.1.3",
-        "lodash": "^4.17.20",
-        "prompt": "^1.0.0",
-        "redux": "^4.0.1",
-        "rxjs": "^6.4.0",
-        "rxjs-compat": "^6.4.0",
-        "yargs": "^13.1.0"
-    },
-    "devDependencies": {
-        "body-parser": "^1.19.0",
-        "express": "^4.17.1",
-        "express-formidable": "^1.2.0",
-        "jest": "^24.8.0",
-        "jest-junit": "^7.0.0",
-        "jest-junit-reporter": "^1.1.0",
-        "pax.libx.js": "*",
-        "ts-jest": "^24.0.2",
-        "typescript": "^3.4.5"
-    },
-    "not-in-use-dependencies": {
-        "bignumber.js": "^8.0.1",
-        "bn.js": "^4.11.8",
-        "bs58": "^4.0.1",
-        "core-js": "2",
-        "cryptico": "^1.0.2",
-        "elliptic": "^6.4.1",
-        "install": "^0.12.2",
-        "jquery": "^3.3.1",
-        "npm": "^6.9.0"
-    },
-    "jest": {
-        "coverageReporters": [
-            "cobertura",
-            "html"
-        ]
-    },
-    "jest-junit": {
-        "suiteName": "jest tests",
-        "output": "./.tmp/test/TEST-RESULTS.xml",
-        "classNameTemplate": "{classname} - {title}",
-        "titleTemplate": "{classname} - {title}",
-        "ancestorSeparator": " > ",
-        "usePathForSuiteName": "true"
-    }
+  "name": "libx.js",
+  "version": "0.6.21",
+  "description": "",
+  "main": "./bundles/essentials",
+  "types": "./compiled/libx.d.ts",
+  "scripts": {
+    "start": "tsc -w",
+    "watch": "tsc -w",
+    "bundle": "node browser/browserify.js --minify",
+    "build": "tsc",
+    "test": "jest --detectOpenHandles --runInBand",
+    "test:ci": "jest --ci --reporters=default --reporters=jest-junit --coverage --coverageReporters=cobertura --coverageReporters=html",
+    "snyk-protect": "snyk protect",
+    "-prepare": "yarn run snyk-protect"
+  },
+  "files": [
+    "dist/**",
+    "build/**",
+    "bundles/**",
+    "compiled/**",
+    "browser/**",
+    "node/**",
+    "modules/**",
+    "src/**",
+    "*.js",
+    "*.ts"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/jest": "^26.0.14",
+    "@types/lodash": "^4.14.161",
+    "@types/node": "^14.11.2",
+    "axios": "^0.20.0",
+    "buffer": "^5.6.0",
+    "concurrency.libx.js": "^0.2.24",
+    "crypto-js": "^4.0.0",
+    "file-saver": "^2.0.2",
+    "form-data": "^3.0.0",
+    "glob": "^7.1.6",
+    "json-bump": "^1.0.2",
+    "lodash": "^4.17.20",
+    "prompt": "^1.0.0",
+    "redux": "^4.0.5",
+    "rxjs": "^6.6.3",
+    "rxjs-compat": "^6.6.3",
+    "snyk": "^1.405.1",
+    "yargs": "^16.0.3"
+  },
+  "devDependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "express-formidable": "^1.2.0",
+    "jest": "^26.4.2",
+    "jest-junit": "^11.1.0",
+    "jest-junit-reporter": "^1.1.0",
+    "pax.libx.js": "^0.2.6",
+    "ts-jest": "^26.4.1",
+    "typescript": "^4.0.3"
+  },
+  "not-in-use-dependencies": {
+    "bignumber.js": "^8.0.1",
+    "bn.js": "^4.11.8",
+    "bs58": "^4.0.1",
+    "core-js": "2",
+    "cryptico": "^1.0.2",
+    "elliptic": "^6.5.3",
+    "install": "^0.12.2",
+    "jquery": "^3.3.1",
+    "npm": "^6.9.0"
+  },
+  "jest": {
+    "coverageReporters": [
+      "cobertura",
+      "html"
+    ]
+  },
+  "jest-junit": {
+    "suiteName": "jest tests",
+    "output": "./.tmp/test/TEST-RESULTS.xml",
+    "classNameTemplate": "{classname} - {title}",
+    "titleTemplate": "{classname} - {title}",
+    "ancestorSeparator": " > ",
+    "usePathForSuiteName": "true"
+  },
+  "snyk": true
 }

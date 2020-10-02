@@ -83,6 +83,8 @@ $ yarn add libx.js
 or
 $ npm install --save libx.js   
 ```
+Play with it in browser playground: https://npm.runkit.com/libx.js
+    
 
 __For browser:__ <br/>
 Create a dedicated file, include (e.g: require) the needed modules into `global` (window) scope and browserify it. See [pax.libx.js](https://github.com/Livshitz/pax.libx.js) for more details how to efficiently browserify and bundle files for browser use.

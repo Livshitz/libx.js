@@ -103,7 +103,7 @@ module.exports = (function(){
 			else console[func].call(console, _msg, 'font-size:8px;', args);
 		} else {
 			var _msg = `${prefix}${time} ${msg} ${trace}`; //${color != null ? '%c' : ''}
-			console[func].call(console, _msg, (args.length == 0) ? '' : args );
+			console[func].call(console, _msg, (args.length == 0) ? '' : args.toString() );
 		}
 
 		return msg;
