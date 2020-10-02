@@ -3,7 +3,9 @@
 /// <reference path="./enums.d.ts" />
 /// <reference types="lodash" />
 
-declare namespace LibxJS {
+// export {};
+
+export namespace LibxJS {
 	interface Base {
 		create(): any;
 	}
@@ -17,7 +19,7 @@ declare namespace LibxJS {
 		[K: string]: T;
 	}
 
-	interface IDeferred<T>  extends Promise<any> {
+	interface IDeferred<T> extends Promise<any> {
 		resolveWith(ctx);
 		rejectWith(ctx);
 		notifyWith(ctx);
@@ -283,6 +285,7 @@ declare namespace LibxJS {
 
 	interface IFirebase {
 		new(firebaseApp: any, firebaseProvider: any) : IFirebase;
+		firebasePathPrefix: string;
 		isConnected(callback: ((isConnected: boolean) => void)): Promise<any>;
 		makeKey(givenTimestamp: Date);
 		getRef(path: string, type: string, callback: Function);
@@ -401,11 +404,11 @@ declare namespace LibxJS {
 // --------------------------------------------------------------------------------
 
 // enables access simply by writing 'libx.'
-declare var libx: LibxJS.ILibxJS;
+export var libx: LibxJS.ILibxJS;
 
 // enables access with 'global.libx' (sometimes you want to make sure the scope)
 declare module NodeJS  {
-    interface Global {
+    export interface Global {
 		libx: LibxJS.ILibxJS;
 	}
 	
