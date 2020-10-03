@@ -10,7 +10,9 @@
     "bundle": "node browser/browserify.js --minify",
     "build": "tsc",
     "test": "jest --detectOpenHandles --runInBand",
-    "test:ci": "jest --ci --reporters=default --reporters=jest-junit --coverage --coverageReporters=cobertura --coverageReporters=html"
+    "test:ci": "jest --ci --reporters=default --reporters=jest-junit --coverage --coverageReporters=cobertura --coverageReporters=html",
+    "snyk-protect": "snyk protect",
+    "prepare": "yarn run snyk-protect"
   },
   "files": [
     "dist/**",
@@ -43,7 +45,8 @@
     "redux": "^4.0.5",
     "rxjs": "^6.6.3",
     "rxjs-compat": "^6.6.3",
-    "yargs": "^16.0.3"
+    "yargs": "^16.0.3",
+    "snyk": "^1.406.0"
   },
   "devDependencies": {
     "body-parser": "^1.19.0",
@@ -79,5 +82,6 @@
     "titleTemplate": "{classname} - {title}",
     "ancestorSeparator": " > ",
     "usePathForSuiteName": "true"
-  }
+  },
+  "snyk": true
 }
