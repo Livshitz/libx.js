@@ -1,6 +1,8 @@
 // Essentials:
 // const libx: LibxJS.ILibxJS = require('../../bundles/essentials');
 
+import { LibxJS } from "../libx";
+
 // Modules:
 // import mod from '../../modules/';
 // const firebase: LibxJS.ILibxJS = require('../bundles/essentials');

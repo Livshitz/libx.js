@@ -1,11 +1,10 @@
 /// <reference path="./libx.extensions.d.ts" />
-/// <reference path="./enums.d.ts" />
-/// <reference path="./enums.d.ts" />
-/// <reference types="lodash" />
 
-// export {};
+import type * as _ from 'lodash';
 
-export namespace LibxJS {
+export {};
+
+export declare namespace LibxJS {
 	interface Base {
 		create(): any;
 	}
@@ -384,15 +383,15 @@ export namespace LibxJS {
 
 	type LogSeverities = { debug, verbose, info, warning, error, fatal }
 
-	export type Serializable =
+	type Serializable =
 		| number
 		| string
 		| boolean
 		| null
 		| JSONArray
 		| JSONObject;
-	export interface JSONArray extends Array<Serializable> { }
-	export interface JSONObject {
+	interface JSONArray extends Array<Serializable> { }
+	interface JSONObject {
 		[key: string]: Serializable;
 	}
 
@@ -403,16 +402,5 @@ export namespace LibxJS {
 
 // --------------------------------------------------------------------------------
 
-// enables access simply by writing 'libx.'
-export var libx: LibxJS.ILibxJS;
-
-// enables access with 'global.libx' (sometimes you want to make sure the scope)
-declare module NodeJS  {
-    export interface Global {
-		libx: LibxJS.ILibxJS;
-	}
-	
-	interface String {
-        capitalize() : string;
-    }
-}
+import * as libx from '../bundles/essentials';
+export const libx: LibxJS.ILibxJS;

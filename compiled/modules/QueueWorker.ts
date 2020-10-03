@@ -1,3 +1,5 @@
+import { LibxJS } from "../libx";
+
 const libx: LibxJS.ILibxJS = require('../../bundles/essentials');
 
 class QueueWorkerItem<T> {

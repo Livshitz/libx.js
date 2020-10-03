@@ -7,7 +7,7 @@ module.exports = (function(){
 	mod.isShowStacktrace = true;
 	mod.isShowTime = !mod.isBrowser;
 	mod.isShowPrefix = true;
-	mod.severities = {
+	mod.severities = mod.filterLevels = {
 		debug: 0, //console.debug
 		verbose: 1, //console.log
 		info: 2, //console.info

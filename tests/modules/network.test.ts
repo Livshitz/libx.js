@@ -2,6 +2,7 @@
  * @jest-environment node
  */
 
+import { LibxJS } from '../../compiled/libx';
 import mockServer = require('../mockServer');
 
 describe('libx:modules:network tests', () => {
