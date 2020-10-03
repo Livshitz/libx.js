@@ -1,5 +1,7 @@
 // const libx: LibxJS.ILibxJS = require('../bundles/essentials');
 
+import { LibxJS } from "../libx";
+
 export default class LinkedNode<T> {
 	public content: T;
 	public parent: LinkedNode<T>;

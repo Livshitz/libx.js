@@ -55,8 +55,8 @@
     "jest": "^26.4.2",
     "jest-junit": "^11.1.0",
     "jest-junit-reporter": "^1.1.0",
-    "pax.libx.js": "^0.2.6",
     "ts-jest": "^26.4.1",
+    "pax.libx.js": "^0.2.6",
     "typescript": "^4.0.3"
   },
   "not-in-use-dependencies": {

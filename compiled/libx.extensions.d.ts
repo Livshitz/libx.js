@@ -1,8 +1,8 @@
-interface String extends LibxJS.IExtensionsString { }
-interface Date extends LibxJS.IExtensionsDate { }
-interface Array<T> extends LibxJS.IExtensionsArray<T> { }
+interface String extends LibxJSExtensions.IExtensionsString { }
+interface Date extends LibxJSExtensions.IExtensionsDate { }
+interface Array<T> extends LibxJSExtensions.IExtensionsArray<T> { }
 
-declare namespace LibxJS {
+declare namespace LibxJSExtensions {
 	interface IExtensionsString {
 		format(...params: any[]) : string;
 		capitalize() : string;

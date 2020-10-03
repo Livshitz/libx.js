@@ -1,5 +1,6 @@
 // helpers.getMeasure-positive
 // import iMyModule from '../interfaces/IMyModule';
+import { LibxJS } from "../compiled/libx";
 const libx: LibxJS.ILibxJS = require('../bundles/essentials');
 import { QueueWorker } from "../compiled/modules/QueueWorker";
 
