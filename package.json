@@ -39,10 +39,10 @@
     "glob": "^7.1.6",
     "json-bump": "^1.0.2",
     "lodash": "^4.17.20",
+    "pax.libx.js": "^0.3.1",
     "redux": "^4.0.5",
     "rxjs": "^6.6.3",
     "rxjs-compat": "^6.6.3",
-    "pax.libx.js": "^0.2.6",
     "yargs": "^16.0.3"
   },
   "devDependencies": {
