@@ -1,6 +1,6 @@
 {
   "name": "libx.js",
-  "version": "0.6.23",
+  "version": "0.6.24",
   "description": "",
   "main": "./bundles/essentials",
   "types": "./compiled/libx.d.ts",
