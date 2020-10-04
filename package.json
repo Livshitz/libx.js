@@ -40,6 +40,7 @@
     "json-bump": "^1.0.2",
     "lodash": "^4.17.20",
     "pax.libx.js": "^0.3.2",
+    "prompt": "^1.0.0",
     "redux": "^4.0.5",
     "rxjs": "^6.6.3",
     "rxjs-compat": "^6.6.3",
