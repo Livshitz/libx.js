@@ -8,7 +8,7 @@ module.exports = (function () {
 	const glob = require('glob')
 
 	var libx = require('../bundles/essentials.js');
-	mod.prompts = require('./ts/prompts').default; 
+	mod.prompts = require('../compiled/node/prompts').default; 
 
 	mod.args = argv;
 
