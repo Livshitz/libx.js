@@ -1,7 +1,7 @@
 // How to run: `$ node examples/cliAndModule.js 123 --param abc`
 // Or require as a module (see `anotherModule.ts`).
 
-require('./_global'); // 'libx.js'
+import { libx } from "../../src/bundles/node.essentials";
 
 export class Program {
 	public static main(arg1?: any, arg2?: any): any {

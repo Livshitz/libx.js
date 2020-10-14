@@ -20,6 +20,7 @@ module.exports = {
 	  "json",
 	  "node"
 	],
+	testEnvironment: "node",
 	verbose: true,
 	// globals: {
 	// 		'ts-jest': {
@@ -28,6 +29,5 @@ module.exports = {
 	// 		}
 	// }
 	reporters: [ "default", "jest-junit" ],
-	// testEnvironment: 'node',
 	coverageDirectory: ".tmp/coverage"
 }

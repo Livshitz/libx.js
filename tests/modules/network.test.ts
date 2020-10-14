@@ -1,22 +1,28 @@
+import { extensions } from '../../src/extensions/';
+import { helpers } from '../../src/helpers';
+import { di } from '../../src/modules/dependencyInjector';
+import { log } from '../../src/modules/log';
+import { IModuleNetwork } from '../../src/types/interfaces';
 /**
  * @jest-environment node
- */
+*/
 
-import { LibxJS } from '../../compiled/libx';
-import mockServer = require('../mockServer');
+log.isShowStacktrace = false;
+extensions.applyAllExtensions();
+
+import mockServer from '../mockServer';
+
 
 describe('libx:modules:network tests', () => {
 	let dataset: any = {
 	}
 	let url = null;
-	let networkModule: LibxJS.IModuleNetwork = null;
+	let networkModule: IModuleNetwork = null;
 	let server = new mockServer();
-
+	
 	beforeAll(async (done)=> {
-		require('libx.js/modules/network');
-
-		networkModule = libx.di.get<LibxJS.IModuleNetwork>('network');
-
+		networkModule = di.get<IModuleNetwork>('network');
+	
 		url = await server.run();
 		
 		done();
@@ -33,18 +39,20 @@ describe('libx:modules:network tests', () => {
 		expect(res).toBe('OK');
 		done();
 	});
-
-	test('module-network-echoParams-get-positive', async (done) => {
-		let res: Buffer = await networkModule.get(url + '/echoParams/' + '?a=1&b=2');
-		expect(Buffer.compare(res, Buffer.from('{\"a\":\"1\",\"b\":\"2\"}'))).toBe(0);
-		done();
-	});
-
+	
 	test('module-network-echoParams-httpGet-positive', async (done) => {
 		let res: Buffer = await networkModule.httpGet(url + '/echoParams/' + '?a=1&b=2');
 		expect(Buffer.compare(res, Buffer.from('{\"a\":\"1\",\"b\":\"2\"}'))).toBe(0);
 		done();
 	});
+
+	test('module-network-echoParams-get-positive', async (done) => {
+		log.v('- echoParams-get-positive');
+		let res: Buffer = await networkModule.get(url + '/echoParams/' + '?a=1&b=2');
+		expect(Buffer.compare(res, Buffer.from('{\"a\":\"1\",\"b\":\"2\"}'))).toBe(0);
+		done();
+	});
+
 	test('module-network-echoParams-httpGetString-positive', async (done) => {
 		let res: String = await networkModule.httpGetString(url + '/echoParams/' + '?a=1&b=2');
 		expect(res).toEqual('{\"a\":\"1\",\"b\":\"2\"}');
@@ -102,7 +110,7 @@ describe('libx:modules:network tests', () => {
 			data: params,
 		});
 		
-		let content = (await libx.fileStreamToBuffer(fs.createReadStream(filePath))).toString();
+		let content = (await helpers.fileStreamToBuffer(fs.createReadStream(filePath))).toString();
 
 		expect(res).toEqual({ 
 			data: {

@@ -1,3 +1,7 @@
+import { extensions } from "../src/extensions/";
+
+extensions.applyAllExtensions();
+
 var dataset: any = {
 	date: new Date("2019-07-25T21:00:14.000Z"),
 }

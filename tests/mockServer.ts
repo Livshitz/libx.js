@@ -1,17 +1,14 @@
 // Run: ts-node tests/mockServer.ts
 
-/// <reference path="../compiled/libx.d.ts" />
-global.libx = require('../bundles/essentials');
+import fs from 'fs';
+import express from 'express';
+import formidable from 'express-formidable';
 
-libx.node = require('../node');
-libx.node.catchErrors();
+import { node } from "../src/node";
+import { network } from '../src/modules/network';
+import { helpers } from "../src/helpers";
 
-const networkModule = require('../modules/network');
-
-const fs = require('fs')
-const express = require('express')
-// const bodyParser = require('body-parser');
-const formidable = require('express-formidable');
+node.catchErrors();
 
 class mod {
 	private app: any;
@@ -24,13 +21,13 @@ class mod {
 	};
 	
 	constructor(options = {}) {
-		this.options = libx.extend(options, this.options);
+		this.options = helpers.ObjectHelpers.merge(options, this.options);
 		this.options.endpoint = `http://localhost:${this.options.port}/`;
-		libx.node.mkdirRecursiveSync(this.options.uploadFolder);
+		node.mkdirRecursiveSync(this.options.uploadFolder);
 	}
 
 	run = async () => {
-		let p = libx.newPromise();
+		let p = helpers.newPromise();
 		let app = this.app = express();
 		// app.use(bodyParser.json());
 		// app.use(bodyParser.urlencoded({ extended: true }));
@@ -67,7 +64,7 @@ class mod {
 			let file = null;
 			let content = null;
 			if (this.options.verbose) console.log('request: "/echoUpload": req.fields: ', req.fields);
-			if (this.options.verbose) console.log('request: "/echoUpload": req.files: ', libx.jsonify(req.files, true));
+			if (this.options.verbose) console.log('request: "/echoUpload": req.files: ', helpers.jsonify(req.files, true));
 			if (req.files) {
 				content = fs.readFileSync(req.files.file.path).toString();
 				fs.writeFileSync(this.options.uploadFolder + '/' + 'tmp_' + req.files.file.name, content);
@@ -79,7 +76,7 @@ class mod {
 			console.log(`Local express server listening on ${this.options.endpoint}`);
 			p.resolve(this.options.endpoint);
 		})
-		await networkModule.httpGet(this.options.endpoint); // wait for express to be ready
+		await network.httpGet(this.options.endpoint); // wait for express to be ready
 	
 		return p;
 	}
@@ -89,11 +86,11 @@ class mod {
 	}
 }
 
-if (libx.node.isCalledDirectly()) {
+if (node.isCalledDirectly()) {
 	let server = new mod();
 	server.options.verbose = true;
 
-	libx.node.onExit(()=> {
+	node.onExit(()=> {
 		console.log('mockServer:cli: shutting down server...')
 		server.stop();
 	});
@@ -104,4 +101,4 @@ if (libx.node.isCalledDirectly()) {
 	})();
 }
 
-export = mod;
+export default mod;

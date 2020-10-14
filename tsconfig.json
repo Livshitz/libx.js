@@ -1,25 +1,23 @@
 {
 	"extends": "./tsconfig.base.json",
-	// "files": [
-	// 	"index.ts"
-	// ],
+
+	"compilerOptions": {
+		"rootDirs": [ "./build" ],
+		"baseUrl": "./"
+	},
+
 	"include": [
-		"./compiled/**/*.ts",
-		"./examples/ts/**/*.ts",
-		"./node/**/*.ts"
-		// "./**/*.ts",
-		// "./compiled/libx.d.ts"
-		// "./modules/**/*.ts"
+		"./src/**/*.d.ts",
+		"./src/**/*.ts"
 	],
 	"exclude": [
-		"node_modules",
+		"node_modules/**/*",
 		"dist",
 		"build",
 		"tests"
 	],
-	"compilerOptions": {
-		// "outDir": "./compiled/",
-		"rootDirs": [ "./compiled" ],                        /* List of root folders whose combined content represents the structure of the project at runtime. */
-		"baseUrl": "./"
+
+	"ts-node": {
+		"files": true
 	}
 }

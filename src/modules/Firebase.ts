@@ -1,0 +1,239 @@
+import { helpers } from '../helpers';
+import { appEvents } from './appEvents';
+import { Callbacks } from './Callbacks';
+import { di } from './dependencyInjector';
+import { log } from './log';
+
+export class Firebase {
+	private maxDate = new Date('01/01/2200').getTime(); //7258111200000 //32503672800000;
+	private entityVersion = 0;
+	
+	private firebasePathPrefix = null;
+	private onReady = new Callbacks();
+	firebaseApp: any;
+	firebaseProvider: any;
+	private _database: any;
+
+	constructor(firebaseApp, firebaseProvider) {
+		// libx.di.require(_appEvents=> {
+		// 	appEvents = _appEvents;
+		// })
+
+		this.firebaseApp = firebaseApp;
+		this.firebaseProvider = firebaseProvider;
+		this._database = this.firebaseApp.database();
+	}
+
+	public async isConnected(callback) {
+		var ret = this.get('.info/connected');
+		if (callback != null) {
+			this.listen('.info/connected', isConnected => {
+				callback(isConnected);
+				if (appEvents != null) appEvents.broadcast('firebase', { step: 'connection-changed', value: isConnected });
+			});
+		}
+		return ret;
+	}
+
+	public makeKey(givenTimestamp?) {
+		var date = givenTimestamp || Date.now();
+		return (this.maxDate - date).toString() + "-" + Math.round(helpers.randomNumber(0,100)*100);
+	}
+
+	public getRef(path, type?, callback?) {
+		path = this._fixPath(path);
+		if (type != null && callback != null) {
+			return this._database.ref(path).on(type, callback);
+		} else {
+			return this._database.ref(path)
+		}
+	}
+
+	public listen(path, callback) {
+		path = this._fixPath(path);
+		log.debug('api.firebase.listen: Listening to \"' + path + '\"');
+		this._database.ref(path).on('value', function(snp) {
+			log.debug('api.firebase.listen: Value Changed at \"' + path + '\"');
+			var obj = snp.val();
+			callback(obj);
+		});
+	}
+
+	public unlisten(path) {
+		path = this._fixPath(path);
+		log.debug('api.firebase.unlisten: Stopping listening to \"' + path + '\"');
+		this._database.ref(path).off('value');
+	}
+
+	public get(path) {
+		path = this._fixPath(path);
+		log.debug('api.firebase.get: Getting \"' + path + '\"');
+		var defer = helpers.newPromise();
+		this._database.ref(path).once('value')
+			.then(function(snp) {
+				var obj = snp.val();
+				defer.resolve(obj);
+			})
+			.catch(ex=>defer.reject(ex));
+		return defer.promise();
+	}
+
+	public update(path, data, avoidFill = true) {
+		path = this._fixPath(path);
+		log.debug('api.firebase.update: Updating data to \"' + path + '\"', data);
+		var defer = helpers.newPromise();
+
+		data = this._fixObj(data);
+
+		if (!avoidFill) data = this._fillMissingFields(data, path);
+		this._database.ref(path).update(data)
+			.then(function() {
+				defer.resolve(path);
+			})
+			.catch(ex=>defer.reject(ex));
+		return defer.promise();
+	}
+
+	public set(path, data, avoidFill = true) {
+		path = this._fixPath(path);
+		log.debug('api.firebase.set: Setting data to \"' + path + '\"', data);
+		var defer = helpers.newPromise();
+
+		data = this._fixObj(data);
+
+		if (!avoidFill) data = this._fillMissingFields(data, path);
+		this._database.ref(path).set(data)
+			.then(function() {
+				defer.resolve(path);
+			})
+			.catch(ex=>defer.reject(ex));
+		return defer.promise();
+	}
+
+	public push(path, data, avoidFill = true) {
+		path = this._fixPath(path);
+		var key = this.makeKey();
+		log.debug('api.firebase.push: Pushing to \"' + path + '\" key=' + key, data);
+		var defer = helpers.newPromise();
+
+		data = this._fixObj(data);
+
+		if (data._entity == null) data._entity = {};
+		data._entity.id = key;
+		if (!avoidFill) data = this._fillMissingFields(data, path);
+		this._database.ref(path + '/' + key).set(data)
+			.then(function() {
+				defer.resolve({ key, path: path + '/' + key });
+			})
+			.catch(ex=>defer.reject(ex));
+		return defer.promise();
+	}
+
+	public delete(path) {
+		path = this._fixPath(path);
+		log.debug('api.firebase.delete: Removing data to \"' + path + '\"');
+		var defer = helpers.newPromise();
+		this._database.ref(path).remove()
+			.then(function() {
+				defer.resolve(path);
+			})
+			.catch(ex=>defer.reject(ex));
+		return defer.promise();
+	}
+
+	public filter(path, byChild, byValue) {
+		path = this._fixPath(path);
+		log.debug('api.firebase.filter: Querying data from "{0}", by child "{1}", by value "{2}"'.format(path, byChild, byValue));
+		var defer = helpers.newPromise();
+		this._database.ref(path).orderByChild(byChild).equalTo(byValue).once('value')
+			.then(function(snp) {
+				var obj = snp.val();
+				if (obj != null) obj = this.dictToArray(obj);
+				defer.resolve(obj);
+			})
+			.catch(ex=>defer.reject(ex));
+		return defer.promise();
+	}
+
+	public getIdFromPath(path) {
+		var tmp = path.match(/\/?.+\/(.+?)\/?$/);
+		if (tmp == null || tmp.length ==0) return null;
+		return tmp[1];
+	}
+
+	public arrayToDic(arr) {
+		return helpers.arrayToDic(arr);
+	}
+
+	public dictToArray(dict) {
+		return helpers.dictToArray(dict);
+	}
+
+	public parseKeyDate(key) {
+		var reversedTimestamp = key.match(/(\d+)\-\d+/)[1];
+		reversedTimestamp = parseInt(reversedTimestamp);
+		var timestamp = this.maxDate - reversedTimestamp;
+		return new Date(timestamp);
+	}
+
+	public onPresent(path, value, onDisconnectValue) {
+		path = this._fixPath(path);
+		this.isConnected((isConnected)=>{
+			log.debug(`api.firebase.onPresent: Setting presence on '${path}', with value '${value}' (onDisconnectValue: '${onDisconnectValue}')`)
+			if (!isConnected) return;
+			var ref = this.getRef(path);
+			if (onDisconnectValue == null)
+				ref.onDisconnect().remove();
+			else
+				ref.onDisconnect().set(onDisconnectValue);
+			ref.set(value || true);
+		});
+	};
+
+	public cleanObjectId(objectId, char = '-') {
+		return objectId.replace(/[\.\#\$\/\[\]\&]/g, char);
+	}
+
+	public _fixObj(data) {
+		return JSON.parse( JSON.stringify(data)); // In order to clear 'undefined' values
+	}
+
+	public _fillMissingFields(data, path) {
+		if (data == null) return null;
+
+		var date = new Date();
+
+		// Delete 'date' field
+
+		if (typeof data != 'object') return data;
+
+		if (data._entity == null) {
+			data._entity = {};
+		}
+		if (data._entity.date != null) {
+			data._entity.createDate = data._entity.date;
+			data._entity.date = null;
+		}
+
+		if (data._entity.createDate == null) data._entity.createDate = date.toISOString();
+		if (data._entity.createDateTime == null) data._entity.createDateTime = date.getTime();
+
+		if (data._entity.entityVersion == null) data._entity.entityVersion = this.entityVersion;
+
+		if (data._entity.id == null) {
+			data._entity.id = this.getIdFromPath(path);
+		}
+
+		return data;
+	}
+
+	public _fixPath(path) {
+		if (this.firebasePathPrefix == null) return path;
+		if (path.startsWith(this.firebasePathPrefix)) return path;
+		if (path.startsWith('.')) return path;
+		if (!path.startsWith('/') && !this.firebasePathPrefix.endsWith('/')) path = '/' + path;
+		return this.firebasePathPrefix + path;
+	}
+};
+
+di.register(Firebase, 'Firebase');
