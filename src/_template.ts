@@ -1,5 +1,12 @@
-// const libx: LibxJS.ILibxJS = require('../bundles/essentials');
+import { Deferred } from 'concurrency.libx.js';
+import { helpers } from './helpers';
+import { di } from './modules/dependencyInjector';
+import { log } from './modules/log';
 
-// export default class Module<T> {
-	
-// }
+export class MyClass {
+    public constructor() {
+        log.v('MyClass:ctor: Ready');
+    }
+}
+
+di.register(MyClass, 'MyClass');
