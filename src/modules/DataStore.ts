@@ -1,6 +1,7 @@
-import { helpers } from "../helpers";
-import { IFirebase } from "../types/interfaces";
-import { log } from "./log";
+import { helpers } from '../helpers';
+import { IFirebase } from '../types/interfaces';
+import { di } from './dependencyInjector';
+import { log } from './log';
 
 interface IDataProvider {
     get<T = any>(path: string, ignoreCache?: boolean): Promise<T>;
@@ -72,7 +73,7 @@ export class DataStore implements IDataProvider {
 
     public static async init(): Promise<DataStore> {
         let dataProvider: IFirebase = null;
-        await helpers.di.require((firebase) => {
+        await di.require((firebase) => {
             dataProvider = firebase;
         });
         return new DataStore(dataProvider);

@@ -15,6 +15,8 @@ export class BrowserHelpers {
             return;
         }
 
+        const _self = this;
+
         (window.onpopstate = function () {
             var match,
                 pl = /\+/g, // Regex for replacing addition symbol with a space
@@ -24,8 +26,8 @@ export class BrowserHelpers {
                 },
                 query = window.location.search.substring(1);
 
-            this.urlParams = {};
-            while ((match = search.exec(query))) this.urlParams[decode(match[1])] = decode(match[2]);
+            _self.urlParams = {};
+            while ((match = search.exec(query))) _self.urlParams[decode(match[1])] = decode(match[2]);
         })();
 
         if (typeof jQuery != 'undefined') {

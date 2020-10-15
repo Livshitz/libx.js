@@ -1,11 +1,21 @@
 import * as concurrency from 'concurrency.libx.js';
 import { Deferred } from 'concurrency.libx.js';
-import { mixin, forEach, transform, reduce, map, mapKeys, mapValues, each, toPairs, repeat, join, has } from 'lodash';
+import mixin from 'lodash/mixin';
+import forEach from 'lodash/forEach';
+import transform from 'lodash/transform';
+import reduce from 'lodash/reduce';
+import map from 'lodash/map';
+import mapKeys from 'lodash/mapKeys';
+import mapValues from 'lodash/mapValues';
+import each from 'lodash/each';
+import toPairs from 'lodash/toPairs';
+import repeat from 'lodash/repeat';
+import join from 'lodash/join';
+import has from 'lodash/has';
 import { extensions } from '../extensions/index';
 import { ILog, log } from '../modules/log';
 import { IAny, IBrowser, ICallbacks, IDeferred, IDeferredJS, IExtensions, ILodash, IModuleNode, IPromise } from '../types/interfaces';
 import { ObjectHelpers } from './ObjectHelpers';
-import DependencyInjector from 'di.libx.js';
 // import XRegExp from "XRegExp";
 // this.fp.map = require("lodash/fp/map");
 // this.fp.flatten = require("lodash/fp/flatten");
@@ -49,7 +59,6 @@ export class Helpers {
     public isBrowser: boolean;
     public extensions = extensions;
 
-    public di = new DependencyInjector();
     // public XRegExp = XRegExp;
 
     public constructor() {
@@ -465,12 +474,10 @@ export const helpers = new Helpers();
 export interface IHelper {
     _: ILodash;
     $: IAny;
-    di: typeof DependencyInjector;
     newPromise(): IDeferred<any>;
     log: ILog;
     browser: IBrowser;
     Callbacks: ICallbacks;
-    DependencyInjector: DependencyInjector;
     async(callback: Function): Promise<any>;
     base64ToUint8Array(base64String: string): Uint8Array;
     Buffer: Buffer;

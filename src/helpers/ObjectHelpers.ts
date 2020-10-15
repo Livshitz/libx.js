@@ -1,4 +1,9 @@
-import { each, has, isString, isObject, transform, isEqual } from 'lodash';
+import each from 'lodash/each';
+import has from 'lodash/has';
+import isObject from 'lodash/isObject';
+import transform from 'lodash/transform';
+import isEqual from 'lodash/isEqual';
+import isString from 'lodash/isString';
 
 class Dummy {}
 
@@ -51,6 +56,7 @@ export class ObjectHelpers {
 
     public static isString(object) {
         return isString(object);
+        // return typeof object === 'string';
     }
 
     public static isFunction(obj) {
