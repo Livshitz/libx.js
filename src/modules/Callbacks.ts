@@ -1,4 +1,5 @@
 import each from 'lodash/each';
+import { FuncWithArgs } from '../types/interfaces';
 import { di } from './dependencyInjector';
 
 export class Callbacks {
@@ -9,14 +10,14 @@ export class Callbacks {
         this.list = {};
     }
 
-    subscribe(cb) {
+    subscribe(cb: FuncWithArgs): number {
         this.list[this.counter] = cb;
         var ret = this.counter;
         this.counter++;
         return ret;
     }
 
-    once(cb) {
+    once(cb: FuncWithArgs) {
         let _this = this;
         let handle = this.subscribe(function () {
             _this.clear(handle);
@@ -24,7 +25,7 @@ export class Callbacks {
         });
     }
 
-    until(cb) {
+    until(cb: FuncWithArgs): () => void {
         let handle = this.subscribe(cb);
         let untilFn = () => {
             this.clear(handle);
@@ -32,13 +33,13 @@ export class Callbacks {
         return untilFn;
     }
 
-    trigger() {
+    trigger(...args) {
         each(this.list, (cb: Function) => {
-            if (cb != null) cb.apply(null, arguments);
+            if (cb != null) cb.apply(null, args);
         });
     }
 
-    clear(id) {
+    clear(id: number) {
         delete this.list[id];
     }
 

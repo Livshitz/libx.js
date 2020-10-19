@@ -16,6 +16,7 @@ import { extensions } from '../extensions/index';
 import { ILog, log } from '../modules/log';
 import { IAny, IBrowser, ICallbacks, IDeferred, IDeferredJS, IExtensions, ILodash, IModuleNode, IPromise } from '../types/interfaces';
 import { ObjectHelpers } from './ObjectHelpers';
+import { StringExtensions } from '../extensions/StringExtensions';
 // import XRegExp from "XRegExp";
 // this.fp.map = require("lodash/fp/map");
 // this.fp.flatten = require("lodash/fp/flatten");
@@ -68,7 +69,7 @@ export class Helpers {
         this.isBrowser = typeof window !== 'undefined';
     }
 
-    public spawnHierarchy(path) {
+    public spawnHierarchy(path: string): any {
         let p = path.split('.');
         let cur = {};
         let init = cur;
@@ -81,7 +82,7 @@ export class Helpers {
         return init;
     }
 
-    public bufferToArrayBuffer(buf) {
+    public bufferToArrayBuffer(buf: Buffer) {
         var ab = new ArrayBuffer(buf.length);
         var view = new Uint8Array(ab);
         for (var i = 0; i < buf.length; ++i) {
@@ -90,7 +91,7 @@ export class Helpers {
         return ab;
     }
 
-    public arrayBufferToBuffer(ab) {
+    public arrayBufferToBuffer(ab: ArrayBuffer) {
         var buf = Buffer.alloc(ab.byteLength);
         var view = new Uint8Array(ab);
         for (var i = 0; i < buf.length; ++i) {
@@ -104,17 +105,17 @@ export class Helpers {
         return promise;
     }
 
-    public parseJsonFileStripComments(content) {
+    public parseJsonFileStripComments<T = any>(content: String): T {
         const matchHashComment = new RegExp(/(?:^|\s)\/\/(.+?)$/, 'gm');
 
         // replaces all hash comments & trim the resulting string
-        let json = content.toString('utf8').replace(matchHashComment, '').trim();
-        json = JSON.parse(json);
+        const json = content.replace(matchHashComment, '').trim();
+        const ret = JSON.parse(json);
 
-        return json;
+        return ret;
     }
 
-    public parseConfig(contents, env) {
+    public parseConfig(contents: string, env: string): Object {
         try {
             var obj = this.parseJsonFileStripComments(contents);
 
@@ -124,7 +125,8 @@ export class Helpers {
             delete obj.envs;
 
             var obj2 = JSON.stringify(obj);
-            obj2 = obj2.format(ObjectHelpers.merge(obj, obj.private));
+
+            obj2 = StringExtensions.format.call(obj2, ObjectHelpers.merge(obj, obj.private));
             obj = JSON.parse(obj2);
 
             return obj;
@@ -274,48 +276,6 @@ export class Helpers {
         return outputArray;
     }
 
-    public jsonRecurse(obj, byid, refs, prop?, parent?) {
-        if (typeof obj !== 'object' || !obj) return obj;
-        if (Object.prototype.toString.call(obj) === '[object Array]') {
-            for (var i = 0; i < obj.length; i++)
-                // check also if the array element is not a primitive value
-                if (typeof obj[i] !== 'object' || !obj[i]) return obj[i];
-                else if ('$ref' in obj[i]) obj[i] = this.jsonRecurse(obj[i], byid, refs, i, obj);
-                else obj[i] = this.jsonRecurse(obj[i], byid, refs, prop, obj);
-            return obj;
-        }
-        if ('$ref' in obj) {
-            var ref = obj.$ref;
-            if (ref in byid) return byid[ref];
-
-            // else we have to make it lazy:
-            refs.push([parent, prop, ref]);
-            return;
-        } else if ('$id' in obj) {
-            var id = obj.$id;
-            delete obj.$id;
-            if ('$values' in obj) obj = obj.$values.map(this.jsonRecurse);
-            else for (var prop2 in obj) obj[prop2] = this.jsonRecurse(obj[prop2], byid, refs, prop2, obj);
-            byid[id] = obj;
-        }
-        return obj;
-    }
-
-    public jsonResolveReferences(json) {
-        if (typeof json === 'string') json = JSON.parse(json);
-
-        var byid = {},
-            refs = [];
-        json = this.jsonRecurse(json, byid, refs); // run it!
-
-        for (var i = 0; i < refs.length; i++) {
-            var ref = refs[i];
-            ref[0][ref[1]] = byid[ref[2]];
-            // Notice that this throws if you put in a reference at top-level
-        }
-        return json;
-    }
-
     public getParamNames(func) {
         var fnStr = func.toString().replace(ObjectHelpers.STRIP_COMMENTS, '');
         if (fnStr.match(/^\s*class\s+/) != null) return null;
@@ -373,12 +333,12 @@ export class Helpers {
         return p;
     }
 
-    public getObjectByPath(s, obj = null) {
+    public getObjectByPath(path: string, obj = null) {
         // ref: https://stackoverflow.com/a/6491621
         if (obj == null) obj = window || global;
-        s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
-        s = s.replace(/^\./, ''); // strip a leading dot
-        var a = s.split('.');
+        path = path.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
+        path = path.replace(/^\./, ''); // strip a leading dot
+        var a = path.split('.');
         for (var i = 0, n = a.length; i < n; ++i) {
             var k = a[i];
             if (k in obj) {
@@ -388,23 +348,6 @@ export class Helpers {
             }
         }
         return obj;
-    }
-
-    public dictToArray(dict) {
-        var pairs = this._.toPairs(dict);
-        var ret = [];
-        this._.each(<any>pairs, function (pair) {
-            if (pair[1].id == null) pair[1].id = pair[0];
-            else pair[1]._id = pair[0];
-
-            ret.push(pair[1]);
-        });
-
-        return ret;
-    }
-
-    public arrayToDic(arr) {
-        return this._.transform(arr, (agg, key: string) => (agg[key] = true), {});
     }
 
     public keys = (obj) => {

@@ -31,7 +31,7 @@ if (!libx.helpers.ObjectHelpers.isString(inputFile)) throw 'Bad input';
         babelifyOptions: {
             sourceMaps: true,
             presets: ['@babel/preset-env'],
-            // global: true,
+            // global: false,
         },
     };
 

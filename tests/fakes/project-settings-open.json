@@ -1,0 +1,20 @@
+{
+    "private": {
+        "myKey": "myValue",
+        "mySmartKey": "mySmarrt-{myVal}-Value"
+    },
+    "envs": {
+        "prod": {
+            "myKey": "myValue-prod",
+            "val": 111
+        },
+        "staging": {
+            "myKey": "myValue-staging",
+            "val": 222
+        },
+        "dev": {
+            "myKey": "myValue-dev",
+            "val": 333
+        }
+    }
+}

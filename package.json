@@ -34,6 +34,7 @@
     "di.libx.js": "^0.1.5",
     "json-bump": "^1.0.2",
     "lodash": "^4.17.20",
+    "rxjs": "^6.6.3",
     "xregexp": "^4.3.0"
   },
   "devDependencies": {
