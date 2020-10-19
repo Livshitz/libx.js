@@ -8,7 +8,7 @@
 /.firebase/*.cache
 /**/node_modules/
 lib-cache/
-dist
+# dist
 
 # psm
 .gitpsm/
