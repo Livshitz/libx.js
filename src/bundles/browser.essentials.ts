@@ -7,3 +7,11 @@ export const libx = {
 };
 
 export type ILibxBrowser = typeof libx;
+
+declare global {
+    interface Window {
+        libx: typeof libx;
+    }
+}
+
+window.libx = libx;
