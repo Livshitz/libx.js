@@ -1,5 +1,6 @@
 // How to run: `$ node examples/anotherModule.js 123 --param abc`
 
+import { libx } from "../../src/bundles/node.essentials";
 import { Program } from './cliAndModule';
 
 export class Program2 {
