@@ -1,139 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="jest tests" tests="141" failures="0" time="15.63">
-  <testsuite name="tests/modules/network.test.ts" errors="0" failures="0" skipped="0" timestamp="2020-10-01T22:17:01" time="6.844" tests="12">
-    <testcase classname="libx:modules:network tests - module-network-httpGet-positive" name="libx:modules:network tests - module-network-httpGet-positive" time="0.021">
+<testsuites name="jest tests" tests="200" failures="0" time="8.949">
+  <testsuite name="tests/node/Node.test.ts" errors="0" failures="0" skipped="0" timestamp="2020-10-19T19:59:52" time="1.939" tests="14">
+    <testcase classname=" - encryptFile-positive" name=" - encryptFile-positive" time="0.007">
     </testcase>
-    <testcase classname="libx:modules:network tests - module-network-httpGetString-positive" name="libx:modules:network tests - module-network-httpGetString-positive" time="0.008">
+    <testcase classname=" - encryptFile-positive" name=" - encryptFile-positive" time="0.003">
     </testcase>
-    <testcase classname="libx:modules:network tests - module-network-echoParams-get-positive" name="libx:modules:network tests - module-network-echoParams-get-positive" time="0.012">
+    <testcase classname=" - getFiles-positive" name=" - getFiles-positive" time="0.007">
     </testcase>
-    <testcase classname="libx:modules:network tests - module-network-echoParams-httpGet-positive" name="libx:modules:network tests - module-network-echoParams-httpGet-positive" time="0.008">
+    <testcase classname=" - isCalledDirectly-positive" name=" - isCalledDirectly-positive" time="0.016">
     </testcase>
-    <testcase classname="libx:modules:network tests - module-network-echoParams-httpGetString-positive" name="libx:modules:network tests - module-network-echoParams-httpGetString-positive" time="0.009">
+    <testcase classname=" - getLibxVersion-positive" name=" - getLibxVersion-positive" time="0.001">
     </testcase>
-    <testcase classname="libx:modules:network tests - module-network-echoParams-httpGetJson-positive" name="libx:modules:network tests - module-network-echoParams-httpGetJson-positive" time="0.014">
+    <testcase classname=" - readPackageJson-positive" name=" - readPackageJson-positive" time="0.001">
     </testcase>
-    <testcase classname="libx:modules:network tests - module-network-echoParams-httpPost-positive" name="libx:modules:network tests - module-network-echoParams-httpPost-positive" time="0.009">
+    <testcase classname=" - exec-positive" name=" - exec-positive" time="0.027">
     </testcase>
-    <testcase classname="libx:modules:network tests - module-network-echoParams-httpPostJson-positive" name="libx:modules:network tests - module-network-echoParams-httpPostJson-positive" time="0.01">
+    <testcase classname=" - exec-array-positive" name=" - exec-array-positive" time="0.061">
     </testcase>
-    <testcase classname="libx:modules:network tests - module-network-echoBody-httpPostJson-positive" name="libx:modules:network tests - module-network-echoBody-httpPostJson-positive" time="0.009">
+    <testcase classname=" - bumpJsonVersion-positive" name=" - bumpJsonVersion-positive" time="0.013">
     </testcase>
-    <testcase classname="libx:modules:network tests - module-network-echoFormData-post-positive" name="libx:modules:network tests - module-network-echoFormData-post-positive" time="0.008">
+    <testcase classname=" - getFilenameWithoutExtension-positive" name=" - getFilenameWithoutExtension-positive" time="0">
     </testcase>
-    <testcase classname="libx:modules:network tests - module-network-echoFormData-get-positive" name="libx:modules:network tests - module-network-echoFormData-get-positive" time="0.013">
+    <testcase classname=" - readJson-positive" name=" - readJson-positive" time="0">
     </testcase>
-    <testcase classname="libx:modules:network tests - module-network-echoFormData-upload-positive" name="libx:modules:network tests - module-network-echoFormData-upload-positive" time="0.029">
+    <testcase classname=" - readJsonStripComments-positive" name=" - readJsonStripComments-positive" time="0.001">
     </testcase>
-  </testsuite>
-  <testsuite name="tests/libx.dependencyInjector.test.ts" errors="0" failures="0" skipped="0" timestamp="2020-10-01T22:17:08" time="5.322" tests="1">
-    <testcase classname="dependencyInjector tests - dependencyInjector--positive" name="dependencyInjector tests - dependencyInjector--positive" time="0.001">
+    <testcase classname=" - mkdirRecursiveSync-positive" name=" - mkdirRecursiveSync-positive" time="0.001">
     </testcase>
-  </testsuite>
-  <testsuite name="tests/libx.queueWorker.test.ts" errors="0" failures="0" skipped="0" timestamp="2020-10-01T22:17:13" time="1.207" tests="5">
-    <testcase classname=" - queue new" name=" - queue new" time="0.107">
-    </testcase>
-    <testcase classname=" - queue with maxConcurrent 1 &amp; serial" name=" - queue with maxConcurrent 1 &amp; serial" time="0.323">
-    </testcase>
-    <testcase classname=" - queue with maxConcurrent 1" name=" - queue with maxConcurrent 1" time="0.309">
-    </testcase>
-    <testcase classname=" - queue with maxConcurrent 2" name=" - queue with maxConcurrent 2" time="0.208">
-    </testcase>
-    <testcase classname=" - queue with maxConcurrent 3" name=" - queue with maxConcurrent 3" time="0.107">
+    <testcase classname=" - rmdirRecursiveSync-positive" name=" - rmdirRecursiveSync-positive" time="0.001">
     </testcase>
   </testsuite>
-  <testsuite name="tests/libx.helpers.test.ts" errors="0" failures="0" skipped="0" timestamp="2020-10-01T22:17:15" time="0.512" tests="55">
-    <testcase classname=" - helpers.spawnHierarchy-positive" name=" - helpers.spawnHierarchy-positive" time="0.001">
+  <testsuite name="tests/helpers/Helpers.test.ts" errors="0" failures="0" skipped="0" timestamp="2020-10-19T19:59:52" time="2.092" tests="32">
+    <testcase classname=" - helpers.spawnHierarchy-positive" name=" - helpers.spawnHierarchy-positive" time="0.002">
     </testcase>
-    <testcase classname=" - helpers.diff-positive" name=" - helpers.diff-positive" time="0.001">
-    </testcase>
-    <testcase classname=" - helpers.diff-skipEmpty-positive" name=" - helpers.diff-skipEmpty-positive" time="0.001">
-    </testcase>
-    <testcase classname=" - helpers.diff-skipEmpty-negative" name=" - helpers.diff-skipEmpty-negative" time="0.001">
-    </testcase>
-    <testcase classname=" - helpers.isObject-positive" name=" - helpers.isObject-positive" time="0">
-    </testcase>
-    <testcase classname=" - helpers.isObject-negative" name=" - helpers.isObject-negative" time="0.001">
-    </testcase>
-    <testcase classname=" - helpers.isFunction-positive" name=" - helpers.isFunction-positive" time="0.001">
-    </testcase>
-    <testcase classname=" - helpers.isArray-positive" name=" - helpers.isArray-positive" time="0">
-    </testcase>
-    <testcase classname=" - helpers.isWindow-positive" name=" - helpers.isWindow-positive" time="0.005">
-    </testcase>
-    <testcase classname=" - helpers.isNumeric-positive" name=" - helpers.isNumeric-positive" time="0.001">
-    </testcase>
-    <testcase classname=" - helpers.type-positive" name=" - helpers.type-positive" time="0.001">
-    </testcase>
-    <testcase classname=" - helpers.isPlainObject-positive" name=" - helpers.isPlainObject-positive" time="0.001">
-    </testcase>
-    <testcase classname=" - helpers.newGuid-positive" name=" - helpers.newGuid-positive" time="0">
+    <testcase classname=" - helpers.newGuid-positive" name=" - helpers.newGuid-positive" time="0.001">
     </testcase>
     <testcase classname=" - helpers.newPromise-positive" name=" - helpers.newPromise-positive" time="0">
     </testcase>
-    <testcase classname=" - helpers.isDefined-positive" name=" - helpers.isDefined-positive" time="0.001">
-    </testcase>
-    <testcase classname=" - helpers.clone-positive" name=" - helpers.clone-positive" time="0">
-    </testcase>
-    <testcase classname=" - helpers.clone-positive-2" name=" - helpers.clone-positive-2" time="0.001">
-    </testcase>
-    <testcase classname=" - helpers.extend-positive-deep" name=" - helpers.extend-positive-deep" time="0.001">
-    </testcase>
-    <testcase classname=" - helpers.extend-positive-deep-2" name=" - helpers.extend-positive-deep-2" time="0">
-    </testcase>
-    <testcase classname=" - helpers.extend-positive-shallow" name=" - helpers.extend-positive-shallow" time="0.001">
-    </testcase>
-    <testcase classname=" - helpers.shallowCopy-positive-shallow" name=" - helpers.shallowCopy-positive-shallow" time="0.001">
-    </testcase>
     <testcase classname=" - helpers.hexc-positive" name=" - helpers.hexc-positive" time="0.001">
     </testcase>
-    <testcase classname=" - helpers.jsonify-compact-positive" name=" - helpers.jsonify-compact-positive" time="0.001">
+    <testcase classname=" - helpers.jsonify-compact-positive" name=" - helpers.jsonify-compact-positive" time="0">
     </testcase>
-    <testcase classname=" - helpers.jsonify-notcompact-positive" name=" - helpers.jsonify-notcompact-positive" time="0">
+    <testcase classname=" - helpers.jsonify-notcompact-positive" name=" - helpers.jsonify-notcompact-positive" time="0.001">
     </testcase>
-    <testcase classname=" - helpers.parse-positive" name=" - helpers.parse-positive" time="0.001">
+    <testcase classname=" - helpers.parse-positive" name=" - helpers.parse-positive" time="0">
     </testcase>
     <testcase classname=" - helpers.stringifyOnce-positive" name=" - helpers.stringifyOnce-positive" time="0.001">
     </testcase>
-    <testcase classname=" - helpers.getMatch-positive" name=" - helpers.getMatch-positive" time="0.001">
+    <testcase classname=" - helpers.getMatch-positive" name=" - helpers.getMatch-positive" time="0">
     </testcase>
     <testcase classname=" - helpers.getMatch-positive-2" name=" - helpers.getMatch-positive-2" time="0">
     </testcase>
     <testcase classname=" - helpers.getMatches-positive" name=" - helpers.getMatches-positive" time="0.001">
     </testcase>
-    <testcase classname=" - helpers.getMatches-positive-index" name=" - helpers.getMatches-positive-index" time="0.001">
+    <testcase classname=" - helpers.getMatches-positive-index" name=" - helpers.getMatches-positive-index" time="0">
     </testcase>
-    <testcase classname=" - helpers.getMatches-positive-groupName" name=" - helpers.getMatches-positive-groupName" time="0">
+    <testcase classname=" - helpers.getMatches-positive-groupName" name=" - helpers.getMatches-positive-groupName" time="0.005">
     </testcase>
-    <testcase classname=" - helpers.getMatches-positive-groups" name=" - helpers.getMatches-positive-groups" time="0.001">
-    </testcase>
-    <testcase classname=" - helpers.getCustomProperties-positive" name=" - helpers.getCustomProperties-positive" time="0">
-    </testcase>
-    <testcase classname=" - helpers.getCustomProperties-negative" name=" - helpers.getCustomProperties-negative" time="0.001">
-    </testcase>
-    <testcase classname=" - helpers.isNull-positive" name=" - helpers.isNull-positive" time="0">
-    </testcase>
-    <testcase classname=" - helpers.isNull-negative" name=" - helpers.isNull-negative" time="0">
-    </testcase>
-    <testcase classname=" - helpers.isEmptyObject-positive" name=" - helpers.isEmptyObject-positive" time="0.001">
-    </testcase>
-    <testcase classname=" - helpers.isEmptyObject-negative" name=" - helpers.isEmptyObject-negative" time="0">
-    </testcase>
-    <testcase classname=" - helpers.isEmptyString-positive" name=" - helpers.isEmptyString-positive" time="0.001">
-    </testcase>
-    <testcase classname=" - helpers.isEmptyString-negative" name=" - helpers.isEmptyString-negative" time="0">
-    </testcase>
-    <testcase classname=" - helpers.isEmpty-positive" name=" - helpers.isEmpty-positive" time="0.001">
-    </testcase>
-    <testcase classname=" - helpers.makeEmpty-positive" name=" - helpers.makeEmpty-positive" time="0.001">
-    </testcase>
-    <testcase classname=" - helpers.makeEmpty-positive-withNull" name=" - helpers.makeEmpty-positive-withNull" time="0">
+    <testcase classname=" - helpers.getMatches-positive-groups" name=" - helpers.getMatches-positive-groups" time="0">
     </testcase>
     <testcase classname=" - helpers.base64ToUint8Array-positive" name=" - helpers.base64ToUint8Array-positive" time="0.002">
     </testcase>
     <testcase classname=" - helpers.getParamNames-positive-arrow" name=" - helpers.getParamNames-positive-arrow" time="0.001">
     </testcase>
-    <testcase classname=" - helpers.getParamNames-positive-function" name=" - helpers.getParamNames-positive-function" time="0.001">
+    <testcase classname=" - helpers.getParamNames-positive-function" name=" - helpers.getParamNames-positive-function" time="0">
     </testcase>
     <testcase classname=" - helpers.getParamNames-positive-async" name=" - helpers.getParamNames-positive-async" time="0">
     </testcase>
@@ -143,33 +73,257 @@
     </testcase>
     <testcase classname=" - helpers.randomNumber-positive" name=" - helpers.randomNumber-positive" time="0.001">
     </testcase>
-    <testcase classname=" - helpers.shuffle-positive" name=" - helpers.shuffle-positive" time="0.001">
+    <testcase classname=" - helpers.shuffle-positive" name=" - helpers.shuffle-positive" time="0">
     </testcase>
-    <testcase classname=" - helpers.measure-positive" name=" - helpers.measure-positive" time="0.206">
+    <testcase classname=" - helpers.measure-positive" name=" - helpers.measure-positive" time="0.212">
     </testcase>
-    <testcase classname=" - helpers.getMeasure-positive" name=" - helpers.getMeasure-positive" time="0.102">
+    <testcase classname=" - helpers.getMeasure-positive" name=" - helpers.getMeasure-positive" time="0.104">
     </testcase>
-    <testcase classname=" - helpers.getDeep-positive" name=" - helpers.getDeep-positive" time="0.001">
+    <testcase classname=" - helpers.bufferToArrayBuffer-positive" name=" - helpers.bufferToArrayBuffer-positive" time="0">
     </testcase>
-    <testcase classname=" - helpers.getDeep-positive-slashAtStart" name=" - helpers.getDeep-positive-slashAtStart" time="0">
+    <testcase classname=" - helpers.arrayBufferToBuffer-positive" name=" - helpers.arrayBufferToBuffer-positive" time="0.001">
+    </testcase>
+    <testcase classname=" - helpers.parseJsonFileStripComments-positive" name=" - helpers.parseJsonFileStripComments-positive" time="0">
+    </testcase>
+    <testcase classname=" - helpers.parseConfig-positive" name=" - helpers.parseConfig-positive" time="0.001">
+    </testcase>
+    <testcase classname=" - helpers.getObjectByPath-positive" name=" - helpers.getObjectByPath-positive" time="0">
+    </testcase>
+    <testcase classname=" - helpers.keys-positive" name=" - helpers.keys-positive" time="0.001">
+    </testcase>
+    <testcase classname=" - helpers.values-positive" name=" - helpers.values-positive" time="0">
+    </testcase>
+    <testcase classname=" - helpers.enumToArray-positive" name=" - helpers.enumToArray-positive" time="0">
     </testcase>
   </testsuite>
-  <testsuite name="tests/libx.extensions.test.ts" errors="0" failures="0" skipped="0" timestamp="2020-10-01T22:17:15" time="0.156" tests="30">
-    <testcase classname=" - string.format-positive" name=" - string.format-positive" time="0.001">
+  <testsuite name="tests/modules/Callbacks.test.ts" errors="0" failures="0" skipped="0" timestamp="2020-10-19T19:59:54" time="0.293" tests="7">
+    <testcase classname=" - subscribe-simple-positive" name=" - subscribe-simple-positive" time="0.013">
+    </testcase>
+    <testcase classname=" - subscribe-subsequent-positive" name=" - subscribe-subsequent-positive" time="0.022">
+    </testcase>
+    <testcase classname=" - once-positive" name=" - once-positive" time="0.01">
+    </testcase>
+    <testcase classname=" - until-after-positive" name=" - until-after-positive" time="0.01">
+    </testcase>
+    <testcase classname=" - until-before-positive" name=" - until-before-positive" time="0.021">
+    </testcase>
+    <testcase classname=" - clear-positive" name=" - clear-positive" time="0.021">
+    </testcase>
+    <testcase classname=" - clearAll-positive" name=" - clearAll-positive" time="0.02">
+    </testcase>
+  </testsuite>
+  <testsuite name="tests/modules/LinkedNode.test.ts" errors="0" failures="0" skipped="0" timestamp="2020-10-19T19:59:54" time="0.522" tests="23">
+    <testcase classname=" - root" name=" - root" time="0.002">
+    </testcase>
+    <testcase classname=" - root.toString()" name=" - root.toString()" time="0">
+    </testcase>
+    <testcase classname=" - root.toString()-serializable" name=" - root.toString()-serializable" time="0">
+    </testcase>
+    <testcase classname=" - root.toStringDeep()" name=" - root.toStringDeep()" time="0.001">
+    </testcase>
+    <testcase classname=" - root.print()" name=" - root.print()" time="0.001">
+    </testcase>
+    <testcase classname=" - root.getFirstChild()" name=" - root.getFirstChild()" time="0">
+    </testcase>
+    <testcase classname=" - root.getRoot()" name=" - root.getRoot()" time="0">
+    </testcase>
+    <testcase classname=" - root.removeChild()" name=" - root.removeChild()" time="0.012">
+    </testcase>
+    <testcase classname=" - root.removeChildByContent()" name=" - root.removeChildByContent()" time="0.001">
+    </testcase>
+    <testcase classname=" - root.addChildren()" name=" - root.addChildren()" time="0.005">
+    </testcase>
+    <testcase classname=" - root.addChildren()" name=" - root.addChildren()" time="0.001">
+    </testcase>
+    <testcase classname=" - root.addChild()" name=" - root.addChild()" time="0.001">
+    </testcase>
+    <testcase classname=" - root.remove()" name=" - root.remove()" time="0.001">
+    </testcase>
+    <testcase classname=" - root.removeChildByContent()" name=" - root.removeChildByContent()" time="0">
+    </testcase>
+    <testcase classname=" - root.crawl()" name=" - root.crawl()" time="0.001">
+    </testcase>
+    <testcase classname=" - root.serialize()" name=" - root.serialize()" time="0.002">
+    </testcase>
+    <testcase classname=" - root.deserialize()" name=" - root.deserialize()" time="0">
+    </testcase>
+    <testcase classname=" - root.next()" name=" - root.next()" time="0.001">
+    </testcase>
+    <testcase classname=" - root.next()-negative" name=" - root.next()-negative" time="0">
+    </testcase>
+    <testcase classname=" - root.prev()" name=" - root.prev()" time="0">
+    </testcase>
+    <testcase classname=" - root.prev()-negative" name=" - root.prev()-negative" time="0.001">
+    </testcase>
+    <testcase classname=" - root.addSibling()" name=" - root.addSibling()" time="0">
+    </testcase>
+    <testcase classname=" - root.addSibling()" name=" - root.addSibling()" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="tests/modules/QueueWorker.test.ts" errors="0" failures="0" skipped="0" timestamp="2020-10-19T19:59:52" time="2.692" tests="5">
+    <testcase classname=" - queue new" name=" - queue new" time="0.125">
+    </testcase>
+    <testcase classname=" - queue with maxConcurrent 1 &amp; serial" name=" - queue with maxConcurrent 1 &amp; serial" time="0.308">
+    </testcase>
+    <testcase classname=" - queue with maxConcurrent 1" name=" - queue with maxConcurrent 1" time="0.31">
+    </testcase>
+    <testcase classname=" - queue with maxConcurrent 2" name=" - queue with maxConcurrent 2" time="0.205">
+    </testcase>
+    <testcase classname=" - queue with maxConcurrent 3" name=" - queue with maxConcurrent 3" time="0.106">
+    </testcase>
+  </testsuite>
+  <testsuite name="tests/helpers/ObjectHelper.test.ts" errors="0" failures="0" skipped="0" timestamp="2020-10-19T19:59:54" time="0.47" tests="32">
+    <testcase classname=" - isString-positive" name=" - isString-positive" time="0.003">
+    </testcase>
+    <testcase classname=" - diff-positive" name=" - diff-positive" time="0.001">
+    </testcase>
+    <testcase classname=" - diff-skipEmpty-positive" name=" - diff-skipEmpty-positive" time="0.001">
+    </testcase>
+    <testcase classname=" - diff-skipEmpty-negative" name=" - diff-skipEmpty-negative" time="0">
+    </testcase>
+    <testcase classname=" - isObject-positive" name=" - isObject-positive" time="0.001">
+    </testcase>
+    <testcase classname=" - isObject-negative" name=" - isObject-negative" time="0">
+    </testcase>
+    <testcase classname=" - isFunction-positive" name=" - isFunction-positive" time="0">
+    </testcase>
+    <testcase classname=" - isArray-positive" name=" - isArray-positive" time="0">
+    </testcase>
+    <testcase classname=" - isWindow-positive" name=" - isWindow-positive" time="0.019">
+    </testcase>
+    <testcase classname=" - isNumeric-positive" name=" - isNumeric-positive" time="0">
+    </testcase>
+    <testcase classname=" - type-positive" name=" - type-positive" time="0.001">
+    </testcase>
+    <testcase classname=" - isPlainObject-positive" name=" - isPlainObject-positive" time="0">
+    </testcase>
+    <testcase classname=" - isDefined-positive" name=" - isDefined-positive" time="0">
+    </testcase>
+    <testcase classname=" - clone-positive" name=" - clone-positive" time="0.001">
+    </testcase>
+    <testcase classname=" - clone-positive-2" name=" - clone-positive-2" time="0">
+    </testcase>
+    <testcase classname=" - extend-positive-deep" name=" - extend-positive-deep" time="0.001">
+    </testcase>
+    <testcase classname=" - extend-positive-deep-2" name=" - extend-positive-deep-2" time="0">
+    </testcase>
+    <testcase classname=" - extend-positive-shallow" name=" - extend-positive-shallow" time="0.001">
+    </testcase>
+    <testcase classname=" - shallowCopy-positive-shallow" name=" - shallowCopy-positive-shallow" time="0">
+    </testcase>
+    <testcase classname=" - getCustomProperties-positive" name=" - getCustomProperties-positive" time="0">
+    </testcase>
+    <testcase classname=" - getCustomProperties-negative" name=" - getCustomProperties-negative" time="0.001">
+    </testcase>
+    <testcase classname=" - isNull-positive" name=" - isNull-positive" time="0">
+    </testcase>
+    <testcase classname=" - isNull-negative" name=" - isNull-negative" time="0">
+    </testcase>
+    <testcase classname=" - isEmptyObject-positive" name=" - isEmptyObject-positive" time="0.001">
+    </testcase>
+    <testcase classname=" - isEmptyObject-negative" name=" - isEmptyObject-negative" time="0">
+    </testcase>
+    <testcase classname=" - isEmptyString-positive" name=" - isEmptyString-positive" time="0">
+    </testcase>
+    <testcase classname=" - isEmptyString-negative" name=" - isEmptyString-negative" time="0">
+    </testcase>
+    <testcase classname=" - isEmpty-positive" name=" - isEmpty-positive" time="0">
+    </testcase>
+    <testcase classname=" - makeEmpty-positive" name=" - makeEmpty-positive" time="0.001">
+    </testcase>
+    <testcase classname=" - makeEmpty-positive-withNull" name=" - makeEmpty-positive-withNull" time="0">
+    </testcase>
+    <testcase classname=" - getDeep-positive" name=" - getDeep-positive" time="0.001">
+    </testcase>
+    <testcase classname=" - getDeep-positive-slashAtStart" name=" - getDeep-positive-slashAtStart" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="tests/modules/Crypto.test.ts" errors="0" failures="0" skipped="0" timestamp="2020-10-19T19:59:55" time="0.385" tests="4">
+    <testcase classname=" - base64_encode-positive" name=" - base64_encode-positive" time="0.002">
+    </testcase>
+    <testcase classname=" - base64_decode-positive" name=" - base64_decode-positive" time="0">
+    </testcase>
+    <testcase classname=" - encrypt-positive" name=" - encrypt-positive" time="0.004">
+    </testcase>
+    <testcase classname=" - decrypt-positive" name=" - decrypt-positive" time="0.004">
+    </testcase>
+  </testsuite>
+  <testsuite name="tests/modules/Log.test.ts" errors="0" failures="0" skipped="0" timestamp="2020-10-19T19:59:55" time="0.334" tests="11">
+    <testcase classname=" - write-allLevels-positive" name=" - write-allLevels-positive" time="0.007">
+    </testcase>
+    <testcase classname=" - verbose-noTime-positive" name=" - verbose-noTime-positive" time="0">
+    </testcase>
+    <testcase classname=" - verbose-noPrefix-positive" name=" - verbose-noPrefix-positive" time="0.001">
+    </testcase>
+    <testcase classname=" - verbose-noTime-noPrefix-positive" name=" - verbose-noTime-noPrefix-positive" time="0">
+    </testcase>
+    <testcase classname=" - verbose-consoleColors-positive" name=" - verbose-consoleColors-positive" time="0.001">
+    </testcase>
+    <testcase classname=" - verbose-stacktrace-positive" name=" - verbose-stacktrace-positive" time="0.01">
+    </testcase>
+    <testcase classname=" - verbose-filteredOut-positive" name=" - verbose-filteredOut-positive" time="0">
+    </testcase>
+    <testcase classname=" - verbose-notFiltered-positive" name=" - verbose-notFiltered-positive" time="0.001">
+    </testcase>
+    <testcase classname=" - verbose-debug-noPrint-positive" name=" - verbose-debug-noPrint-positive" time="0">
+    </testcase>
+    <testcase classname=" - verbose-debug-print-positive" name=" - verbose-debug-print-positive" time="0.001">
+    </testcase>
+    <testcase classname=" - verbose-isBrowser-positive" name=" - verbose-isBrowser-positive" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="tests/modules/Queue.test.ts" errors="0" failures="0" skipped="0" timestamp="2020-10-19T19:59:55" time="0.281" tests="6">
+    <testcase classname=" - queue new" name=" - queue new" time="0.013">
+    </testcase>
+    <testcase classname=" - queue.length" name=" - queue.length" time="0">
+    </testcase>
+    <testcase classname=" - queue.enqueue" name=" - queue.enqueue" time="0">
+    </testcase>
+    <testcase classname=" - queue.enqueue" name=" - queue.enqueue" time="0.001">
+    </testcase>
+    <testcase classname=" - queue forEach" name=" - queue forEach" time="0">
+    </testcase>
+    <testcase classname=" - queue index" name=" - queue index" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="tests/modules/BinaryHeap.test.ts" errors="0" failures="0" skipped="0" timestamp="2020-10-19T19:59:55" time="0.244" tests="8">
+    <testcase classname=" - basic" name=" - basic" time="0.002">
+    </testcase>
+    <testcase classname=" - max - insert low" name=" - max - insert low" time="0.002">
+    </testcase>
+    <testcase classname=" - max - insert mid" name=" - max - insert mid" time="0.004">
+    </testcase>
+    <testcase classname=" - max - insert high" name=" - max - insert high" time="0.001">
+    </testcase>
+    <testcase classname=" - max - insert low" name=" - max - insert low" time="0.001">
+    </testcase>
+    <testcase classname=" - min - insert low" name=" - min - insert low" time="0.002">
+    </testcase>
+    <testcase classname=" - min - insert mid" name=" - min - insert mid" time="0.002">
+    </testcase>
+    <testcase classname=" - min - insert high" name=" - min - insert high" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="tests/myTest.test.ts" errors="0" failures="0" skipped="0" timestamp="2020-10-19T19:59:55" time="0.182" tests="1">
+    <testcase classname=" - libx exists" name=" - libx exists" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="tests/helpers/extensions.test.ts" errors="0" failures="0" skipped="0" timestamp="2020-10-19T19:59:55" time="0.343" tests="30">
+    <testcase classname=" - string.format-positive" name=" - string.format-positive" time="0.004">
     </testcase>
     <testcase classname=" - string.capitalize-positive" name=" - string.capitalize-positive" time="0.001">
     </testcase>
     <testcase classname=" - string.ellipsis-positive" name=" - string.ellipsis-positive" time="0">
     </testcase>
-    <testcase classname=" - string.kebabCase-positive" name=" - string.kebabCase-positive" time="0.001">
+    <testcase classname=" - string.kebabCase-positive" name=" - string.kebabCase-positive" time="0">
     </testcase>
-    <testcase classname=" - string.camelize-positive" name=" - string.camelize-positive" time="0.001">
+    <testcase classname=" - string.camelize-positive" name=" - string.camelize-positive" time="0.019">
     </testcase>
     <testcase classname=" - string.padNumber-positive" name=" - string.padNumber-positive" time="0">
     </testcase>
     <testcase classname=" - string.contains-positive" name=" - string.contains-positive" time="0.001">
     </testcase>
-    <testcase classname=" - string.hashCode-positive" name=" - string.hashCode-positive" time="0.001">
+    <testcase classname=" - string.hashCode-positive" name=" - string.hashCode-positive" time="0.021">
     </testcase>
     <testcase classname=" - string.endsWith-positive" name=" - string.endsWith-positive" time="0">
     </testcase>
@@ -179,25 +333,25 @@
     </testcase>
     <testcase classname=" - string.isEmpty-positive-2" name=" - string.isEmpty-positive-2" time="0.001">
     </testcase>
-    <testcase classname=" - string.isEmpty-negative" name=" - string.isEmpty-negative" time="0.004">
+    <testcase classname=" - string.isEmpty-negative" name=" - string.isEmpty-negative" time="0">
     </testcase>
-    <testcase classname=" - date.toUtc-positive" name=" - date.toUtc-positive" time="0.002">
+    <testcase classname=" - date.toUtc-positive" name=" - date.toUtc-positive" time="0.001">
     </testcase>
     <testcase classname=" - date.isValid-positive" name=" - date.isValid-positive" time="0">
     </testcase>
-    <testcase classname=" - date.isValid-negative" name=" - date.isValid-negative" time="0">
+    <testcase classname=" - date.isValid-negative" name=" - date.isValid-negative" time="0.001">
     </testcase>
-    <testcase classname=" - date.formatx-positive" name=" - date.formatx-positive" time="0.001">
+    <testcase classname=" - date.formatx-positive" name=" - date.formatx-positive" time="0.015">
     </testcase>
-    <testcase classname=" - date.format-positive" name=" - date.format-positive" time="0">
+    <testcase classname=" - date.format-positive" name=" - date.format-positive" time="0.002">
     </testcase>
     <testcase classname=" - date.toJSON-positive" name=" - date.toJSON-positive" time="0.001">
     </testcase>
-    <testcase classname=" - date.toJson-positive" name=" - date.toJson-positive" time="0.001">
+    <testcase classname=" - date.toJson-positive" name=" - date.toJson-positive" time="0">
     </testcase>
-    <testcase classname=" - date.fromJson-positive" name=" - date.fromJson-positive" time="0">
+    <testcase classname=" - date.fromJson-positive" name=" - date.fromJson-positive" time="0.003">
     </testcase>
-    <testcase classname=" - date.addHours-positive" name=" - date.addHours-positive" time="0.001">
+    <testcase classname=" - date.addHours-positive" name=" - date.addHours-positive" time="0.003">
     </testcase>
     <testcase classname=" - date.addMinutes-positive" name=" - date.addMinutes-positive" time="0">
     </testcase>
@@ -205,99 +359,77 @@
     </testcase>
     <testcase classname=" - date.diff-positive" name=" - date.diff-positive" time="0.001">
     </testcase>
-    <testcase classname=" - date.myFilter-positive" name=" - date.myFilter-positive" time="0">
+    <testcase classname=" - date.myFilter-positive" name=" - date.myFilter-positive" time="0.001">
+    </testcase>
+    <testcase classname=" - date.myFilterSingle-positive" name=" - date.myFilterSingle-positive" time="0">
     </testcase>
     <testcase classname=" - date.myFilterSingle-positive" name=" - date.myFilterSingle-positive" time="0.001">
     </testcase>
-    <testcase classname=" - date.myFilterSingle-positive" name=" - date.myFilterSingle-positive" time="0.001">
+    <testcase classname=" - date.remove-positive" name=" - date.remove-positive" time="0">
     </testcase>
-    <testcase classname=" - date.remove-positive" name=" - date.remove-positive" time="0.001">
-    </testcase>
-    <testcase classname=" - date.contains-positive" name=" - date.contains-positive" time="0">
+    <testcase classname=" - date.contains-positive" name=" - date.contains-positive" time="0.001">
     </testcase>
   </testsuite>
-  <testsuite name="tests/libx.queue.test.ts" errors="0" failures="0" skipped="0" timestamp="2020-10-01T22:17:15" time="0.127" tests="6">
-    <testcase classname=" - queue new" name=" - queue new" time="0.001">
+  <testsuite name="tests/modules/EventsStore.test.ts" errors="0" failures="0" skipped="0" timestamp="2020-10-19T19:59:52" time="5.715" tests="10">
+    <testcase classname=" - subscribe-state-positive" name=" - subscribe-state-positive" time="0.004">
     </testcase>
-    <testcase classname=" - queue.length" name=" - queue.length" time="0.001">
+    <testcase classname=" - subscribe-state-emitCurrent-noTrigger-positive" name=" - subscribe-state-emitCurrent-noTrigger-positive" time="0.001">
     </testcase>
-    <testcase classname=" - queue.enqueue" name=" - queue.enqueue" time="0.001">
+    <testcase classname=" - subscribe-history-emitAll-noTrigger-positive" name=" - subscribe-history-emitAll-noTrigger-positive" time="0.001">
     </testcase>
-    <testcase classname=" - queue.enqueue" name=" - queue.enqueue" time="0">
+    <testcase classname=" - subscribe-future-noEmit-noTrigger-positive" name=" - subscribe-future-noEmit-noTrigger-positive" time="0.012">
     </testcase>
-    <testcase classname=" - queue forEach" name=" - queue forEach" time="0.001">
+    <testcase classname=" - subscribe-future-noEmit-withTrigger-positive" name=" - subscribe-future-noEmit-withTrigger-positive" time="0.001">
     </testcase>
-    <testcase classname=" - queue index" name=" - queue index" time="0.002">
+    <testcase classname=" - subscribe-withTypePredicate-positive" name=" - subscribe-withTypePredicate-positive" time="0.001">
     </testcase>
-  </testsuite>
-  <testsuite name="tests/libx.linkedNode.test.ts" errors="0" failures="0" skipped="0" timestamp="2020-10-01T22:17:15" time="0.169" tests="23">
-    <testcase classname=" - root" name=" - root" time="0.001">
+    <testcase classname=" - subscribeOnce-defaultFuture-positive" name=" - subscribeOnce-defaultFuture-positive" time="0.001">
     </testcase>
-    <testcase classname=" - root.toString()" name=" - root.toString()" time="0.001">
+    <testcase classname=" - subscribeOnce-state-positive" name=" - subscribeOnce-state-positive" time="0.001">
     </testcase>
-    <testcase classname=" - root.toString()-serializable" name=" - root.toString()-serializable" time="0.001">
+    <testcase classname=" - unsubscribe-viaHandler-positive" name=" - unsubscribe-viaHandler-positive" time="0.013">
     </testcase>
-    <testcase classname=" - root.toStringDeep()" name=" - root.toStringDeep()" time="0.001">
-    </testcase>
-    <testcase classname=" - root.print()" name=" - root.print()" time="0">
-    </testcase>
-    <testcase classname=" - root.getFirstChild()" name=" - root.getFirstChild()" time="0.001">
-    </testcase>
-    <testcase classname=" - root.getRoot()" name=" - root.getRoot()" time="0.001">
-    </testcase>
-    <testcase classname=" - root.removeChild()" name=" - root.removeChild()" time="0.001">
-    </testcase>
-    <testcase classname=" - root.removeChildByContent()" name=" - root.removeChildByContent()" time="0.001">
-    </testcase>
-    <testcase classname=" - root.addChildren()" name=" - root.addChildren()" time="0.001">
-    </testcase>
-    <testcase classname=" - root.addChildren()" name=" - root.addChildren()" time="0.001">
-    </testcase>
-    <testcase classname=" - root.addChild()" name=" - root.addChild()" time="0">
-    </testcase>
-    <testcase classname=" - root.remove()" name=" - root.remove()" time="0.001">
-    </testcase>
-    <testcase classname=" - root.removeChildByContent()" name=" - root.removeChildByContent()" time="0.005">
-    </testcase>
-    <testcase classname=" - root.crawl()" name=" - root.crawl()" time="0.001">
-    </testcase>
-    <testcase classname=" - root.serialize()" name=" - root.serialize()" time="0.002">
-    </testcase>
-    <testcase classname=" - root.deserialize()" name=" - root.deserialize()" time="0.001">
-    </testcase>
-    <testcase classname=" - root.next()" name=" - root.next()" time="0.001">
-    </testcase>
-    <testcase classname=" - root.next()-negative" name=" - root.next()-negative" time="0.001">
-    </testcase>
-    <testcase classname=" - root.prev()" name=" - root.prev()" time="0.001">
-    </testcase>
-    <testcase classname=" - root.prev()-negative" name=" - root.prev()-negative" time="0.001">
-    </testcase>
-    <testcase classname=" - root.addSibling()" name=" - root.addSibling()" time="0.001">
-    </testcase>
-    <testcase classname=" - root.addSibling()" name=" - root.addSibling()" time="0">
+    <testcase classname=" - unsubscribe-viaModule-positive" name=" - unsubscribe-viaModule-positive" time="0.011">
     </testcase>
   </testsuite>
-  <testsuite name="tests/libx.binaryHeap.test.ts" errors="0" failures="0" skipped="0" timestamp="2020-10-01T22:17:16" time="0.163" tests="8">
-    <testcase classname=" - basic" name=" - basic" time="0.002">
+  <testsuite name="tests/modules/Firebase.test.ts" errors="0" failures="0" skipped="0" timestamp="2020-10-19T19:59:52" time="5.825" tests="3">
+    <testcase classname=" - helpers.dictToArray-positive" name=" - helpers.dictToArray-positive" time="0.003">
     </testcase>
-    <testcase classname=" - max - insert low" name=" - max - insert low" time="0.005">
+    <testcase classname=" - helpers.dictToArray-realistic-positive" name=" - helpers.dictToArray-realistic-positive" time="0.001">
     </testcase>
-    <testcase classname=" - max - insert mid" name=" - max - insert mid" time="0.002">
-    </testcase>
-    <testcase classname=" - max - insert high" name=" - max - insert high" time="0.002">
-    </testcase>
-    <testcase classname=" - max - insert low" name=" - max - insert low" time="0.001">
-    </testcase>
-    <testcase classname=" - min - insert low" name=" - min - insert low" time="0.001">
-    </testcase>
-    <testcase classname=" - min - insert mid" name=" - min - insert mid" time="0.002">
-    </testcase>
-    <testcase classname=" - min - insert high" name=" - min - insert high" time="0.002">
+    <testcase classname=" - helpers.arrayToDic-positive" name=" - helpers.arrayToDic-positive" time="0">
     </testcase>
   </testsuite>
-  <testsuite name="tests/myTest.test.ts" errors="0" failures="0" skipped="0" timestamp="2020-10-01T22:17:16" time="0.101" tests="1">
-    <testcase classname=" - libx exists" name=" - libx exists" time="0.001">
+  <testsuite name="tests/modules/DependencyInjector.test.ts" errors="0" failures="0" skipped="0" timestamp="2020-10-19T19:59:52" time="6.188" tests="1">
+    <testcase classname="dependencyInjector tests - dependencyInjector--positive" name="dependencyInjector tests - dependencyInjector--positive" time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="tests/modules/Network.test.ts" errors="0" failures="0" skipped="0" timestamp="2020-10-19T19:59:52" time="7.939" tests="13">
+    <testcase classname="libx:modules:network tests - module-network-httpRequest-positive" name="libx:modules:network tests - module-network-httpRequest-positive" time="0.043">
+    </testcase>
+    <testcase classname="libx:modules:network tests - module-network-httpGet-positive" name="libx:modules:network tests - module-network-httpGet-positive" time="0.005">
+    </testcase>
+    <testcase classname="libx:modules:network tests - module-network-httpGetString-positive" name="libx:modules:network tests - module-network-httpGetString-positive" time="0.021">
+    </testcase>
+    <testcase classname="libx:modules:network tests - module-network-echoParams-httpGet-positive" name="libx:modules:network tests - module-network-echoParams-httpGet-positive" time="0.012">
+    </testcase>
+    <testcase classname="libx:modules:network tests - module-network-echoParams-get-positive" name="libx:modules:network tests - module-network-echoParams-get-positive" time="0.006">
+    </testcase>
+    <testcase classname="libx:modules:network tests - module-network-echoParams-httpGetString-positive" name="libx:modules:network tests - module-network-echoParams-httpGetString-positive" time="0.004">
+    </testcase>
+    <testcase classname="libx:modules:network tests - module-network-echoParams-httpGetJson-positive" name="libx:modules:network tests - module-network-echoParams-httpGetJson-positive" time="0.003">
+    </testcase>
+    <testcase classname="libx:modules:network tests - module-network-echoParams-httpPost-positive" name="libx:modules:network tests - module-network-echoParams-httpPost-positive" time="0.003">
+    </testcase>
+    <testcase classname="libx:modules:network tests - module-network-echoParams-httpPostJson-positive" name="libx:modules:network tests - module-network-echoParams-httpPostJson-positive" time="0.003">
+    </testcase>
+    <testcase classname="libx:modules:network tests - module-network-echoBody-httpPostJson-positive" name="libx:modules:network tests - module-network-echoBody-httpPostJson-positive" time="0.003">
+    </testcase>
+    <testcase classname="libx:modules:network tests - module-network-echoFormData-post-positive" name="libx:modules:network tests - module-network-echoFormData-post-positive" time="0.003">
+    </testcase>
+    <testcase classname="libx:modules:network tests - module-network-echoFormData-get-positive" name="libx:modules:network tests - module-network-echoFormData-get-positive" time="0.003">
+    </testcase>
+    <testcase classname="libx:modules:network tests - module-network-echoFormData-upload-positive" name="libx:modules:network tests - module-network-echoFormData-upload-positive" time="0.013">
     </testcase>
   </testsuite>
 </testsuites>

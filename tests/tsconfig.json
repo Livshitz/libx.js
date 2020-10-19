@@ -1,10 +1,8 @@
 {
 	"extends": "../tsconfig.base.json",
-	"files": [
-		"../compiled/index.ts"
-	],
+
 	"include": [
-		"../**/*.ts"
+		"../**/*.ts",
 	],
 	"exclude": [
 		"node_modules",

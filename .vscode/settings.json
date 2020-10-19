@@ -47,5 +47,6 @@
 		"typescript",
 		"typescriptreact",
 		"yml"
-	]
+	],
+	"editor.formatOnSave": true
 }
