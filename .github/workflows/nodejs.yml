@@ -11,7 +11,6 @@ on:
 
 jobs:
     build:
-        # To enable Github Actions for CI/CD remove 'false' condition
         if: "!contains(github.event.head_commit.message, 'skip-ci')"
 
         runs-on: ubuntu-latest
@@ -39,3 +38,14 @@ jobs:
                   yarn bump
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+            - uses: actions/checkout@master
+            - uses: codecov/codecov-action@v1
+              with:
+                  token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
+                  file: .tmp/coverage/cobertura-coverage.xml # optional
+                  # files: ./coverage1.xml,./coverage2.xml # optional
+                  # flags: unittests # optional
+                  # name: codecov-umbrella # optional
+                  # fail_ci_if_error: true # optional (default = false)
+                  verbose: true # optional (default = false)
