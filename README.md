@@ -77,6 +77,7 @@ Different projects usually have a shared portion of infrastructural or helpers c
     - Helpers for download, upload, inject and many more helpers
 
 ** See [unit-tests](./tests) and [example](./examples) folder for practical uses and examples.
+** Live [playground](https://raw.githack.com/Livshitz/libx.js/master/examples/playground.html)
 
 ## Usage
 ```
