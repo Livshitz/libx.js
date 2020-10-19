@@ -5,7 +5,7 @@ import express from 'express';
 import formidable from 'express-formidable';
 
 import { node } from '../../src/node';
-import { network } from '../../src/modules/network';
+import { network } from '../../src/modules/Network';
 import { helpers } from '../../src/helpers';
 import { log, LogLevel } from '../../src/modules/log';
 
