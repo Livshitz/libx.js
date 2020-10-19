@@ -1,0 +1,15 @@
+<html>
+    <head>
+        <!-- execute the script 'browsrify.sh' to compile libx to browser-friendly bundle -->
+        <script src="../.tmp/forBrowser.min.js"></script>
+    </head>
+    <body></body>
+    <script>
+        console.log('- loaded!');
+
+        // Example how to require a module, initialize it from JS and call it's functions:
+        libx.di.require((log) => {
+            log.i('hello from browser via libx.js!');
+        });
+    </script>
+</html>
