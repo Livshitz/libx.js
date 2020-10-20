@@ -81,6 +81,16 @@ Different projects usually have a shared portion of infrastructural or helpers c
 ** See [unit-tests](./tests) and [example](./examples) folder for practical uses and examples.
 ** Live [playground](https://raw.githack.com/Livshitz/libx.js/master/examples/playground.html)
 
+## Related packages:
+1. **[concurrency.libx.js](https://github.com/Livshitz/concurrency.libx.js)** -  
+    Module that provides handy helpers for Async and concurrent work, for example Deferred utility, Debounce/Throttle, Chain, measurements and more.  
+    Was initially part of libx and departed to be independent package.
+2. **[di.libx.js](https://github.com/Livshitz/di.libx.js)** -  
+    Light weight Dependency-Injection module.  
+    Was initially part of libx and departed to be independent package.
+3. **[pax.libx.js](https://github.com/Livshitz/pax.libx.js)** -   
+    Custom made bundler, based on gulp that supports Browserifying, TS, LESS, SCSS, Vue and more. Used here to bundle libx.js for browser use. 
+
 ## Usage
 ```
 $ yarn add libx.js
