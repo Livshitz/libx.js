@@ -8,7 +8,7 @@
         "build": "yarn clean; tsc",
         "watch": "yarn clean; tsc -w",
         "main": "node build/Main.js",
-        "bundle": "ts-node tools/browserify.ts --minify --filename='libx.min' && du -sh dist/libx.min.js",
+        "bundle": "ts-node tools/browserify.ts --filename='libx.min' --minify && du -sh dist/libx.min.js",
         "test": "jest",
         "test:ci": "jest --ci --reporters=default --reporters=jest-junit --coverage --coverageReporters=cobertura --coverageReporters=html",
         "bump": "./bump.sh"
@@ -30,8 +30,8 @@
     "dependencies": {
         "axios": "^0.20.0",
         "concurrency.libx.js": "^0.2.25",
-        "crypto-js": "^4.0.0",
         "di.libx.js": "^0.1.5",
+        "crypto-js": "^4.0.0",
         "json-bump": "^1.0.2",
         "lodash": "^4.17.20",
         "rxjs": "^6.6.3",

@@ -19,6 +19,7 @@ packages/*
 .npmrc
 build
 .tmp
+# junit.xml
 
 compiled/**/*.js
 compiled/**/*.js.map
