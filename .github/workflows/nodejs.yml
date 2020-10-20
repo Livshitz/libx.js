@@ -41,7 +41,7 @@ jobs:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
             - name: Upload coverage to Codecov
-            - uses: codecov/codecov-action@v1
+              uses: codecov/codecov-action@v1
               with:
                   token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
                   file: .tmp/coverage/cobertura-coverage.xml # optional
