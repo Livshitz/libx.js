@@ -170,6 +170,9 @@ export class ObjectHelpers {
         }
         return target;
     }
+    public static extend(...args) {
+        return ObjectHelpers.merge(...args);
+    }
 
     public static shallowCopy(obj) {
         return ObjectHelpers.merge(false, {}, obj); // Object.assign({}, obj);

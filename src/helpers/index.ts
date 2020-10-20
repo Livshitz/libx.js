@@ -41,8 +41,8 @@ export class Helpers {
 
     public concurrency: typeof concurrency;
     public Deferred: typeof concurrency.Deferred;
-    public throttle: (func: any, wait: any, immediate?: boolean) => () => void;
-    public debounce: (func: any, wait: any, immediate?: boolean, allowTaillingCall?: boolean) => () => void;
+    public throttle: (func: Function, wait: any, immediate?: boolean) => () => void;
+    public debounce: (func: Function, wait: any, immediate?: boolean, allowTaillingCall?: boolean) => (...args) => void;
     public delay: (milliseconds: any) => Promise<any>;
     public async: <T>(func: Function) => (...args: any[]) => Promise<T>;
     public isAsync: (func: any) => boolean;
