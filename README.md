@@ -1,11 +1,13 @@
 # Libx.js 
 
 [![MIT license](https://img.badgesize.io/Livshitz/libx.js/master/dist/libx.min.js?compression=gzip)](https://cdn.jsdelivr.net/gh/Livshitz/libx.js@latest/dist/libx.min.js)
+[![codecov](https://img.shields.io/codecov/c/github/Livshitz/libx.js)](https://codecov.io/gh/Livshitz/libx.js)
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](/LICENSE)
 [![npm](https://img.shields.io/npm/v/libx.js.svg?maxAge=1000)](https://www.npmjs.com/package/libx.js)
-[![Build Status](https://livshitz.visualstudio.com/libx/_apis/build/status/libx-CI?branchName=master)](https://livshitz.visualstudio.com/libx/_build/latest?definitionId=1&branchName=master)
 [![npm](https://img.shields.io/github/languages/code-size/livshitz/libx.js.svg?label=source%20code%20size)](https://www.github.com/livshitz/libx.js)
 [![Known Vulnerabilities](https://snyk.io/test/github/Livshitz/libx.js/badge.svg?targetFile=package.json)](https://snyk.io/test/github/Livshitz/libx.js?targetFile=package.json)
+<!-- [![Build Status](https://livshitz.visualstudio.com/libx/_apis/build/status/libx-CI?branchName=master)](https://livshitz.visualstudio.com/libx/_build/latest?definitionId=1&branchName=master) -->
+<!-- [![codecov](https://codecov.io/gh/Livshitz/libx.js/branch/master/graph/badge.svg)](https://codecov.io/gh/Livshitz/libx.js) -->
 <!--- [![npm](https://img.shields.io/bundlephobia/minzip/libx.js.svg?style=plastic)](https://www.npmjs.com/package/libx.js)
 [![npm](https://img.shields.io/bundlephobia/min/libx.js.svg?style=plastic)](https://www.npmjs.com/package/libx.js)
 -->
@@ -109,6 +111,10 @@ We have adopted the same Code of Conduct as Facebook that we expect project part
 
 Read our [contributing guide](/CONTRIBUTING.md) to learn about how you can contribute, how to propose improvements or if you are interested in translating the content. -->
 
+
+## Tests Coverage:
+
+![Code Coverage](https://codecov.io/gh/Livshitz/libx.js/branch/master/graphs/commits.svg)
 
 ## License
 
