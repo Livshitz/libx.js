@@ -32,7 +32,7 @@ export class Extensions {
     }
 
     public applyAllExtensions() {
-        this.applyObjectExtensions();
+        // this.applyObjectExtensions();
         this.applyStringExtensions();
         this.applyDateExtensions();
         this.applyArrayExtensions();
