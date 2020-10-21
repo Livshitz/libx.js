@@ -8,6 +8,7 @@ import { node } from '../../src/node';
 import { network } from '../../src/modules/Network';
 import { helpers } from '../../src/helpers';
 import { log, LogLevel } from '../../src/modules/log';
+import { objectHelpers } from '../../src/helpers/ObjectHelpers';
 
 log.filterLevel = LogLevel.Info;
 node.catchErrors();
@@ -23,7 +24,7 @@ class mod {
     };
 
     constructor(options = {}) {
-        this.options = helpers.ObjectHelpers.merge(options, this.options);
+        this.options = objectHelpers.merge(options, this.options);
         this.options.endpoint = `http://localhost:${this.options.port}/`;
         node.mkdirRecursiveSync(this.options.uploadFolder);
     }
@@ -77,7 +78,7 @@ class mod {
             log.v('----------');
         });
         this.server = app.listen(this.options.port, () => {
-            log.i(`Local express server listening on ${this.options.endpoint}`);
+            log.v(`Local express server listening on ${this.options.endpoint}`);
             p.resolve(this.options.endpoint);
         });
         await network.httpGet(this.options.endpoint); // wait for express to be ready

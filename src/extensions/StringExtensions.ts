@@ -1,5 +1,5 @@
 import capitalize from 'lodash/capitalize';
-import { ObjectHelpers } from '../helpers/ObjectHelpers';
+import { objectHelpers } from '../helpers/ObjectHelpers';
 
 export class StringExtensions {
     public static capitalize = function () {
@@ -71,7 +71,7 @@ export class StringExtensions {
 
         var obj = arguments[0];
         if (obj !== null && typeof obj === 'object') {
-            var arr = ObjectHelpers.getCustomProperties(obj);
+            var arr = objectHelpers.getCustomProperties(obj);
             for (var i = 0; i < arr.length; i++) {
                 var x = arr[i];
                 ret = ret.replace('{' + x + '}', obj[x]);

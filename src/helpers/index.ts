@@ -15,7 +15,7 @@ import has from 'lodash/has';
 import { extensions } from '../extensions/index';
 import { ILog, log } from '../modules/log';
 import { IAny, IBrowser, ICallbacks, IDeferred, IDeferredJS, IExtensions, ILodash, IModuleNode, IPromise } from '../types/interfaces';
-import { ObjectHelpers } from './ObjectHelpers';
+import { ObjectHelpers, objectHelpers } from './ObjectHelpers';
 import { StringExtensions } from '../extensions/StringExtensions';
 // import XRegExp from "XRegExp";
 // this.fp.map = require("lodash/fp/map");
@@ -55,7 +55,7 @@ export class Helpers {
     public getMeasureAndReset: any;
     public chainTasks: (tasks: any, eachCb?: any) => Promise<void>;
     public sleep: (millis: any) => Promise<unknown>;
-    public ObjectHelpers = ObjectHelpers;
+    public ObjectHelpers = objectHelpers;
 
     public isBrowser: boolean;
     public extensions = extensions;
@@ -119,14 +119,14 @@ export class Helpers {
         try {
             var obj = this.parseJsonFileStripComments(contents);
 
-            obj.private = ObjectHelpers.merge(obj.private, obj.envs[env].private);
+            obj.private = objectHelpers.merge(obj.private, obj.envs[env].private);
             delete obj.envs[env].private;
-            obj = ObjectHelpers.merge(obj, obj.envs[env]);
+            obj = objectHelpers.merge(obj, obj.envs[env]);
             delete obj.envs;
 
             var obj2 = JSON.stringify(obj);
 
-            obj2 = StringExtensions.format.call(obj2, ObjectHelpers.merge(obj, obj.private));
+            obj2 = StringExtensions.format.call(obj2, objectHelpers.merge(obj, obj.private));
             obj = JSON.parse(obj2);
 
             return obj;
@@ -277,7 +277,7 @@ export class Helpers {
     }
 
     public getParamNames(func) {
-        var fnStr = func.toString().replace(ObjectHelpers.STRIP_COMMENTS, '');
+        var fnStr = func.toString().replace(objectHelpers.STRIP_COMMENTS, '');
         if (fnStr.match(/^\s*class\s+/) != null) return null;
         var m = fnStr.match(/^\(?(?:async\s?)?(?:function\s?)?\(?([\w\d\,\s\$\_]+)\)?/);
         if (m == null || m.length < 1) return null;
@@ -296,7 +296,7 @@ export class Helpers {
     }
 
     public shuffle(a) {
-        var ret = ObjectHelpers.clone(a, []);
+        var ret = objectHelpers.clone(a, []);
         var j, x, i;
         for (i = ret.length; i; i--) {
             j = Math.floor(Math.random() * i);

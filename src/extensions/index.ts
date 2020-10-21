@@ -1,41 +1,42 @@
-import { ObjectHelpers } from "../helpers/ObjectHelpers";
-import { ArrayExtensions } from "./ArrayExtensions";
-import { DateExtensions } from "./DateExtensions";
-import { ObjectExtensions } from "./ObjectExtensions";
-import { StringExtensions } from "./StringExtensions";
+import { objectHelpers } from '../helpers/ObjectHelpers';
+import { ArrayExtensions } from './ArrayExtensions';
+import { DateExtensions } from './DateExtensions';
+import { ObjectExtensions } from './ObjectExtensions';
+import { StringExtensions } from './StringExtensions';
 
 export class Extensions {
-	public object = ObjectExtensions;
-	public string = StringExtensions;
-	public date = DateExtensions;
-	public array = ArrayExtensions;
+    public object = ObjectExtensions;
+    public string = StringExtensions;
+    public date = DateExtensions;
+    public array = ArrayExtensions;
 
-	constructor() {
-		
-	}
+    constructor() {}
 
-	public applyObjectExtensions() {
-		ObjectExtensions.extend.apply(Object.prototype, ObjectExtensions);
-	}
+    public applyObjectExtensions() {
+        ObjectExtensions.__extend.call(Object.prototype, ObjectExtensions);
+    }
 
-	public applyStringExtensions() {
-		ObjectHelpers.merge(String.prototype, StringExtensions);
-	}
+    public applyStringExtensions() {
+        // objectHelpers.merge(String.prototype, StringExtensions);
+        ObjectExtensions.__extend.call(String.prototype, StringExtensions);
+    }
 
-	public applyDateExtensions() {
-		ObjectHelpers.merge(Date.prototype, DateExtensions);
-	}
+    public applyDateExtensions() {
+        // objectHelpers.merge(Date.prototype, DateExtensions);
+        ObjectExtensions.__extend.call(Date.prototype, DateExtensions);
+    }
 
-	public applyArrayExtensions() {
-		ObjectHelpers.merge(Array.prototype, ArrayExtensions);
-	}
+    public applyArrayExtensions() {
+        // objectHelpers.merge(Array.prototype, ArrayExtensions);
+        ObjectExtensions.__extend.call(Array.prototype, ArrayExtensions);
+    }
 
-	public applyAllExtensions() {
-		this.applyStringExtensions();
-		this.applyDateExtensions();
-		this.applyArrayExtensions();
-	}
+    public applyAllExtensions() {
+        this.applyObjectExtensions();
+        this.applyStringExtensions();
+        this.applyDateExtensions();
+        this.applyArrayExtensions();
+    }
 }
 
 export const extensions = new Extensions();
-

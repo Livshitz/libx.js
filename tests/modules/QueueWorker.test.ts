@@ -11,7 +11,7 @@ const delayPadded = delay + delay * 0.1 + 50;
 const processItem = (input: string, id: string): Promise<string> => {
     let p = helpers.newPromise<string>();
     helpers.sleep(delay).then(() => {
-        console.log('Resolved: ', id, input);
+        // console.log('Resolved: ', id, input);
         p.resolve(input + '-xxx');
     });
     return p; //.getPromise();

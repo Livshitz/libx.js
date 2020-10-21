@@ -7,6 +7,7 @@ import { helpers } from '../helpers';
 import { di } from './dependencyInjector';
 import { Buffer } from 'buffer';
 import { log } from './log';
+import { objectHelpers } from '../helpers/ObjectHelpers';
 
 // var querialize = require('../browser/helpers').querialize;
 
@@ -17,13 +18,13 @@ export class Network {
     constructor() {}
 
     public httpGetJson = async (url, _options) => {
-        _options = helpers.ObjectHelpers.merge({}, _options, { headers: { 'Content-Type': 'application/json; charset=UTF-8' }, enc: 'utf-8' });
+        _options = objectHelpers.merge({}, _options, { headers: { 'Content-Type': 'application/json; charset=UTF-8' }, enc: 'utf-8' });
         let ret = await this.httpGet(url, _options);
         return JSON.parse(ret);
     };
 
     public httpGetString = async (url, _options) => {
-        _options = helpers.ObjectHelpers.merge({}, _options, { enc: 'utf-8' });
+        _options = objectHelpers.merge({}, _options, { enc: 'utf-8' });
         let ret = await this.httpGet(url, _options);
         return ret.toString(); //Buffer.concat(ret).toString(_options.enc);
     };
@@ -78,8 +79,8 @@ export class Network {
             autoParse: false,
             formData: null,
         };
-        helpers.ObjectHelpers.clone(_options, options);
-        helpers.ObjectHelpers.clone(dest, options);
+        objectHelpers.clone(_options, options);
+        objectHelpers.clone(dest, options);
 
         // Fill in missing content type based on dataType:
         if (options.dataType != null && options.headers['content-type'] == null) {
@@ -136,9 +137,10 @@ export class Network {
         let p = helpers.newPromise();
         let _options = {
             method: method,
+            mode: 'no-cors',
         };
         url = this.helper.fixUrl(url);
-        options = helpers.ObjectHelpers.merge(options, _options, { url: url });
+        options = objectHelpers.merge(options, _options, { url: url });
         options.data = data;
         if (options.responseType == null) options.responseType = 'arraybuffer';
         axios(options)
@@ -158,7 +160,7 @@ export class Network {
             url += includePrefix ? queryString : '&' + queryString;
         }
 
-        options = helpers.ObjectHelpers.merge(options, { url: url });
+        options = objectHelpers.merge(options, { url: url });
         return await this.request('GET', url, params, null, options);
     };
 
@@ -176,7 +178,7 @@ export class Network {
 
         // data = this.helpers.getFormData(data);
 
-        options = helpers.ObjectHelpers.merge(options, { url: url });
+        options = objectHelpers.merge(options, { url: url });
 
         return await this.request('POST', url, null, data, options);
         // request.post(options, (err, httpResponse, body) => {
@@ -193,7 +195,7 @@ export class Network {
         formData.append('file', fileReadStream);
 
         if (options.data != null) {
-            let props = helpers.ObjectHelpers.getCustomProperties(options.data);
+            let props = objectHelpers.getCustomProperties(options.data);
 
             for (let prop of props) {
                 formData.append(prop, options.data[prop]);
@@ -259,7 +261,7 @@ class Helper {
 	public getFormData = object => {
 		const formData = new FormData();
 		Object.keys(object).forEach(key => {
-			if (helpers.ObjectHelpers.isObject(object[key])) 
+			if (helpers.isObject(object[key])) 
 				formData.append(key, this.getFormData(object[key]));
 			else 
 				formData.append(key, object[key])

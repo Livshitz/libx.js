@@ -5,14 +5,21 @@ import transform from 'lodash/transform';
 import isEqual from 'lodash/isEqual';
 import isString from 'lodash/isString';
 
-class Dummy {}
+class Dummy {
+    constructor() {}
+    static ___func = () => {};
+}
 
 export class ObjectHelpers {
-    private static globalProperties: string[] = [...Object.getOwnPropertyNames(Dummy), ...Object.getOwnPropertyNames(new Object())];
-    public static readonly STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/gm;
-    private static readonly ARGUMENT_NAMES = /([^\s,]+)/g;
-
-    public static class2type = {
+    private globalProperties: string[] = [
+        ...Object.getOwnPropertyNames(Dummy),
+        ...Object.getOwnPropertyNames(new Object()),
+        ...Object.getOwnPropertyNames(Dummy.prototype),
+        ...Object.getOwnPropertyNames((<any>Dummy).__proto__),
+    ];
+    private readonly ARGUMENT_NAMES = /([^\s,]+)/g;
+    public readonly STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/gm;
+    public class2type = {
         '[object Boolean]': 'boolean',
         '[object Number]': 'number',
         '[object String]': 'string',
@@ -23,69 +30,70 @@ export class ObjectHelpers {
         '[object Object]': 'object',
     };
 
+    public constructor() {}
+
     /**
      * Deep diff between two object, using lodash
      * @param  {Object} object Object compared
      * @param  {Object} base   Object to compare with
      * @return {Object}        Return a new object who represent the diff
      */
-    public static diff(object: Object, base: Object, skipEmpty = false) {
-        function changes(object, base, skipEmpty = false) {
-            let ret = transform(object, function (result, value, key) {
+    public diff(object: Object, base: Object, skipEmpty = false) {
+        const changes = (object, base, skipEmpty = false) => {
+            let ret = transform(object, (result, value, key) => {
                 if (!isEqual(value, base[key])) {
-                    if (skipEmpty && ObjectHelpers.isEmpty(value)) {
+                    if (skipEmpty && this.isEmpty(value)) {
                         result = null;
                         return;
                     }
                     result[key] = isObject(value) && isObject(base[key]) ? changes(value, base[key], skipEmpty) : value;
-                    if (skipEmpty && ObjectHelpers.isEmpty(result[key])) {
+                    if (skipEmpty && this.isEmpty(result[key])) {
                         delete result[key];
                     }
                 }
             });
 
-            if (skipEmpty && ObjectHelpers.isEmpty(ret)) return null;
+            if (skipEmpty && this.isEmpty(ret)) return null;
             else return ret;
-        }
+        };
         return changes(object, base, skipEmpty);
     }
 
-    public static isObject(object) {
+    public isObject(object) {
         return isObject(object);
     }
 
-    public static isString(object) {
+    public isString(object) {
         return isString(object);
         // return typeof object === 'string';
     }
 
-    public static isFunction(obj) {
-        var isFunc = ObjectHelpers.type(obj) === 'function';
+    public isFunction(obj) {
+        var isFunc = this.type(obj) === 'function';
         if (!isFunc) return false;
 
-        var fnStr = obj.toString().replace(ObjectHelpers.STRIP_COMMENTS, '');
+        var fnStr = obj.toString().replace(this.STRIP_COMMENTS, '');
         if (fnStr.match(/\s*class\s+/) != null) return false;
 
         return true;
     }
 
-    public static isArray =
-        Array.isArray ||
-        function (obj) {
-            return ObjectHelpers.type(obj) === 'array';
-        };
-    public static isWindow(obj) {
+    public isArray(obj) {
+        if (Array.isArray) return Array.isArray(obj);
+        return this.type(obj) === 'array';
+    }
+    public isWindow(obj) {
         return obj != null && (obj == obj.window || (typeof global != 'undefined' && obj == global));
     }
-    public static isNumeric(obj) {
+    public isNumeric(obj) {
         return !isNaN(parseFloat(obj)) && isFinite(obj);
     }
-    public static type(obj) {
-        return obj == null ? String(obj) : ObjectHelpers.class2type[toString.call(obj)] || 'object';
+    public type(obj) {
+        return obj == null ? String(obj) : this.class2type[toString.call(obj)] || 'object';
     }
-    public static isPlainObject(obj) {
+    public isPlainObject(obj) {
         var hasOwn = Object.prototype.hasOwnProperty;
-        if (!obj || ObjectHelpers.type(obj) !== 'object' || obj.nodeType) {
+        if (!obj || this.type(obj) !== 'object' || obj.nodeType) {
             return false;
         }
         try {
@@ -101,7 +109,7 @@ export class ObjectHelpers {
         return key === undefined || hasOwn.call(obj, key);
     }
 
-    public static isDefined(obj, prop) {
+    public isDefined(obj, prop) {
         if (typeof obj == 'undefined') return false;
 
         if (prop != null) {
@@ -111,11 +119,11 @@ export class ObjectHelpers {
         return true;
     }
 
-    public static clone(source, target = {}) {
-        return ObjectHelpers.merge(true, target, source);
+    public clone(source, target = {}) {
+        return this.merge(true, target, source);
     }
 
-    public static merge(...args) {
+    public merge(...args) {
         var options,
             name,
             src,
@@ -138,7 +146,7 @@ export class ObjectHelpers {
             target = arguments[1] || {};
             i = 2;
         }
-        if (typeof target !== 'object' && !ObjectHelpers.isFunction(target)) {
+        if (typeof target !== 'object' && !this.isFunction(target)) {
             target = {};
         }
         if (length === i) {
@@ -153,15 +161,15 @@ export class ObjectHelpers {
                     if (target === copy) {
                         continue;
                     }
-                    if (deep && copy && (ObjectHelpers.isPlainObject(copy) || (copyIsArray = ObjectHelpers.isArray(copy)))) {
+                    if (deep && copy && (this.isPlainObject(copy) || (copyIsArray = this.isArray(copy)))) {
                         if (copyIsArray) {
                             copyIsArray = false;
-                            clone = src && ObjectHelpers.isArray(src) ? src : [];
+                            clone = src && this.isArray(src) ? src : [];
                         } else {
-                            clone = src && ObjectHelpers.isPlainObject(src) ? src : {};
+                            clone = src && this.isPlainObject(src) ? src : {};
                         }
                         // WARNING: RECURSION
-                        target[name] = ObjectHelpers.merge(deep, clone, copy);
+                        target[name] = this.merge(deep, clone, copy);
                     } else if (copy !== undefined) {
                         target[name] = copy;
                     }
@@ -170,15 +178,12 @@ export class ObjectHelpers {
         }
         return target;
     }
-    public static extend(...args) {
-        return ObjectHelpers.merge(...args);
+
+    public shallowCopy(obj) {
+        return this.merge(false, {}, obj); // Object.assign({}, obj);
     }
 
-    public static shallowCopy(obj) {
-        return ObjectHelpers.merge(false, {}, obj); // Object.assign({}, obj);
-    }
-
-    public static getDeep(obj, path) {
+    public getDeep(obj, path) {
         let parts = path.split('/');
         let ret = obj;
         do {
@@ -190,19 +195,19 @@ export class ObjectHelpers {
         return ret;
     }
 
-    public static isNull(obj) {
+    public isNull(obj) {
         return obj == undefined || obj == null;
     }
-    public static isEmptyObject(obj) {
+    public isEmptyObject(obj) {
         for (var name in obj) {
             return false;
         }
         return true;
     }
-    public static isEmptyString(obj) {
+    public isEmptyString(obj) {
         return obj == null || obj == '';
     }
-    public static isEmpty(obj) {
+    public isEmpty(obj) {
         if (obj == null) return true;
         for (var prop in obj) {
             if (obj.hasOwnProperty(prop)) return false;
@@ -211,7 +216,7 @@ export class ObjectHelpers {
         return JSON.stringify(obj) === JSON.stringify({});
     }
 
-    public static makeEmpty(obj) {
+    public makeEmpty(obj) {
         each(Object.keys(obj), (prop) => {
             if (!obj.hasOwnProperty(prop)) return;
 
@@ -222,7 +227,7 @@ export class ObjectHelpers {
                     obj[prop] = null;
                     return;
                 }
-                ObjectHelpers.makeEmpty(obj[prop]);
+                this.makeEmpty(obj[prop]);
             } else {
                 obj[prop] = '';
             }
@@ -231,11 +236,13 @@ export class ObjectHelpers {
         return obj;
     }
 
-    public static getCustomProperties(obj) {
+    public getCustomProperties(obj) {
         var currentPropList = Object.getOwnPropertyNames(obj);
 
-        const findDuplicate = (propName) => ObjectHelpers.globalProperties.indexOf(propName) === -1;
+        const findDuplicate = (propName) => this.globalProperties.indexOf(propName) === -1;
 
         return currentPropList.filter(findDuplicate);
     }
 }
+
+export const objectHelpers = new ObjectHelpers();

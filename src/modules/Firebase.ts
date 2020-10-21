@@ -1,4 +1,5 @@
 import { helpers } from '../helpers';
+import { objectHelpers } from '../helpers/ObjectHelpers';
 // import { EventsStream } from './EventsStream';
 import { Callbacks } from './Callbacks';
 import { di } from './dependencyInjector';
@@ -182,7 +183,7 @@ export class Firebase {
         helpers._.each(<any>pairs, (pair) => {
             const key = pair[0];
             let val = pair[1];
-            if (helpers.ObjectHelpers.isObject(val)) {
+            if (objectHelpers.isObject(val)) {
                 if (val.id == null) val.id = key;
                 else val._id = key;
             } else {
