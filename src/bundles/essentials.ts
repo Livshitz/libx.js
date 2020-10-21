@@ -5,12 +5,14 @@ import { Buffer } from 'buffer';
 import { extensions } from '../extensions/';
 import { di } from '../modules/dependencyInjector';
 import { ObjectHelpers, objectHelpers } from '../helpers/ObjectHelpers';
-import { ObjectExtensions } from '../extensions/ObjectExtensions';
+import { objectExtensions } from '../extensions/ObjectExtensions';
+import { Deferred } from 'concurrency.libx.js';
 
 if (!(<any>global)._libx_avoidExtensions) extensions.applyAllExtensions();
 
 const libxBase = {
     $: {},
+    Deferred,
     Callbacks,
     Buffer,
     extensions,
@@ -18,8 +20,8 @@ const libxBase = {
     di,
 };
 
-const exLibx = ObjectExtensions.extend(libxBase, objectHelpers);
-const exLibx2 = ObjectExtensions.extend(exLibx, helpers);
+const exLibx = objectExtensions.extend(libxBase, objectHelpers);
+const exLibx2 = objectExtensions.extend(exLibx, helpers);
 
 export const libx = exLibx2;
 

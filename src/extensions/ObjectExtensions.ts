@@ -6,10 +6,10 @@ export class ObjectExtensions {
     };
 
     public static __extend = function <T1 = any, T2 = any>(withObj: T2): T1 & T2 {
-        return ObjectExtensions.extend(this, withObj);
+        return objectExtensions.extend(this, withObj);
     };
 
-    public static extend<T1 = any, T2 = any>(input: T1, withObj: T2): T1 & T2 {
+    public extend<T1 = any, T2 = any>(input: T1, withObj: T2): T1 & T2 {
         for (let key of ObjectExtensions.__getCustomProperties.call(withObj)) {
             input[key] = withObj[key];
         }
@@ -19,3 +19,5 @@ export class ObjectExtensions {
         return input as T1 & T2;
     }
 }
+
+export const objectExtensions = new ObjectExtensions();
