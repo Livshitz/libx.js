@@ -1,4 +1,5 @@
 import { helpers as libxHelpers } from '../helpers';
+import { objectHelpers } from '../helpers/ObjectHelpers';
 import { log } from '../modules/log';
 import { network } from '../modules/Network';
 
@@ -286,7 +287,7 @@ export class BrowserHelpers {
         document.body.appendChild(a);
         (<any>a).style = 'display: none';
 
-        if (libxHelpers.ObjectHelpers.isObject(data)) {
+        if (objectHelpers.isObject(data)) {
             data = JSON.stringify(data);
         }
         var blob = new Blob([data], { type: type });

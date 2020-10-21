@@ -6,6 +6,7 @@ import { exec } from 'child_process';
 import glob from 'glob';
 
 import { helpers } from '../helpers';
+import { objectHelpers } from '../helpers/ObjectHelpers';
 import { di } from '../modules/dependencyInjector';
 import { log } from '../modules/log';
 import { Crypto } from '../modules/Crypto';
@@ -13,6 +14,7 @@ import prompts from './prompts';
 
 export class Node {
     public args = argv;
+    public prompts = prompts;
 
     public getFiles = (query = '**/*', options?) => {
         let p = helpers.newPromise();
@@ -54,7 +56,7 @@ export class Node {
         var p = helpers.newPromise();
 
         var process = exec(<string>cmd, (err, stdout, stderr) => {
-            if (!helpers.ObjectHelpers.isEmpty(err) || !helpers.ObjectHelpers.isEmptyString(stderr)) {
+            if (!objectHelpers.isEmpty(err) || !objectHelpers.isEmptyString(stderr)) {
                 p.reject(err || stderr);
                 return;
             }

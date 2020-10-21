@@ -1,6 +1,6 @@
 import { Node, SemverPart } from '../../src/node';
 import fs from 'fs';
-import { ObjectHelpers } from '../../src/helpers/ObjectHelpers';
+import { objectHelpers } from '../../src/helpers/ObjectHelpers';
 
 const envKey = 'secretKey';
 const fakeProjectSettings = __dirname + '/../fakes/project-settings-open.json';
@@ -24,7 +24,7 @@ test('encryptFile-positive', () => {
 test('getFiles-positive', async () => {
     let output = await mod.getFiles(__dirname + '/../fakes/*.*');
     expect(output).not.toEqual(null);
-    expect(ObjectHelpers.isArray(output)).toEqual(true);
+    expect(objectHelpers.isArray(output)).toEqual(true);
 });
 
 test('isCalledDirectly-positive', () => {

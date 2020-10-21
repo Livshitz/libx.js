@@ -1,18 +1,16 @@
 import { log } from '../src/modules/log';
 import * as pax from 'pax.libx.js';
 import { libx as libxNode, ILibxNode } from '../src/bundles/node.essentials';
+import { ObjectExtensions } from '../src/extensions/ObjectExtensions';
 // import fs from 'fs';
 // import path from "path";
 
-const libx = {
-    ...libxNode,
-    pax,
-};
+export const libx = ObjectExtensions.extend(libxNode, { pax });
 
 const inputFile = libx.node.args.input || __dirname + '/../build/bundles/browser.essentials.js';
 const outputFolder = libx.node.args.out || __dirname + '/../dist';
 const outFileName = libx.node.args.filename;
-if (!libx.helpers.ObjectHelpers.isString(inputFile)) throw 'Bad input';
+if (!libx.isString(inputFile)) throw 'Bad input';
 
 (async () => {
     var dest = outputFolder;

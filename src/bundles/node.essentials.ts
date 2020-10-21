@@ -1,9 +1,7 @@
-import { libx as libxEssentials } from "./essentials";
-import { node } from "../node/";
+import { libx as libxEssentials } from './essentials';
+import { node } from '../node/';
+import { ObjectExtensions } from '../extensions/ObjectExtensions';
 
-export const libx = {
-	...libxEssentials,
-	node,
-}
+export const libx = ObjectExtensions.extend(libxEssentials, { node });
 
 export type ILibxNode = typeof libx;

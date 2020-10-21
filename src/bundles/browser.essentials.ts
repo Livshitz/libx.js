@@ -1,10 +1,8 @@
 import { libx as libxEssentials } from './essentials';
 import { browser } from '../browser';
+import { ObjectExtensions } from '../extensions/ObjectExtensions';
 
-export const libx = {
-    ...libxEssentials,
-    browser,
-};
+export const libx = ObjectExtensions.extend(libxEssentials, { browser });
 
 export type ILibxBrowser = typeof libx;
 

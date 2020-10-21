@@ -4,6 +4,7 @@ import { Callbacks } from './Callbacks';
 import { helpers } from '../helpers';
 import { log } from './log';
 import { browser } from '../browser';
+import { objectHelpers } from '../helpers/ObjectHelpers';
 
 export class UserManager {
     public firebaseModule;
@@ -207,7 +208,7 @@ export class UserManager {
                 profilePicUrl: user.photoURL,
                 email: user.email,
             };
-            helpers.ObjectHelpers.merge(this.data, obj);
+            objectHelpers.merge(this.data, obj);
         }
         this.data.isAnonymous = user.isAnonymous;
         this.data.id = user.uid;
@@ -222,7 +223,7 @@ export class UserManager {
         return this.firebaseModule.listen('/users/' + this.data.id, (data) => {
             if (data != null && data.length == 1) data = data[0];
             log.verbose('> user: user data changed', data);
-            helpers.ObjectHelpers.merge(this.data, data);
+            objectHelpers.merge(this.data, data);
             this.events.broadcast({ step: 'user-updated' }, 'user');
             this.onDataChanged.trigger(this.data);
         });
@@ -233,9 +234,9 @@ export class UserManager {
             if (data != null && data.length == 1) data = data[0];
             log.verbose('> user: profile data changed', data);
 
-            helpers.ObjectHelpers.merge(this.profile, data);
+            objectHelpers.merge(this.profile, data);
 
-            if (helpers.ObjectHelpers.isEmpty(this.profile)) {
+            if (objectHelpers.isEmpty(this.profile)) {
                 log.verbose('> user: profile is empty, taking from user object (login)');
                 this.profile = {};
                 this.profile.email = this.data.email;
