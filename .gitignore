@@ -21,6 +21,9 @@ build
 .tmp
 junit.xml
 
+src/**/*.js
+src/**/*.d.ts
+src/**/*.js.map
 compiled/**/*.js
 compiled/**/*.js.map
 **/ts/**/*.js

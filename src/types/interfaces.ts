@@ -1,4 +1,5 @@
-import Deferred from 'concurrency.libx.js/src/Deferred';
+// import Deferred from 'concurrency.libx.js/src/Deferred';
+export { Deferred } from 'concurrency.libx.js';
 
 export {};
 
@@ -28,6 +29,7 @@ export interface Base {
 // 	notify();
 // }
 
+// export interface IDeferred<T = any, Treason = any> extends Deferred<T, Treason> {
 export interface IDeferred<T = any, Treason = any> extends Promise<T> {
     resolveWith(ctx);
     rejectWith(ctx);

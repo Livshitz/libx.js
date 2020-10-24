@@ -17,6 +17,9 @@ import { ILog, log } from '../modules/log';
 import { IAny, IBrowser, ICallbacks, IDeferred, IDeferredJS, IExtensions, ILodash, IModuleNode, IPromise } from '../types/interfaces';
 import { ObjectHelpers, objectHelpers } from './ObjectHelpers';
 import { StringExtensions } from '../extensions/StringExtensions';
+
+export { Deferred };
+
 // import XRegExp from "XRegExp";
 // this.fp.map = require("lodash/fp/map");
 // this.fp.flatten = require("lodash/fp/flatten");
