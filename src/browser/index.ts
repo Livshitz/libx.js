@@ -1,7 +1,7 @@
 import { browserHelpers } from './browserHelpers';
-import req from "../browser/require";
+import req from './require';
 
 export const browser = {
-	helpers: browserHelpers,
-	require: req,
-}
+    helpers: browserHelpers,
+    require: req,
+};
