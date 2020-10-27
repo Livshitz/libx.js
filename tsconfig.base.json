@@ -14,7 +14,7 @@
         "skipLibCheck": true,
         "resolveJsonModule": true,
         "allowSyntheticDefaultImports": true,
-        "allowJs": true,
+        // "allowJs": true,
         "esModuleInterop": true,
         "declaration": true,
 
