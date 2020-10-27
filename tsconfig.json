@@ -5,7 +5,7 @@
         "baseUrl": "./"
     },
 
-    "include": ["./*.d.ts", "./src/**/*.ts"],
+    "include": ["./src/**/*.ts", "./globals.d.ts"],
     "exclude": ["**/_template.ts", "node_modules/*", "dist", "build", "tests"],
 
     "ts-node": {
