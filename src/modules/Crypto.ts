@@ -1,6 +1,6 @@
 // const cryptojs = require('crypto-js');
 // import * as cryptojs from 'crypto-js';
-import { AES, enc } from 'crypto-js';
+import { AES, enc, SHA1, SHA256, DES, MD5 } from 'crypto-js';
 import { di } from './dependencyInjector';
 
 export class Crypto {
@@ -26,5 +26,7 @@ export class Crypto {
 		return decrypted;
 	}
 }
+
+export { SHA1, SHA256, DES, MD5 };
 
 di.register(Crypto, 'crypto');
