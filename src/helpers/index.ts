@@ -1,4 +1,4 @@
-import * as concurrency from 'concurrency.libx.js';
+import * as concurrency from 'concurrency.libx.js/src/index';
 import { Deferred } from 'concurrency.libx.js';
 import mixin from 'lodash/mixin';
 import forEach from 'lodash/forEach';
