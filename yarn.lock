@@ -1378,20 +1378,30 @@
     jest-diff "^26.0.0"
     pretty-format "^26.0.0"
 
-"@types/lodash@^4.14.161", "@types/lodash@^4.14.162":
+"@types/lodash@^4.14.161":
   version "4.14.162"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.162.tgz#65d78c397e0d883f44afbf1f7ba9867022411470"
   integrity sha512-alvcho1kRUnnD1Gcl4J+hK0eencvzq9rmzvFPRmP5rPHx9VVsJj6bKLTATPVf9ktgv4ujzh7T+XWKp+jhuODig==
+
+"@types/lodash@^4.14.163":
+  version "4.14.163"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.163.tgz#6026f73c8267a0b7d41c7c8aadacfa2a5255774f"
+  integrity sha512-BeZM/FZaV53emqyHxn9L39Oz6XbHMBRLA1b1quROku48J/1kYYxPmVOJ/qSQheb81on4BI7H6QDo6bkUuRaDNQ==
 
 "@types/minimatch@*":
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-3.0.3.tgz#3dca0e3f33b200fc7d1139c0cd96c1268cadfd9d"
   integrity sha512-tHq6qdbT9U1IRSGf14CL0pUlULksvY9OZ+5eEgl1N7t+OA3tGvNpxJCzuKQlsNgCVwbAs670L1vcVQi8j9HjnA==
 
-"@types/node@*", "@types/node@^14.11.2", "@types/node@^14.14.5":
+"@types/node@*", "@types/node@^14.11.2":
   version "14.14.5"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.5.tgz#e92d3b8f76583efa26c1a63a21c9d3c1143daa29"
   integrity sha512-H5Wn24s/ZOukBmDn03nnGTp18A60ny9AmCwnEcgJiTgSGsCO7k+NWP7zjCCbhlcnVCoI+co52dUAt9GMhOSULw==
+
+"@types/node@^14.14.6":
+  version "14.14.6"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.6.tgz#146d3da57b3c636cc0d1769396ce1cfa8991147f"
+  integrity sha512-6QlRuqsQ/Ox/aJEQWBEJG7A9+u7oSYl3mem/K8IzxXG/kAGbV1YPD9Bg9Zw3vyxC/YP+zONKwy8hGkSt1jxFMw==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
@@ -3226,10 +3236,10 @@ concurrency.libx.js@^0.2.23, concurrency.libx.js@^0.2.24:
   resolved "https://registry.yarnpkg.com/concurrency.libx.js/-/concurrency.libx.js-0.2.25.tgz#045735b83cf0405bc05bcbcf791cb9f79d56b79b"
   integrity sha512-aYvgorK8d6hoWgkWdyy8vc+hiGQbMTJllewe0fpdn8pt9Bg9AZNwSbdcFPfwZoh73vnHFX8wfULxS693aT7jEA==
 
-concurrency.libx.js@^0.3.1:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/concurrency.libx.js/-/concurrency.libx.js-0.3.1.tgz#f71a4789c5587d6b7395ac5a585d3a2847e85a44"
-  integrity sha512-FeTKpALMzP1z8QYva+qjqliE3A8LE6Jm4+zTODOywJUREG8gNwx/OHt7BBe/eqkyGJiNw5h7xQOT38NT3DqcoQ==
+concurrency.libx.js@^0.3.3:
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/concurrency.libx.js/-/concurrency.libx.js-0.3.3.tgz#77da1ac386f62d9caaa330bddaecdefc09333c22"
+  integrity sha512-wo0c+5d+ZahoJRrMAz1wx8+Pn13S+A597rc0L/ITUS2ekq5fxKxl1hbz4ixEdAHK0iWtlutHsl5U/ks6rpX+RA==
 
 connect-livereload@^0.6.0:
   version "0.6.1"
@@ -3718,10 +3728,10 @@ detective@^5.2.0:
     defined "^1.0.0"
     minimist "^1.1.1"
 
-di.libx.js@^0.1.6:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/di.libx.js/-/di.libx.js-0.1.6.tgz#c214f04a6cec339d3600ce391cb32afc72c7667e"
-  integrity sha512-ahgTUK8aRgAtMDa1cWTQ70r4h9KAQslGEl5PxN3b7VKd4tm8sFwq3kP8RRWDY2AjrJqNrKoy6hnWQ4hyrAOCzg==
+di.libx.js@^0.1.8:
+  version "0.1.8"
+  resolved "https://registry.yarnpkg.com/di.libx.js/-/di.libx.js-0.1.8.tgz#cf3e574382b543295dd3d10b873a3a95684806d4"
+  integrity sha512-KuHWHHDeq4heERxUX81pOpZcXYKphbza3ukIo4y69RrDmhlO34YzTJY2af5dSB3V0fFn5jrlrCAaMOjW5/JbOA==
   dependencies:
     concurrency.libx.js "^0.2.23"
     typescript "^3.9.3"

@@ -1,4 +1,4 @@
-import DependencyInjector from 'di.libx.js/src/DependencyInjector';
+import DependencyInjector from 'di.libx.js/build/DependencyInjector';
 
 export const di = new DependencyInjector();
 
