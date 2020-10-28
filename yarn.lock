@@ -3221,10 +3221,15 @@ concat-with-sourcemaps@^1.0.0, concat-with-sourcemaps@^1.1.0:
   dependencies:
     source-map "^0.6.1"
 
-concurrency.libx.js@^0.2.23, concurrency.libx.js@^0.2.24, concurrency.libx.js@^0.2.25:
+concurrency.libx.js@^0.2.23, concurrency.libx.js@^0.2.24:
   version "0.2.25"
   resolved "https://registry.yarnpkg.com/concurrency.libx.js/-/concurrency.libx.js-0.2.25.tgz#045735b83cf0405bc05bcbcf791cb9f79d56b79b"
   integrity sha512-aYvgorK8d6hoWgkWdyy8vc+hiGQbMTJllewe0fpdn8pt9Bg9AZNwSbdcFPfwZoh73vnHFX8wfULxS693aT7jEA==
+
+concurrency.libx.js@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/concurrency.libx.js/-/concurrency.libx.js-0.3.1.tgz#f71a4789c5587d6b7395ac5a585d3a2847e85a44"
+  integrity sha512-FeTKpALMzP1z8QYva+qjqliE3A8LE6Jm4+zTODOywJUREG8gNwx/OHt7BBe/eqkyGJiNw5h7xQOT38NT3DqcoQ==
 
 connect-livereload@^0.6.0:
   version "0.6.1"
@@ -3713,10 +3718,10 @@ detective@^5.2.0:
     defined "^1.0.0"
     minimist "^1.1.1"
 
-di.libx.js@^0.1.5:
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/di.libx.js/-/di.libx.js-0.1.5.tgz#1185ddbd636d63bb04e5843627d6f53bf1de0b41"
-  integrity sha512-H63Qs7hMdKhI95rAaJIZG5v0NKI9Zrblx+eFID/zNuvqtCt5kc+Vi3JjdxrWRKGC66mGY897+etpiiuBZMiGIQ==
+di.libx.js@^0.1.6:
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/di.libx.js/-/di.libx.js-0.1.6.tgz#c214f04a6cec339d3600ce391cb32afc72c7667e"
+  integrity sha512-ahgTUK8aRgAtMDa1cWTQ70r4h9KAQslGEl5PxN3b7VKd4tm8sFwq3kP8RRWDY2AjrJqNrKoy6hnWQ4hyrAOCzg==
   dependencies:
     concurrency.libx.js "^0.2.23"
     typescript "^3.9.3"
