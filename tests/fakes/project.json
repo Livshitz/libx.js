@@ -17,12 +17,13 @@
         },
         "dev": {
             "env": "dev",
-            "someUrl": "http://dev.domain.com"
+            "someUrl": "http://dev.domain.com:{{debugPort}}"
         }
     },
 
     "private": {
         // Will be overriden by project-secrets.json
-        "some-token": "[Will be overriden by project-secrets.json]"
+        "some-token": "[Will be overriden by project-secrets.json]",
+        "debugPort": 1234
     }
 }

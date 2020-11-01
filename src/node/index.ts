@@ -234,7 +234,7 @@ export class Node {
             projectConfig = objectHelpers.merge(projectConfig, projectSecrets);
         }
 
-        projectConfig = helpers.formatify(projectConfig, projectConfig, projectSecrets);
+        projectConfig = helpers.formatify(projectConfig, projectConfig, projectConfig.private, projectSecrets);
 
         // var projectSecrets = helpers.parseConfig(projectSecretsStr, env);
         return projectConfig;
