@@ -128,14 +128,19 @@ export class Helpers {
             delete obj.envs;
 
             var obj2 = JSON.stringify(obj);
-
             obj2 = StringExtensions.format.call(obj2, objectHelpers.merge(obj, obj.private));
             obj = JSON.parse(obj2);
 
             return obj;
         } catch (ex) {
-            log.error('readConfig error: ', ex);
+            log.error('parseConfig error: ', ex);
         }
+    }
+
+    public formatify(objectWithFormat: {}, ...args): {} {
+        var str = JSON.stringify(objectWithFormat);
+        str = StringExtensions.format.call(str, objectHelpers.merge(objectWithFormat, ...args));
+        return JSON.parse(str);
     }
 
     public hexc(colorval) {

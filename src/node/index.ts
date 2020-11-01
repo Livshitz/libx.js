@@ -208,6 +208,37 @@ export class Node {
         //catches uncaught exceptions
         process.on('uncaughtException', wrapper.bind(exitHandler, { exit: true }));
     };
+
+    public readJsonFileStripComments<T = any>(filePath: string, decryptKey?: string): T {
+        let fileContent = fs.readFileSync(filePath)?.toString();
+        if (fileContent == null) return null;
+        if (decryptKey != null) fileContent = Crypto.decrypt(fileContent, decryptKey);
+        return helpers.parseJsonFileStripComments(fileContent);
+    }
+
+    public getProjectConfig(env: string, containingFolder?: string, secret?: string) {
+        const folder = containingFolder || process.cwd() + (this.args.folder || '/src');
+        const projectFilePath = folder + '/project.json';
+        const projectSecretsFilePath = folder + '/project-secrets.json';
+        if (!fs.existsSync(projectFilePath)) throw `getProjectConfig: Could not find project.json file in "${folder}"!`;
+
+        let projectConfig = this.readJsonFileStripComments(projectFilePath);
+        projectConfig = objectHelpers.merge(projectConfig, projectConfig.envs[env]);
+        delete projectConfig.envs;
+
+        let projectSecrets = null;
+        if (secret != null && fs.existsSync(projectSecretsFilePath)) {
+            projectSecrets = this.readJsonFileStripComments(projectSecretsFilePath, secret);
+            projectSecrets = objectHelpers.merge(projectSecrets, projectSecrets.envs[env]);
+            delete projectSecrets.envs;
+            projectConfig = objectHelpers.merge(projectConfig, projectSecrets);
+        }
+
+        projectConfig = helpers.formatify(projectConfig, projectConfig, projectSecrets);
+
+        // var projectSecrets = helpers.parseConfig(projectSecretsStr, env);
+        return projectConfig;
+    }
 }
 
 export enum SemverPart {

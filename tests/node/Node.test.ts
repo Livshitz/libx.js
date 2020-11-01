@@ -1,6 +1,7 @@
 import { Node, SemverPart } from '../../src/node';
 import fs from 'fs';
 import { objectHelpers } from '../../src/helpers/ObjectHelpers';
+import { Crypto } from '../../src/modules/Crypto';
 
 const envKey = 'secretKey';
 const fakeProjectSettings = __dirname + '/../fakes/project-settings-open.json';
@@ -108,4 +109,102 @@ test('rmdirRecursiveSync-positive', () => {
     const param = tmp + 'test';
     const output = mod.rmdirRecursiveSync(param);
     expect(fs.existsSync(param)).toEqual(false);
+});
+
+const prepareProjectConfig = ({ sourceFolder, projectFileName, tmp, projectSecretsOpenFileName = null, secret = null }) => {
+    fs.copyFileSync(sourceFolder + projectFileName, tmp + projectFileName);
+    let projectSecrets = null;
+    if (projectSecretsOpenFileName != null) {
+        fs.copyFileSync(sourceFolder + projectSecretsOpenFileName, tmp + projectSecretsOpenFileName);
+        projectSecrets = Crypto.encrypt(fs.readFileSync(tmp + projectSecretsOpenFileName).toString(), secret);
+        fs.writeFileSync(tmp + '/project-secrets.json', projectSecrets);
+    }
+};
+
+test('getProjectConfig-simple-positive', () => {
+    const tmp = __dirname + '/../../.tmp/';
+    const secret = 'mySecret';
+
+    // prepare: move working files to '.tmp' folder:
+    prepareProjectConfig({
+        sourceFolder: __dirname + '/../fakes',
+        projectFileName: '/project.json',
+        projectSecretsOpenFileName: '/project-secrets-open.json',
+        tmp,
+        secret,
+    });
+
+    const output = mod.getProjectConfig('dev', tmp, secret);
+    const expected = {
+        projectName: 'libx',
+        projectCaption: 'Libx.js',
+        version: '0.0.1',
+        'formatable-internal': 'version=0.0.1',
+        'formatable-secret': 'topLevelSecret=123',
+        private: {
+            'some-token': 'dev-token',
+            someUrl: 'http://dev.domain.com',
+        },
+        env: 'dev',
+        someUrl: 'http://dev.domain.com',
+        topLevelSecret: '123',
+    };
+    expect(output).toEqual(expected);
+});
+
+test('getProjectConfig-prod-positive', () => {
+    const tmp = __dirname + '/../../.tmp/';
+    const secret = 'mySecret';
+
+    // prepare: move working files to '.tmp' folder:
+    prepareProjectConfig({
+        sourceFolder: __dirname + '/../fakes',
+        projectFileName: '/project.json',
+        projectSecretsOpenFileName: '/project-secrets-open.json',
+        tmp,
+        secret,
+    });
+
+    const output = mod.getProjectConfig('prod', tmp, secret);
+    const expected = {
+        projectName: 'libx',
+        projectCaption: 'Libx.js',
+        version: '0.0.1',
+        'formatable-internal': 'version=0.0.1',
+        'formatable-secret': 'topLevelSecret=123',
+        private: {
+            'some-token': 'prod-token',
+            someUrl: 'http://prod.domain.com',
+        },
+        env: 'prod',
+        someUrl: 'http://prod.domain.com',
+        topLevelSecret: '123',
+    };
+    expect(output).toEqual(expected);
+});
+
+test('getProjectConfig-noSecrets-positive', () => {
+    const tmp = __dirname + '/../../.tmp/';
+
+    // prepare: move working files to '.tmp' folder:
+    prepareProjectConfig({
+        sourceFolder: __dirname + '/../fakes',
+        projectFileName: '/project.json',
+        tmp,
+    });
+
+    const output = mod.getProjectConfig('dev', tmp);
+    const expected = {
+        projectName: 'libx',
+        projectCaption: 'Libx.js',
+        version: '0.0.1',
+        'formatable-internal': 'version=0.0.1',
+        'formatable-secret': 'topLevelSecret={{topLevelSecret}}',
+        private: {
+            'some-token': '[Will be overriden by project-secrets.json]',
+        },
+        env: 'dev',
+        someUrl: 'http://dev.domain.com',
+    };
+    expect(output).toEqual(expected);
 });
