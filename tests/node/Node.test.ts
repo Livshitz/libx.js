@@ -8,6 +8,10 @@ const fakeProjectSettings = __dirname + '/../fakes/project-settings-open.json';
 const encryptedProjectSettings = __dirname + '/../../.tmp/encrypted.json';
 const mod = new Node();
 
+beforeAll(async (done) => {
+    mod.mkdirRecursiveSync(__dirname + '/../../.tmp');
+    done();
+});
 beforeEach(() => {});
 
 test('encryptFile-positive', () => {
