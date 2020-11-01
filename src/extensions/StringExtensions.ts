@@ -74,7 +74,7 @@ export class StringExtensions {
             var arr = objectHelpers.getCustomProperties(obj);
             for (var i = 0; i < arr.length; i++) {
                 var x = arr[i];
-                ret = ret.replace('{' + x + '}', obj[x]);
+                ret = ret.replace('{{' + x + '}}', obj[x]);
                 // ret = ret.replace(new RegExp('\{' + x + '\}', 'g'), obj[x])
             }
         } else {
@@ -83,7 +83,7 @@ export class StringExtensions {
             }
             if (args.length > 0 && Array.isArray(args[0])) args = args[0];
 
-            ret = this.replace(/{(\d+)}/g, function (match, number) {
+            ret = this.replace(/{{(\d+)}}/g, function (match, number) {
                 return typeof args[number] != 'undefined' ? args[number] : match;
             });
         }

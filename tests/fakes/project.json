@@ -1,0 +1,28 @@
+{
+    "projectName": "libx",
+    "projectCaption": "Libx.js",
+    "version": "0.0.1",
+
+    "formatable-internal": "version={{version}}",
+    "formatable-secret": "topLevelSecret={{topLevelSecret}}",
+
+    "envs": {
+        "prod": {
+            "env": "prod",
+            "someUrl": "http://prod.domain.com"
+        },
+        "staging": {
+            "env": "staging",
+            "someUrl": "http://staging.domain.com"
+        },
+        "dev": {
+            "env": "dev",
+            "someUrl": "http://dev.domain.com"
+        }
+    },
+
+    "private": {
+        // Will be overriden by project-secrets.json
+        "some-token": "[Will be overriden by project-secrets.json]"
+    }
+}

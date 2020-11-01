@@ -1,4 +1,4 @@
-// import Deferred from 'concurrency.libx.js/src/Deferred';
+// import Deferred from 'concurrency.libx.js/build/Deferred';
 export { Deferred } from 'concurrency.libx.js';
 
 export {};

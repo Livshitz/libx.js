@@ -183,7 +183,7 @@ test('helpers.parseConfig-positive', async () => {
     let param = `{  
 		"myEnvVars": {
 			"ShareVar": 123,
-			"replaceAble": "--{myPrivateVar}--"
+			"replaceAble": "--{{myPrivateVar}}--"
 		},
 		"private": {
 			"myPrivateVar": 999
@@ -244,6 +244,23 @@ enum myEnum {
 test('helpers.enumToArray-positive', () => {
     let output = helpers.enumToArray(myEnum);
     expect(output).toEqual(['A', 'B']);
+});
+
+test('helpers.formatify', () => {
+    let output = helpers.formatify(
+        {
+            myField: '{{toBeReplaced}}',
+            myField2: 'notToBeReplaced',
+        },
+        {
+            toBeReplaced: 111,
+            notToBeReplaced: 222,
+        }
+    );
+    expect(output).toEqual({
+        myField: '111',
+        myField2: 'notToBeReplaced',
+    });
 });
 
 // test('helpers.-positive', () => {

@@ -11,7 +11,7 @@ beforeAll(() => {});
 // [[[[[[[[[[  String Extensions  ]]]]]]]]]]
 
 test('string.format-positive', () => {
-    let source = 'abc {0}';
+    let source = 'abc {{0}}';
     let output = source.format(123);
     expect(output).toBe('abc 123');
 });
