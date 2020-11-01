@@ -146,11 +146,12 @@ test('getProjectConfig-simple-positive', () => {
         'formatable-internal': 'version=0.0.1',
         'formatable-secret': 'topLevelSecret=123',
         private: {
+            debugPort: 1234,
             'some-token': 'dev-token',
             someUrl: 'http://dev.domain.com',
         },
         env: 'dev',
-        someUrl: 'http://dev.domain.com',
+        someUrl: 'http://dev.domain.com:1234',
         topLevelSecret: '123',
     };
     expect(output).toEqual(expected);
@@ -177,6 +178,7 @@ test('getProjectConfig-prod-positive', () => {
         'formatable-internal': 'version=0.0.1',
         'formatable-secret': 'topLevelSecret=123',
         private: {
+            debugPort: 1234,
             'some-token': 'prod-token',
             someUrl: 'http://prod.domain.com',
         },
@@ -205,10 +207,11 @@ test('getProjectConfig-noSecrets-positive', () => {
         'formatable-internal': 'version=0.0.1',
         'formatable-secret': 'topLevelSecret={{topLevelSecret}}',
         private: {
+            debugPort: 1234,
             'some-token': '[Will be overriden by project-secrets.json]',
         },
         env: 'dev',
-        someUrl: 'http://dev.domain.com',
+        someUrl: 'http://dev.domain.com:1234',
     };
     expect(output).toEqual(expected);
 });
