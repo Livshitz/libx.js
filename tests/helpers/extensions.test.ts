@@ -2,7 +2,7 @@ import { extensions } from '../../src/extensions';
 
 extensions.applyAllExtensions();
 
-var dataset: any = {
+var dataset = {
     date: new Date('2019-07-25T21:00:14.000Z'),
 };
 
@@ -141,39 +141,44 @@ test('date.addMilliseconds-positive', () => {
     expect(output.getMilliseconds()).toBe((dataset.date.getMilliseconds() + 6) % 1000);
 });
 
+test('date.toTimezone-positive', () => {
+    let output = dataset.date.toTimezone('Australia/Sydney');
+    expect(output.getTime()).toBe(1564113614000); // equals to 'Fri Jul 26 2019 07:00:14'
+});
+
 // [[[[[[[[[[  Array Extensions  ]]]]]]]]]]
 
-test('date.diff-positive', () => {
+test('array.diff-positive', () => {
     let source = [1, 2, 3];
     let output = source.diff([2]);
     expect(output).toEqual([1, 3]);
 });
 
-test('date.myFilter-positive', () => {
+test('array.myFilter-positive', () => {
     let source = [1, 2, 3, 4];
     let output = source.myFilter((item) => item % 2 == 0);
     expect(output).toEqual([2, 4]);
 });
 
-test('date.myFilterSingle-positive', () => {
+test('array.myFilterSingle-positive', () => {
     let source = [1, 2, 3, 4];
     let output = source.myFilterSingle((item) => item % 2 == 0);
     expect(output).toEqual(2);
 });
 
-test('date.myFilterSingle-positive', () => {
+test('array.myFilterSingle-positive', () => {
     let source = [1, 2, 3, 4];
     let output = source.myFilterSingle((item) => item % 2 == 0);
     expect(output).toEqual(2);
 });
 
-test('date.remove-positive', () => {
+test('array.remove-positive', () => {
     let source = [1, 2, 3, 4];
     let output = source.remove(3);
     expect(output).toEqual([1, 2, 4]);
 });
 
-test('date.contains-positive', () => {
+test('array.contains-positive', () => {
     let source = [1, 2, 3, 4];
     let output = source.contains(3);
     expect(output).toEqual(true);
