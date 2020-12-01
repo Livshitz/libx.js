@@ -143,7 +143,7 @@ test('date.addMilliseconds-positive', () => {
 
 test('date.toTimezone-positive', () => {
     let output = dataset.date.toTimezone('Australia/Sydney');
-    expect(output.getTime()).toBe(1564113614000); // equals to 'Fri Jul 26 2019 07:00:14'
+    expect(output.toString().startsWith('Fri Jul 26 2019 07:00:14')).toBe(true); // equals to 'Fri Jul 26 2019 07:00:14'
 });
 
 // [[[[[[[[[[  Array Extensions  ]]]]]]]]]]
