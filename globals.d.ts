@@ -89,6 +89,7 @@ declare namespace LibxJSExtensions {
         addMilliseconds(ms: number): Date;
         toUTC(): Date;
         toISOStringUTC(isUTC?: Boolean): Date;
+        toTimezone(timezone: string): Date;
     }
 
     interface IExtensionsArray<T> {
