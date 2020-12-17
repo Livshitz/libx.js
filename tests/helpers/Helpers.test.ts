@@ -7,12 +7,6 @@ beforeAll(() => {});
 // [[[[[[[[[[  Helper Extensions  ]]]]]]]]]]
 // TODO: isWindow, arrayBufferToBuffer, bufferToArrayBuffer, getProjectConfig, DependencyInjector, jsonRecurse, jsonResolveReferences
 
-test('helpers.spawnHierarchy-positive', () => {
-    let param = 'a.b.c';
-    let output = helpers.spawnHierarchy(param);
-    expect(output).toEqual({ a: { b: { c: {} } } });
-});
-
 test('helpers.newGuid-positive', () => {
     let guid = helpers.newGuid(true);
     expect(guid.replace(/[\d\w]/g, '')).toEqual('----');

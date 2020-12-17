@@ -44,7 +44,7 @@ export class Helpers {
 
     public concurrency: typeof concurrency;
     public Deferred: typeof concurrency.Deferred;
-    public throttle: (func: Function, wait: any, immediate?: boolean) => () => void;
+    public throttle: (func: Function, wait: any, immediate?: boolean) => (...args) => void;
     public debounce: (func: Function, wait: any, immediate?: boolean, allowTaillingCall?: boolean) => (...args) => void;
     public delay: (milliseconds: any) => Promise<any>;
     public async: <T>(func: Function) => (...args: any[]) => Promise<T>;
@@ -53,9 +53,9 @@ export class Helpers {
     public forceAsync: <T>(func: Function) => (...args: any[]) => Promise<T>;
     public waitUntil: (conditionFn: any, callback?: any, interval?: number, timeout?: number) => Promise<any>;
     public measurements: typeof concurrency.measurements;
-    public measure: any;
-    public getMeasure: any;
-    public getMeasureAndReset: any;
+    public measure: typeof concurrency.measurements.measure;
+    public getMeasure: typeof concurrency.measurements.getMeasure;
+    public getMeasureAndReset: typeof concurrency.measurements.getMeasureAndReset;
     public chainTasks: (tasks: any, eachCb?: any) => Promise<void>;
     public sleep: (millis: any) => Promise<unknown>;
     public ObjectHelpers = objectHelpers;
@@ -70,19 +70,6 @@ export class Helpers {
         this.initCustomLodashMixins();
 
         this.isBrowser = typeof window !== 'undefined';
-    }
-
-    public spawnHierarchy(path: string): any {
-        let p = path.split('.');
-        let cur = {};
-        let init = cur;
-        let next = null;
-        for (let i = 0; i < p.length; i++) {
-            next = p[i];
-            if (typeof cur[next] == 'undefined') cur[next] = {};
-            cur = cur[next];
-        }
-        return init;
     }
 
     public bufferToArrayBuffer(buf: Buffer) {
