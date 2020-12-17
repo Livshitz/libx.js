@@ -37,7 +37,7 @@ export class BrowserHelpers {
                 this.jQueryExt.applyReveal();
             });
         } else {
-            if (log) log.warning('helpers: jQuery is not defined, skipping jQuery libx setup...');
+            if (log) log.debug('helpers: jQuery is not defined, skipping jQuery libx setup...');
         }
 
         if (console) (<any>console).watch = this.watch;

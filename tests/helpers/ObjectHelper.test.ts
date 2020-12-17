@@ -40,6 +40,12 @@ test('isObject-negative', () => {
     expect(output).toEqual(false);
 });
 
+test('isObject-date', () => {
+    let param = new Date();
+    let output = objectHelpers.isObject(param);
+    expect(output).toEqual(false);
+});
+
 test('isFunction-positive', () => {
     let param = () => {
         console.log('isFunction');
@@ -199,6 +205,16 @@ test('isEmpty-positive', () => {
     expect(output).toEqual(true);
 });
 
+test('isDate-positive', () => {
+    let param = new Date();
+    let output = objectHelpers.isDate(param);
+    expect(output).toEqual(true);
+
+    let param2 = {};
+    let output2 = objectHelpers.isDate(param2);
+    expect(output2).toEqual(false);
+});
+
 test('makeEmpty-positive', () => {
     let param = { a: 1 };
     let output = objectHelpers.makeEmpty(param);
@@ -219,6 +235,117 @@ test('getDeep-positive-slashAtStart', async () => {
     let param = { a: { b: { c: 2 } } };
     let output = objectHelpers.getDeep(param, '/a/b/c');
     expect(output).toEqual(2);
+});
+
+test('spawnHierarchy-positive', () => {
+    let param = 'a.b.c';
+    let output = objectHelpers.spawnHierarchy(param);
+    expect(output).toEqual({ a: { b: { c: {} } } });
+});
+test('spawnHierarchy-existinObj-positive', () => {
+    let param = 'a.b.c';
+    let obj = {
+        a: {
+            d: 4,
+        },
+    };
+    let output = objectHelpers.spawnHierarchy(param, obj);
+    expect(output).toEqual({ a: { b: { c: {} }, d: 4 } });
+
+    let output2 = objectHelpers.spawnHierarchy('a.b.e', obj);
+    expect(output2).toEqual({ a: { b: { c: {}, e: {} }, d: 4 } });
+});
+test('spawnHierarchy-putValue-positive', () => {
+    let param = 'a.b.c';
+    let output = objectHelpers.spawnHierarchy(param, null, 111);
+    expect(output).toEqual({ a: { b: { c: 111 } } });
+});
+
+test('objectToKeyValue-positive-simple', async () => {
+    let param = { a: 1 };
+    let output = objectHelpers.objectToKeyValue(param);
+    expect(output).toEqual({
+        a: 1,
+    });
+});
+test('objectToKeyValue-positive-multiKey', async () => {
+    let param = { a: { b: { c: 3, d: 4 } } };
+    let output = objectHelpers.objectToKeyValue(param);
+    expect(output).toEqual({
+        'a/b/c': 3,
+        'a/b/d': 4,
+    });
+});
+test('objectToKeyValue-positive-complex', async () => {
+    let param = {
+        a: {
+            b: {
+                c: 3,
+                d: 4,
+            },
+            e: {
+                x1: 1,
+                x2: 2,
+            },
+        },
+        x: {
+            bArray: [1, 2, 3],
+        },
+    };
+    let output = objectHelpers.objectToKeyValue(param);
+    expect(output).toEqual({
+        'a/b/c': 3,
+        'a/b/d': 4,
+        'a/e/x1': 1,
+        'a/e/x2': 2,
+        'x/bArray': [1, 2, 3],
+    });
+});
+
+test('keyValueToObject-positive-simple', async () => {
+    let param = {
+        'a/b/c': 3,
+        'a/b/d': 4,
+        'a/e/x1': 1,
+        'a/e/x2': 2,
+        'x/bArray': [1, 2, 3],
+    };
+    let output = objectHelpers.keyValueToObject(param);
+    let expected = {
+        a: {
+            b: {
+                c: 3,
+                d: 4,
+            },
+            e: {
+                x1: 1,
+                x2: 2,
+            },
+        },
+        x: {
+            bArray: [1, 2, 3],
+        },
+    };
+    expect(output).toEqual(expected);
+});
+
+test('keyValueToObject-positive-withSubObject', async () => {
+    let param = {
+        'a/b/c': 3,
+        'a/e/x1': '{ "aaa": 123 }',
+    };
+    let output = objectHelpers.keyValueToObject(param, true);
+    let expected = {
+        a: {
+            b: {
+                c: 3,
+            },
+            e: {
+                x1: { aaa: 123 },
+            },
+        },
+    };
+    expect(output).toEqual(expected);
 });
 
 // test('-positive', () => {

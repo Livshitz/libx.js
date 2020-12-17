@@ -1,9 +1,11 @@
 import each from 'lodash/each';
 import has from 'lodash/has';
 import isObject from 'lodash/isObject';
+import isPlainObject from 'lodash/isPlainObject';
 import transform from 'lodash/transform';
 import isEqual from 'lodash/isEqual';
 import isString from 'lodash/isString';
+import { Map } from '../types/interfaces';
 
 class Dummy {
     constructor() {}
@@ -60,7 +62,7 @@ export class ObjectHelpers {
     }
 
     public isObject(object) {
-        return isObject(object);
+        return isPlainObject(object); // && !this.isDate(object);
     }
 
     public isString(object) {
@@ -216,6 +218,10 @@ export class ObjectHelpers {
         return JSON.stringify(obj) === JSON.stringify({});
     }
 
+    public isDate(obj) {
+        return typeof obj?.getMonth === 'function';
+    }
+
     public makeEmpty(obj) {
         each(Object.keys(obj), (prop) => {
             if (!obj.hasOwnProperty(prop)) return;
@@ -242,6 +248,56 @@ export class ObjectHelpers {
         const findDuplicate = (propName) => this.globalProperties.indexOf(propName) === -1;
 
         return currentPropList.filter(findDuplicate);
+    }
+
+    public spawnHierarchy(path: string, root: any = {}, putValue: any = null, delimiter = '.'): any {
+        let p = path.split(delimiter);
+        if (root == null) root = {};
+        let cur = root;
+        let next = null;
+        let prev = null;
+        for (let i = 0; i < p.length; i++) {
+            next = p[i];
+            if (typeof cur[next] == 'undefined') cur[next] = {};
+            prev = cur;
+            cur = cur[next];
+        }
+        if (putValue != null) prev[next] = putValue;
+        return root;
+    }
+
+    public objectToKeyValue(obj: object): Map<any> {
+        const props = this.getCustomProperties(obj);
+        let ret: Map<any> = {};
+
+        for (let prop of props) {
+            const sub = obj[prop];
+            if (this.isObject(sub)) {
+                // if nested object:
+                const subKV = this.objectToKeyValue(sub);
+                for (let subK in subKV) {
+                    ret[prop + '/' + subK] = subKV[subK];
+                }
+            } else {
+                // if primitive:
+                ret[prop] = sub;
+            }
+        }
+        return ret;
+    }
+
+    public keyValueToObject(keyValueMap: Map<any>, shouldParse = false): object {
+        let ret = {};
+        for (let path in keyValueMap) {
+            let value = keyValueMap[path];
+            if (shouldParse && this.isString(value)) {
+                try {
+                    value = JSON.parse(value);
+                } catch {}
+            }
+            objectHelpers.spawnHierarchy(path, ret, value, '/');
+        }
+        return ret;
     }
 }
 

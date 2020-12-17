@@ -1,5 +1,11 @@
-export { libx } from '../../src/bundles/browser.essentials';
+// import { libx as libxEssentials } from '../../src/bundles/essentials';
+import { libx as libxBrowser } from '../../src/bundles/browser.essentials';
 import { Firebase } from '../../src/modules/Firebase';
+import DeepProxy from '../../src/modules/DeepProxy';
+import { objectExtensions } from '../../src/extensions/ObjectExtensions';
+import { ProxyCache } from '../../src/modules/ProxyCache';
+
+export const libx = objectExtensions.extend(libxBrowser, { Proxy, ProxyCache, DeepProxy });
 
 declare global {
     interface Window {

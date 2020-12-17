@@ -12,10 +12,16 @@
     </body>
     <script>
         console.log('- page loaded!');
-
+        
         // Example how to require a module, initialize it from JS and call it's functions:
         libx.di.require((log) => {
-            log.i('hello from browser via libx.js!');
+            log.isDebug = true;
+            log.isBrowser = true;
+            log.filterLevel = log.severities.Debug;
+            log.isShowStacktrace = true;
+            log.d('hello from browser via libx.js!');
         });
+
+        libx.di.register(libx.log, 'log');
     </script>
 </html>

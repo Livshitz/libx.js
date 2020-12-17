@@ -10,7 +10,13 @@ export interface IDeferredJS {
     (): IDeferred<any>;
 }
 
-export interface Map<T> {
+export type Key = string | number | symbol;
+
+export type DynamicProperties<T = any> = { [P in keyof T]: T[P] };
+export const DynamicProps = class {
+    [key: string]: any;
+};
+export interface Map<T = any> {
     [K: string]: T;
 }
 
