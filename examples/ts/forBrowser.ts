@@ -5,7 +5,7 @@ import DeepProxy from '../../src/modules/DeepProxy';
 import { objectExtensions } from '../../src/extensions/ObjectExtensions';
 import { ProxyCache } from '../../src/modules/ProxyCache';
 
-export const libx = objectExtensions.extend(libxBrowser, { Proxy, ProxyCache, DeepProxy });
+export const libx = objectExtensions.extend(libxBrowser, { ProxyCache, DeepProxy });
 
 declare global {
     interface Window {
