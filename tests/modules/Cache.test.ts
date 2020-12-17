@@ -65,15 +65,6 @@ test('cache-getAll-positive', () => {
     });
 });
 
-test('cache-isExpired-positive', async () => {
-    const cache = new Cache('prefix', 10, '/', localStorage);
-
-    cache.set('a', 111);
-    expect(cache.isExpired('a')).toEqual(false);
-    await sleep(10);
-    expect(cache.isExpired('a')).toEqual(true);
-});
-
 test('cache-listen-positive', () => {
     const p = new Deferred();
     cache.listen('a', (path, data) => {
@@ -108,7 +99,7 @@ test('cache-isExpired-positive', async () => {
     cache.set('a', 1);
     expect(cache.get('a')).toEqual(1);
     expect(cache.isExpired('a')).toEqual(false);
-    await delay(100);
+    await delay(110);
     expect(cache.isExpired('a')).toEqual(true);
     expect(cache.get('a')).toEqual(null);
 });
