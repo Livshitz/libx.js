@@ -1,18 +1,20 @@
 import DeepProxy from '../../src/modules/DeepProxy';
 
-const existingObj = {
-    a: 1,
-    b: 2,
-    c: {
-        ca: 11,
-        cb: 22,
-        cc: {
-            da: 111,
-        },
-    },
-};
+let existingObj = null;
 
-beforeEach(() => {});
+beforeEach(() => {
+    existingObj = {
+        a: 1,
+        b: 2,
+        c: {
+            ca: 11,
+            cb: 22,
+            cc: {
+                da: 111,
+            },
+        },
+    };
+});
 
 test('DeepProxy-get-simple', () => {
     const obj = {

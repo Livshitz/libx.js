@@ -79,7 +79,7 @@ export default class DeepProxy<T extends object = any> {
             this.preproxy.delete(obj[key]);
         }
 
-        if (this.isDeep) {
+        if (this.isDeep && obj[key] != null) {
             for (let k of Object.keys(obj[key])) {
                 if (this.isDeep && typeof obj[key][k] === 'object') {
                     this.unproxy(obj[key], k);
