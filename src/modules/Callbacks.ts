@@ -2,7 +2,7 @@ import each from 'lodash/each';
 import { FuncWithArgs } from '../types/interfaces';
 import { di } from './dependencyInjector';
 
-export class Callbacks {
+export class Callbacks<T = any> {
     counter: number;
     list: {};
     constructor() {
@@ -10,14 +10,14 @@ export class Callbacks {
         this.list = {};
     }
 
-    subscribe(cb: FuncWithArgs): number {
+    subscribe(cb: FuncWithArgs<T>): number {
         this.list[this.counter] = cb;
         var ret = this.counter;
         this.counter++;
         return ret;
     }
 
-    once(cb: FuncWithArgs) {
+    once(cb: FuncWithArgs<T>) {
         let _this = this;
         let handle = this.subscribe(function () {
             _this.clear(handle);
@@ -25,7 +25,7 @@ export class Callbacks {
         });
     }
 
-    until(cb: FuncWithArgs): () => void {
+    until(cb: FuncWithArgs<T>): () => void {
         let handle = this.subscribe(cb);
         let untilFn = () => {
             this.clear(handle);
@@ -33,7 +33,7 @@ export class Callbacks {
         return untilFn;
     }
 
-    trigger(...args) {
+    trigger(...args: T[]) {
         each(this.list, (cb: Function) => {
             if (cb != null) cb.apply(null, args);
         });

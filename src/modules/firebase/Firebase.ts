@@ -1,9 +1,9 @@
-import { helpers } from '../helpers';
-import { objectHelpers } from '../helpers/ObjectHelpers';
+import { helpers } from '../../helpers';
+import { objectHelpers } from '../../helpers/ObjectHelpers';
 // import { EventsStream } from './EventsStream';
-import { Callbacks } from './Callbacks';
-import { di } from './dependencyInjector';
-import { log } from './log';
+import { Callbacks } from '../Callbacks';
+import { di } from '../dependencyInjector';
+import { log } from '../log';
 
 export class Firebase {
     private maxDate = new Date('01/01/2200').getTime(); //7258111200000 //32503672800000;
@@ -26,7 +26,7 @@ export class Firebase {
         this._database = this.firebaseApp.database();
     }
 
-    public async isConnected(callback) {
+    public async isConnected(callback: Function) {
         var ret = this.get('.info/connected');
         if (callback != null) {
             this.listen('.info/connected', (isConnected) => {
@@ -37,12 +37,12 @@ export class Firebase {
         return ret;
     }
 
-    public makeKey(givenTimestamp?) {
+    public makeKey(givenTimestamp?: number) {
         var date = givenTimestamp || Date.now();
         return (this.maxDate - date).toString() + '-' + Math.round(helpers.randomNumber(0, 100) * 100);
     }
 
-    public getRef(path, type?, callback?) {
+    public getRef(path: string, type?, callback?: Function) {
         path = this._fixPath(path);
         if (type != null && callback != null) {
             return this._database.ref(path).on(type, callback);
@@ -51,7 +51,7 @@ export class Firebase {
         }
     }
 
-    public listen(path, callback) {
+    public listen(path: string, callback: Function) {
         path = this._fixPath(path);
         log.debug('api.firebase.listen: Listening to "' + path + '"');
         this._database.ref(path).on('value', function (snp) {
@@ -61,13 +61,24 @@ export class Firebase {
         });
     }
 
-    public unlisten(path) {
+    public listenChild<T = any>(path: string, callback: (string, T) => void) {
+        path = this._fixPath(path);
+        log.debug('api.firebase.listenChild: Listening to "' + path + '"');
+        this._database.ref(path).on('child_changed', function (snp) {
+            const childPath = snp.getRef().path.pieces_.slice(1).join('/');
+            var obj = snp.val();
+            log.debug('api.firebase.listenChild: Value Changed at "' + childPath + '"', obj);
+            callback(childPath, obj);
+        });
+    }
+
+    public unlisten(path: string) {
         path = this._fixPath(path);
         log.debug('api.firebase.unlisten: Stopping listening to "' + path + '"');
         this._database.ref(path).off('value');
     }
 
-    public get(path) {
+    public get(path: string) {
         path = this._fixPath(path);
         log.debug('api.firebase.get: Getting "' + path + '"');
         var defer = helpers.newPromise();
@@ -82,7 +93,7 @@ export class Firebase {
         return defer.promise();
     }
 
-    public update(path, data, avoidFill = true) {
+    public update(path: string, data, avoidFill = true) {
         path = this._fixPath(path);
         log.debug('api.firebase.update: Updating data to "' + path + '"', data);
         var defer = helpers.newPromise();
@@ -100,7 +111,7 @@ export class Firebase {
         return defer.promise();
     }
 
-    public set(path, data, avoidFill = true) {
+    public set(path: string, data, avoidFill = true) {
         path = this._fixPath(path);
         log.debug('api.firebase.set: Setting data to "' + path + '"', data);
         var defer = helpers.newPromise();
@@ -118,7 +129,7 @@ export class Firebase {
         return defer.promise();
     }
 
-    public push(path, data, avoidFill = true) {
+    public push(path: string, data, avoidFill = true) {
         path = this._fixPath(path);
         var key = this.makeKey();
         log.debug('api.firebase.push: Pushing to "' + path + '" key=' + key, data);
@@ -139,7 +150,7 @@ export class Firebase {
         return defer.promise();
     }
 
-    public delete(path) {
+    public delete(path: string) {
         path = this._fixPath(path);
         log.debug('api.firebase.delete: Removing data to "' + path + '"');
         var defer = helpers.newPromise();
@@ -153,7 +164,7 @@ export class Firebase {
         return defer.promise();
     }
 
-    public filter(path, byChild, byValue) {
+    public filter(path: string, byChild, byValue) {
         path = this._fixPath(path);
         log.debug('api.firebase.filter: Querying data from "{0}", by child "{1}", by value "{2}"'.format(path, byChild, byValue));
         var defer = helpers.newPromise();
@@ -171,7 +182,7 @@ export class Firebase {
         return defer.promise();
     }
 
-    public getIdFromPath(path) {
+    public getIdFromPath(path: string) {
         var tmp = path.match(/\/?.+\/(.+?)\/?$/);
         if (tmp == null || tmp.length == 0) return null;
         return tmp[1];
@@ -196,18 +207,18 @@ export class Firebase {
         return ret;
     }
 
-    public arrayToDic(arr) {
+    public arrayToDic(arr: []) {
         return helpers._.transform(arr, (agg, key: string) => (agg[key] = true), {});
     }
 
-    public parseKeyDate(key) {
+    public parseKeyDate(key: string) {
         var reversedTimestamp = key.match(/(\d+)\-\d+/)[1];
-        reversedTimestamp = parseInt(reversedTimestamp);
-        var timestamp = this.maxDate - reversedTimestamp;
+        var reversedTimestampNum = parseInt(reversedTimestamp);
+        var timestamp = this.maxDate - reversedTimestampNum;
         return new Date(timestamp);
     }
 
-    public onPresent(path, value, onDisconnectValue) {
+    public onPresent(path: string, value, onDisconnectValue: Function) {
         path = this._fixPath(path);
         this.isConnected((isConnected) => {
             log.debug(
@@ -221,15 +232,15 @@ export class Firebase {
         });
     }
 
-    public cleanObjectId(objectId, char = '-') {
+    public cleanObjectId(objectId: string, char = '-') {
         return objectId.replace(/[\.\#\$\/\[\]\&]/g, char);
     }
 
-    public _fixObj(data) {
+    public _fixObj(data: string) {
         return JSON.parse(JSON.stringify(data)); // In order to clear 'undefined' values
     }
 
-    public _fillMissingFields(data, path) {
+    public _fillMissingFields(data, path: string) {
         if (data == null) return null;
 
         var date = new Date();
@@ -258,7 +269,7 @@ export class Firebase {
         return data;
     }
 
-    public _fixPath(path) {
+    public _fixPath(path: string) {
         if (this.firebasePathPrefix == null) return path;
         if (path.startsWith(this.firebasePathPrefix)) return path;
         if (path.startsWith('.')) return path;

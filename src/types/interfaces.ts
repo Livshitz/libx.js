@@ -3,7 +3,7 @@ export { Deferred } from 'concurrency.libx.js';
 
 export {};
 
-export type FuncWithArgs = (...args) => void;
+export type FuncWithArgs<T = any> = (...args: T[]) => void;
 
 export interface IDeferredJS {
     when();
@@ -12,11 +12,12 @@ export interface IDeferredJS {
 
 export type Key = string | number | symbol;
 
+export type ObjectLiteral = { [key: string]: any };
 export type DynamicProperties<T = any> = { [P in keyof T]: T[P] };
 export const DynamicProps = class {
     [key: string]: any;
 };
-export interface Map<T = any> {
+export interface Mapping<T = any> {
     [K: string]: T;
 }
 

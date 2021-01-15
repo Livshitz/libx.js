@@ -1,11 +1,12 @@
 // import { libx as libxEssentials } from '../../src/bundles/essentials';
 import { libx as libxBrowser } from '../../src/bundles/browser.essentials';
-import { Firebase } from '../../src/modules/Firebase';
+import { Firebase } from '../../src/modules/firebase/Firebase';
 import DeepProxy from '../../src/modules/DeepProxy';
 import { objectExtensions } from '../../src/extensions/ObjectExtensions';
 import { ProxyCache } from '../../src/modules/ProxyCache';
+import { FireProxy } from '../../src/modules/firebase/FireProxy';
 
-export const libx = objectExtensions.extend(libxBrowser, { ProxyCache, DeepProxy });
+export const libx = objectExtensions.extend(libxBrowser, { ProxyCache, DeepProxy, Firebase, FireProxy });
 
 declare global {
     interface Window {
