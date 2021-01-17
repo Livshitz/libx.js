@@ -14,8 +14,8 @@ export default class DeepProxy<T extends object = any> {
     }
 
     public static create<T extends object = any>(target: T = <T>null, handler: IHandler, isDeep = true) {
-        const proxy = new DeepProxy<T>(target, handler, isDeep);
-        return <T>proxy;
+        const newProxy = new DeepProxy<T>(target, handler, isDeep);
+        return <T>newProxy.proxy;
     }
 
     public set(target: object, path: string, key: Key, value: T, receiver: any) {
