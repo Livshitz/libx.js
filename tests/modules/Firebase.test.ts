@@ -1,6 +1,6 @@
 // helpers.getMeasure-positive
 // import iMyModule from '../interfaces/IMyModule';
-import { Firebase } from '../../src/modules/firebase/Firebase';
+import { Firebase } from '../../src/modules/firebase/FirebaseModule';
 
 const firebaseMock = {
     database: () => {},

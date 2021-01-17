@@ -5,7 +5,7 @@ import { Callbacks } from '../Callbacks';
 import DeepProxy from '../DeepProxy';
 import { di } from '../dependencyInjector';
 import { ExpiryManager } from '../ExpiryManager';
-import { Firebase } from '../Firebase/Firebase';
+import { Firebase } from './FirebaseModule';
 import { log } from '../log';
 import { ProxyCache } from '../ProxyCache';
 

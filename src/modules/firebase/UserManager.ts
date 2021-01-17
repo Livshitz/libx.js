@@ -7,7 +7,7 @@ import { browser } from '../../browser';
 import { objectHelpers } from '../../helpers/ObjectHelpers';
 import { EventsStream } from '../EventsStream';
 import { FireProxy } from './FireProxy';
-import { Firebase, IFirebaseInstance } from './Firebase';
+import { Firebase, IFirebaseInstance } from './FirebaseModule';
 
 export class UserManager {
     public firebaseModule: Firebase;
