@@ -54,6 +54,12 @@ export class StringExtensions {
         return this.indexOf(suffix, this.length - suffix.length) !== -1;
     };
 
+    public static removeLastPart = function (delimiter = '/') {
+        let parts = this.split(delimiter);
+        parts.pop();
+        return parts.join(delimiter);
+    };
+
     // see below for better implementation!
     public static startsWith = function (prefix) {
         return this.indexOf(prefix) == 0;

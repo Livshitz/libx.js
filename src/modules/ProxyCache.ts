@@ -12,6 +12,7 @@ export class ProxyCache<T extends object = any> {
     public proxy: T;
     private _cache: Cache = null;
     private _options = new ModuleOptions();
+    private _deepProxy: DeepProxy;
     // private _expiryManager = new ExpiryManager(200);
 
     public constructor(name: string, target: T, options?: ModuleOptions) {
@@ -22,7 +23,7 @@ export class ProxyCache<T extends object = any> {
 
         this.storeObjectAsKeyValueCache('', mergedObj);
 
-        this.proxy = DeepProxy.create(
+        this._deepProxy = new DeepProxy(
             mergedObj,
             {
                 get: (target, path, key) => {
@@ -67,6 +68,8 @@ export class ProxyCache<T extends object = any> {
             },
             true
         );
+
+        this.proxy = this._deepProxy.proxy;
     }
 
     public set(path: string, value, context: object) {

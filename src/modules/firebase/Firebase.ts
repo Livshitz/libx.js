@@ -10,7 +10,7 @@ export class Firebase {
     private entityVersion = 0;
 
     private firebasePathPrefix = null;
-    private onReady = new Callbacks();
+    public onReady = new Callbacks();
     private _database: any;
     public firebaseApp: any;
     public firebaseProvider: any;
@@ -24,6 +24,10 @@ export class Firebase {
         this.firebaseApp = firebaseApp;
         this.firebaseProvider = firebaseProvider;
         this._database = this.firebaseApp.database();
+
+        this.isConnected((connected) => {
+            if (connected) this.onReady.trigger();
+        });
     }
 
     public async isConnected(callback: Function) {
@@ -237,6 +241,7 @@ export class Firebase {
     }
 
     public _fixObj(data: string) {
+        if (data == null) return null;
         return JSON.parse(JSON.stringify(data)); // In order to clear 'undefined' values
     }
 
@@ -276,6 +281,12 @@ export class Firebase {
         if (!path.startsWith('/') && !this.firebasePathPrefix.endsWith('/')) path = '/' + path;
         return this.firebasePathPrefix + path;
     }
+}
+
+export interface IFirebaseInstance {
+    set(path: string, value: any);
+    auth();
+    listen(string, callback: Function);
 }
 
 di.register(Firebase, 'Firebase');

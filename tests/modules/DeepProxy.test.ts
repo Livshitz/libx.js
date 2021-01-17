@@ -66,7 +66,7 @@ test('DeepProxy-get-additional', () => {
         set: (target, path, key, value) => {
             expect(path).toEqual('/c/e');
             expect(key).toEqual('e');
-            expect(value).toEqual({ ea: 555 });
+            expect(value.ea).toEqual(555);
         },
     });
 
@@ -122,4 +122,21 @@ test('DeepProxy-delete-null', () => {
     proxy.b = null;
     const param = proxy.b;
     expect(param).toEqual(null);
+});
+
+test('DeepProxy-set-object (should proxify it as well)', () => {
+    const proxy = DeepProxy.create(existingObj, {
+        get: (target, path, key) => {},
+        set: (target, path, key, value) => {
+            // expect(path).toEqual('/a/b');
+            // expect(key).toEqual('b');
+            // expect(value).toEqual(2);
+        },
+    });
+
+    proxy.a = { b: 2 };
+    // proxy.a.b = 3;
+    const param = proxy.a.b;
+    expect(param).toEqual(2);
+    expect(proxy.a.isProxy).toEqual(true);
 });

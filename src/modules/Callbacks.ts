@@ -39,6 +39,10 @@ export class Callbacks<T = any> {
         });
     }
 
+    unsubscribe(id: number) {
+        return this.clear(id);
+    }
+
     clear(id: number) {
         delete this.list[id];
     }

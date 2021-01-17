@@ -3,13 +3,14 @@ import { Key } from '../types/interfaces';
 import { log } from './log';
 
 export default class DeepProxy<T extends object = any> {
+    public target: T;
+    public proxy: T = null;
     private preproxy = new WeakMap();
     private delimiter = '/';
-    private proxy: T = null;
 
-    private constructor(target: T = <T>null, private handler: IHandler, private isDeep = true) {
+    public constructor(target: T = <T>null, private handler: IHandler, private isDeep = true) {
         this.proxy = this.proxify(target, '');
-        return <any>this.proxy;
+        this.target = target;
     }
 
     public static create<T extends object = any>(target: T = <T>null, handler: IHandler, isDeep = true) {
@@ -25,7 +26,7 @@ export default class DeepProxy<T extends object = any> {
 
         target[key] = value;
 
-        if (this.isDeep && objectHelpers.isObject(value) && !(<any>value)?.isProxy) {
+        if (this.isDeep && !(<any>value)?.isProxy && objectHelpers.isObject(value)) {
             value = this.proxify(value, path + this.delimiter + <string>key);
         }
 
@@ -42,6 +43,7 @@ export default class DeepProxy<T extends object = any> {
         const wrapper = {
             get: (target: object, key: Key) => {
                 if (key == 'isProxy') return true;
+                // if (target[key] == null) return null;
 
                 let ret = null;
                 if (this.handler?.get) {
@@ -52,6 +54,10 @@ export default class DeepProxy<T extends object = any> {
             },
 
             set: (target: object, key: Key, value: T, receiver: any) => {
+                if (this.isDeep && !(<any>value)?.isProxy && objectHelpers.isObject(value)) {
+                    log.debug('wrapHandler:set: value is an object, proxying it', value);
+                    value = this.proxify(value, path + this.delimiter + <string>key);
+                }
                 return this.set(target, path, key, value, receiver);
             },
 
