@@ -28,6 +28,7 @@ export class UserManager {
     private _fbUser: any;
     private token: any;
     private dataProxy: FireProxy<IBasicUser> = null;
+    private _options = new Options();
 
     public constructor(firebaseModule: Firebase) {
         this.firebaseModule = firebaseModule;
@@ -46,7 +47,9 @@ export class UserManager {
 
         const cachedUserId = localStorage.loggedInUserId;
         if (cachedUserId != null) {
-            this.dataProxy = new FireProxy<IBasicUser>(this.firebaseModule, '/users/' + cachedUserId, null, { isCachedProxy: true });
+            this.dataProxy = new FireProxy<IBasicUser>(this.firebaseModule, '/users/' + cachedUserId, null, {
+                isCachedProxy: this._options.isCacheProfile,
+            });
             log.verbose('userManager:ctor: detected cached userId, will try to load cached data');
             this.data = this.dataProxy.proxy;
             log.d('userManager:ctor: cached data: ', this.data);
@@ -93,21 +96,19 @@ export class UserManager {
 
     public async signInAnon(displayName) {
         let p = helpers.newPromise();
-        // if (this.data == null) this.data = {};
-        // if (this.profile == null) this.profile = {};
 
-        this.data.public.displayName = displayName;
         this.auth
             .signInAnonymously()
-            .then(function (u) {
-                log.verbose(' > app:user: Got anon user');
+            .then((u) => {
+                log.verbose(' > app:user: Got anon user', u);
+                this.onSignIn.once(() => {
+                    this.data.public.displayName = displayName;
+                });
                 p.resolve();
             })
-            .catch(function (error) {
+            .catch((error) => {
                 log.verbose(' ! app:user: Failed to get anon user', error);
                 p.reject(error);
-                // var errorCode = error.code;
-                // var errorMessage = error.message;
             });
         return p;
     }
@@ -210,7 +211,7 @@ export class UserManager {
 
         this.onStatusChanged.trigger(user);
 
-        if (!user) {
+        if (user == null) {
             this.data = null;
             this.onSignOut.trigger(this.data);
             this.events.broadcast({ step: 'signed-out' }, 'user');
@@ -221,16 +222,16 @@ export class UserManager {
 
         // await this.refreshToken();
 
-        this.events.broadcast({ step: 'signed-in' }, 'user');
-        this.onSignIn.trigger(this.data);
+        const obj = <IBasicUser>{
+            public: {},
+            private: {},
+        };
+        this.dataProxy = new FireProxy<IBasicUser>(this.firebaseModule, '/users/' + user.uid, obj, {
+            isCachedProxy: this._options.isCacheProfile,
+        });
+        this.data = this.dataProxy.proxy;
 
-        this.dataProxy = new FireProxy<IBasicUser>(this.firebaseModule, '/users/' + user.uid);
-        // const curVal = await this.dataProxy.getValueFromDB();
         this.dataProxy.skip(() => {
-            this.data = this.dataProxy.proxy;
-            if (this.data.public == null) this.data.public = <any>{};
-            if (this.data.private == null) this.data.private = <any>{};
-
             if (!user.isAnonymous) {
                 this.data.public.profilePicUrl = user.photoURL || user.providerData[0]?.photoURL;
                 this.data.public.lastLoginAt = user.lastLoginAt;
@@ -243,55 +244,16 @@ export class UserManager {
         }, false); //!objectHelpers.isEmptyObject(curVal));
 
         localStorage.loggedInUserId = user.uid;
+
+        this.events.broadcast({ step: 'signed-in' }, 'user');
+        this.onSignIn.trigger(this.data);
+
         this.onReady.trigger(this.data);
     }
+}
 
-    // public async observeUser() {
-    //     return this.firebaseModule.listen('/users/' + this.data.id, (data) => {
-    //         if (data != null && data.length == 1) data = data[0];
-    //         log.verbose('> user: user data changed', data);
-    //         objectHelpers.merge(this.data, data);
-    //         this.events.broadcast({ step: 'user-updated' }, 'user');
-    //         this.onDataChanged.trigger(this.data);
-    //     });
-    // }
-
-    // public async observeProfile() {
-    //     return this.firebaseModule.listen('/profiles/' + this.data.id, (data) => {
-    //         if (data != null && data.length == 1) data = data[0];
-    //         log.verbose('> user: profile data changed', data);
-
-    //         objectHelpers.merge(this.profile, data);
-
-    //         if (objectHelpers.isEmpty(this.profile)) {
-    //             log.verbose('> user: profile is empty, taking from user object (login)');
-    //             this.profile = {};
-    //             this.profile.email = this.data.email;
-    //             if (this.auth.currentUser.displayName != null) this.profile.displayName = this.auth.currentUser.displayName;
-    //             else if (this.data.displayName != null) this.profile.displayName = this.data.displayName;
-    //             this.profile.profilePicUrl = this.data.profilePicUrl;
-    //         }
-
-    //         this.events.broadcast({ step: 'profile-updated' }, 'user');
-    //         this.onProfileChanged.trigger(this.profile);
-    //     });
-    // }
-
-    // public async writeData() {
-    //     let p1 = this.firebaseModule.update('/users/' + this.data.id, this.data);
-    //     let p2 = this.firebaseModule.update('/profiles/' + this.data.id, this.profile);
-    //     this.events.broadcast({ step: 'wrote-data' }, 'user');
-
-    //     Promise.all([p1, p2]);
-
-    //     return;
-    // }
-
-    // if ($rootScope.app == null) $rootScope.app = {};
-    // $rootScope.mod = mod;
-    // $rootScope.$on('fib-ready', function () {
-    // 	this.auth.onAuthStateChanged(this.onAuthStateChanged.bind(this));
-    // });
+export class Options {
+    isCacheProfile = false;
 }
 
 export interface IBasicUser {
