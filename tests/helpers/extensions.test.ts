@@ -85,6 +85,22 @@ test('string.isEmpty-negative', () => {
     expect(output).toBe(false);
 });
 
+test('string.removeLastPart-positive', () => {
+    let source = 'a/b/c';
+    let output = source.removeLastPart();
+    expect(output).toBe('a/b');
+});
+test('string.removeLastPart-positive-2', () => {
+    let source = '/a/b/c';
+    let output = source.removeLastPart();
+    expect(output).toBe('/a/b');
+});
+test('string.removeLastPart-positive-3', () => {
+    let source = 'a.b.c';
+    let output = source.removeLastPart('.');
+    expect(output).toBe('a.b');
+});
+
 // [[[[[[[[[[  Date Extensions  ]]]]]]]]]]
 
 test('date.toUtc-positive', () => {

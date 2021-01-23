@@ -5,7 +5,7 @@ import isPlainObject from 'lodash/isPlainObject';
 import transform from 'lodash/transform';
 import isEqual from 'lodash/isEqual';
 import isString from 'lodash/isString';
-import { Map } from '../types/interfaces';
+import { Mapping } from '../types/interfaces';
 
 class Dummy {
     constructor() {}
@@ -62,6 +62,7 @@ export class ObjectHelpers {
     }
 
     public isObject(object) {
+        if (object != null && object.isProxy) return typeof object == 'object' && object.constructor == Object;
         return isPlainObject(object); // && !this.isDate(object);
     }
 
@@ -91,7 +92,9 @@ export class ObjectHelpers {
         return !isNaN(parseFloat(obj)) && isFinite(obj);
     }
     public type(obj) {
-        return obj == null ? String(obj) : this.class2type[toString.call(obj)] || 'object';
+        if (obj == null) return String(obj);
+        if (obj.isProxy) return 'object';
+        return this.class2type[toString.call(obj)] || 'object';
     }
     public isPlainObject(obj) {
         var hasOwn = Object.prototype.hasOwnProperty;
@@ -148,7 +151,7 @@ export class ObjectHelpers {
             target = arguments[1] || {};
             i = 2;
         }
-        if (typeof target !== 'object' && !this.isFunction(target)) {
+        if (typeof target !== 'object' && !objectHelpers.isFunction(target)) {
             target = {};
         }
         if (length === i) {
@@ -163,15 +166,15 @@ export class ObjectHelpers {
                     if (target === copy) {
                         continue;
                     }
-                    if (deep && copy && (this.isPlainObject(copy) || (copyIsArray = this.isArray(copy)))) {
+                    if (deep && copy && (objectHelpers.isPlainObject(copy) || (copyIsArray = objectHelpers.isArray(copy)))) {
                         if (copyIsArray) {
                             copyIsArray = false;
-                            clone = src && this.isArray(src) ? src : [];
+                            clone = src && objectHelpers.isArray(src) ? src : [];
                         } else {
-                            clone = src && this.isPlainObject(src) ? src : {};
+                            clone = src && objectHelpers.isPlainObject(src) ? src : {};
                         }
                         // WARNING: RECURSION
-                        target[name] = this.merge(deep, clone, copy);
+                        target[name] = objectHelpers.merge(deep, clone, copy);
                     } else if (copy !== undefined) {
                         target[name] = copy;
                     }
@@ -266,9 +269,9 @@ export class ObjectHelpers {
         return root;
     }
 
-    public objectToKeyValue(obj: object): Map<any> {
+    public objectToKeyValue(obj: object): Mapping<any> {
         const props = this.getCustomProperties(obj);
-        let ret: Map<any> = {};
+        let ret: Mapping<any> = {};
 
         for (let prop of props) {
             const sub = obj[prop];
@@ -286,7 +289,7 @@ export class ObjectHelpers {
         return ret;
     }
 
-    public keyValueToObject(keyValueMap: Map<any>, shouldParse = false): object {
+    public keyValueToObject(keyValueMap: Mapping<any>, shouldParse = false): object {
         let ret = {};
         for (let path in keyValueMap) {
             let value = keyValueMap[path];
