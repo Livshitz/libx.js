@@ -4,6 +4,7 @@ import { libx as libxNode, ILibxNode } from '../src/bundles/node.essentials';
 import { objectExtensions } from '../src/extensions/ObjectExtensions';
 // import fs from 'fs';
 // import path from "path";
+log.isShowTime = false;
 
 export const libx = objectExtensions.extend(libxNode, { pax });
 

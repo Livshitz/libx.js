@@ -1,6 +1,6 @@
 // helpers.getMeasure-positive
 // import iMyModule from '../interfaces/IMyModule';
-import { Firebase } from '../../src/modules/Firebase';
+import { Firebase } from '../../src/modules/firebase/FirebaseModule';
 
 const firebaseMock = {
     database: () => {},
@@ -24,6 +24,6 @@ test('helpers.dictToArray-realistic-positive', () => {
 
 test('helpers.arrayToDic-positive', () => {
     let param = [1, 2, 'hello'];
-    let output = mod.arrayToDic(param);
+    let output = mod.arrayToDic(param as []);
     expect(output).toEqual({ 1: true, 2: true, hello: true });
 });

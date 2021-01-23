@@ -10,7 +10,7 @@ beforeEach(() => {
     localStorage = new LocalStorageMock();
     localStorage['test/a'] = 10;
     localStorage['test/x'] = 111;
-    proxyCache = new ProxyCache('test', existingObj, localStorage);
+    proxyCache = new ProxyCache('test', existingObj, { store: localStorage });
 });
 
 test('localStorage-verify-proxified', () => {

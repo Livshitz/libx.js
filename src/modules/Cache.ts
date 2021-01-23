@@ -5,16 +5,16 @@ import { objectHelpers } from '../helpers/ObjectHelpers';
 import { Callbacks } from './Callbacks';
 import { IDataProvider } from './IDataProvider';
 import { log } from './log';
-import { DynamicProperties, Map } from '../types/interfaces';
+import { DynamicProperties, Mapping } from '../types/interfaces';
 
 export class Cache implements IDataProvider {
-    private _expiryPeriodMS: number;
     public delimiter = '/';
-    private static readonly _DefaultExpiryMS = 5 * 60 * 1000; // 5 min
     public prefix: string;
+    private _expiryPeriodMS: number;
+    private static readonly _DefaultExpiryMS = 5 * 60 * 1000; // 5 min
     private store: IStoreProvider;
     private onChange = new Callbacks();
-    private listenersMap: Map<ListenerCallback> = {};
+    private listenersMap: Mapping<ListenerCallback> = {};
 
     constructor(prefix: string, expiryPeriodMS: number = Cache._DefaultExpiryMS, delimiter?: string, store: IStoreProvider = null) {
         if (delimiter) this.delimiter = delimiter;

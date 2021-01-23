@@ -1,5 +1,5 @@
 import { IStoreProvider } from '../../src/modules/Cache';
-import { DynamicProperties, Map, DynamicProps } from '../../src/types/interfaces';
+import { DynamicProperties, Mapping, DynamicProps } from '../../src/types/interfaces';
 
 export class LocalStorageMock extends DynamicProps implements IStoreProvider {
     private store = null;
