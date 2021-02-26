@@ -50,3 +50,11 @@ test('localStorage-delete-positive', () => {
     delete proxyCache.proxy.a;
     expect(proxyCache.proxy.a).toEqual(undefined);
 });
+
+test('localStorage-array-positive', () => {
+    proxyCache.proxy.d = [];
+    proxyCache.proxy.d.push(111);
+    expect(proxyCache.proxy.d[0]).toEqual(111);
+    proxyCache.proxy.d[0] = 222;
+    expect(proxyCache.proxy.d[0]).toEqual(222);
+});

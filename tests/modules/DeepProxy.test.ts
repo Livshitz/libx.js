@@ -140,3 +140,16 @@ test('DeepProxy-set-object (should proxify it as well)', () => {
     expect(param).toEqual(2);
     expect(proxy.a.isProxy).toEqual(true);
 });
+
+test('DeepProxy-setAndGetArray-simple', () => {
+    const proxy = DeepProxy.create(existingObj, {
+        get: (target, path, key) => {},
+        set: (target, path, key, value) => {
+            expect(path).toEqual('/b');
+            expect(key).toEqual('b');
+        },
+    });
+
+    proxy.b = [];
+    expect(proxy.b.isProxy).toEqual(true);
+});
