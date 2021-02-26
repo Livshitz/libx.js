@@ -54,7 +54,7 @@ export default class DeepProxy<T extends object = any> {
             },
 
             set: (target: object, key: Key, value: T, receiver: any) => {
-                if (this.isDeep && !(<any>value)?.isProxy && objectHelpers.isObject(value)) {
+                if (this.isDeep && !(<any>value)?.isProxy && (objectHelpers.isObject(value) || objectHelpers.isArray(value))) {
                     log.debug('wrapHandler:set: value is an object, proxying it', value);
                     value = this.proxify(value, path + this.delimiter + <string>key);
                 }
