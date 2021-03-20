@@ -164,7 +164,7 @@ export class Helpers {
         );
     }
 
-    public newGuid(useDash) {
+    public newGuid(useDash = false) {
         var dash = useDash ? '-' : '';
         function s4() {
             return Math.floor((1 + Math.random()) * 0x10000)

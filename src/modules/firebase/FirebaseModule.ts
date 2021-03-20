@@ -1,3 +1,4 @@
+import { StringExtensions } from '../../extensions/StringExtensions';
 import { helpers } from '../../helpers';
 import { objectHelpers } from '../../helpers/ObjectHelpers';
 // import { EventsStream } from './EventsStream';
@@ -58,9 +59,9 @@ export class Firebase {
     public listen(path: string, callback: Function) {
         path = this._fixPath(path);
         log.debug('api.firebase.listen: Listening to "' + path + '"');
-        this._database.ref(path).on('value', function (snp) {
+        return this._database.ref(path).on('value', function (snp) {
             log.debug('api.firebase.listen: Value Changed at "' + path + '"');
-            var obj = snp.val();
+            var obj = snp?.val();
             callback(obj);
         });
     }
@@ -70,7 +71,7 @@ export class Firebase {
         log.debug('api.firebase.listenChild: Listening to "' + path + '"');
         this._database.ref(path).on('child_changed', function (snp) {
             const childPath = snp.getRef().path.pieces_.slice(1).join('/');
-            var obj = snp.val();
+            var obj = snp?.val();
             log.debug('api.firebase.listenChild: Value Changed at "' + childPath + '"', obj);
             callback(childPath, obj);
         });
@@ -170,7 +171,13 @@ export class Firebase {
 
     public filter(path: string, byChild, byValue) {
         path = this._fixPath(path);
-        log.debug('api.firebase.filter: Querying data from "{0}", by child "{1}", by value "{2}"'.format(path, byChild, byValue));
+        log.debug(
+            StringExtensions.format.apply('api.firebase.filter: Querying data from "{0}", by child "{1}", by value "{2}"', [
+                path,
+                byChild,
+                byValue,
+            ])
+        );
         var defer = helpers.newPromise();
         this._database
             .ref(path)

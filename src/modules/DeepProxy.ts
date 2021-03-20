@@ -1,3 +1,4 @@
+import { helpers } from '../helpers';
 import { objectHelpers } from '../helpers/ObjectHelpers';
 import { Key } from '../types/interfaces';
 import { log } from './log';
@@ -26,7 +27,8 @@ export default class DeepProxy<T extends object = any> {
 
         target[key] = value;
 
-        if (this.isDeep && !(<any>value)?.isProxy && objectHelpers.isObject(value)) {
+        if (this.isDeep && !(<any>value)?.isProxy) {
+            // && objectHelpers.isObject(value)) {
             value = this.proxify(value, path + this.delimiter + <string>key);
         }
 
@@ -43,18 +45,19 @@ export default class DeepProxy<T extends object = any> {
         const wrapper = {
             get: (target: object, key: Key) => {
                 if (key == 'isProxy') return true;
+                if (key == 'toString') return () => helpers.stringifyOnce(target, null, 2);
                 // if (target[key] == null) return null;
 
                 let ret = null;
                 if (this.handler?.get) {
-                    ret = this.handler.get(target, path + this.delimiter + <string>key, key);
+                    ret = this.handler.get(target, path + this.delimiter + String(key), key);
                 }
                 if (ret == null) ret = target[<string>key];
                 return ret;
             },
 
             set: (target: object, key: Key, value: T, receiver: any) => {
-                if (this.isDeep && !(<any>value)?.isProxy && objectHelpers.isObject(value)) {
+                if (this.isDeep && !(<any>value)?.isProxy && (objectHelpers.isObject(value) || objectHelpers.isArray(value))) {
                     log.debug('wrapHandler:set: value is an object, proxying it', value);
                     value = this.proxify(value, path + this.delimiter + <string>key);
                 }
@@ -97,13 +100,15 @@ export default class DeepProxy<T extends object = any> {
     private proxify(obj: T, path: string, clone = false): T {
         if (obj == null) return null;
         let copy = clone ? objectHelpers.clone(obj) : obj;
-        if (this.isDeep) {
+        if (this.isDeep && (objectHelpers.isObject(obj) || objectHelpers.isArray(obj))) {
             for (let key of Object.keys(copy)) {
                 const prop = copy[key];
                 if (typeof prop === 'object' && !prop?.isProxy) {
                     copy[key] = this.proxify(prop, path + this.delimiter + key);
                 }
             }
+        } else {
+            copy = () => obj;
         }
 
         let p = new Proxy(copy, this.wrapHandler(path));
