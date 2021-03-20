@@ -93,11 +93,13 @@ declare namespace LibxJSExtensions {
         toTimezone(timezone: string): Date;
     }
 
-    interface IExtensionsArray<T> {
+    interface IExtensionsArray<T = any> {
         diff(a: T[]): T[];
         myFilter(fn: Function): T[];
         myFilterSingle(fn: Function): T;
+        move(from: number, to: number): T[];
         remove(item: T): T[];
+        removeAt(index: number, replace = null): T[];
         contains(item: T): boolean;
     }
 }
