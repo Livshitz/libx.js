@@ -188,10 +188,28 @@ test('array.myFilterSingle-positive', () => {
     expect(output).toEqual(2);
 });
 
+test('array.move-positive', () => {
+    let source = [1, 2, 3, 4];
+    let output = source.move(1, 3);
+    expect(output).toEqual([1, 3, 4, 2]);
+});
+
 test('array.remove-positive', () => {
     let source = [1, 2, 3, 4];
     let output = source.remove(3);
     expect(output).toEqual([1, 2, 4]);
+});
+
+test('array.removeAt-positive', () => {
+    let source = [1, 2, 3, 4];
+    let output = source.removeAt(2);
+    expect(output).toEqual([1, 2, 4]);
+});
+
+test('array.removeAt-replace', () => {
+    let source = [1, 2, 3, 4];
+    let output = source.removeAt(2, 'x');
+    expect(output).toEqual([1, 2, 'x', 4]);
 });
 
 test('array.contains-positive', () => {

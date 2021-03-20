@@ -36,6 +36,19 @@ export class ArrayExtensions {
         return this;
     };
 
+    public static removeAt = function (index: number, replace = undefined) {
+        if (index > -1 && this?.length > index) {
+            if (replace) this.splice(index, 1, replace);
+            else this.splice(index, 1);
+        }
+        return this;
+    };
+
+    public static move = function (from: number, to: number) {
+        this.splice(to, 0, this.splice(from, 1)[0]);
+        return this;
+    };
+
     public static last = function () {
         if (this == null || this.length == 0) return null;
         return this[this.length - 1];
