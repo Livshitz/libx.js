@@ -34,7 +34,7 @@
         "detect.js": "^2.2.3",
         "di.libx.js": "^0.1.8",
         "json-bump": "^1.0.2",
-        "lodash": "^4.17.20",
+        "lodash": "^4.17.21",
         "prompt": "^1.0.0",
         "rxjs": "^6.6.3",
         "rxjs-compat": "^6.6.3",
