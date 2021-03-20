@@ -70,7 +70,7 @@ export class StringExtensions {
         return v ? v.trim().length == 0 : true;
     };
 
-    public static format = function () {
+    public static format = function (args: any[]) {
         var args = [];
 
         var ret = this;
