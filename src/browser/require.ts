@@ -162,10 +162,10 @@ export = (function () {
                 request.open('GET', descriptor.uri, true); //!!callback);
 
                 try {
-                    // request.setRequestHeader("Origin", window.location.hostname);
-                    request.setRequestHeader('Access-Control-Allow-Origin', '*');
-                    request.setRequestHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
-                    request.setRequestHeader('Access-Control-Allow-Headers', 'Origin, Content-Type, X-Auth-Token');
+                    // request.setRequestHeader('Origin', window.location.hostname);
+                    // request.setRequestHeader('Access-Control-Allow-Origin', '*');
+                    // request.setRequestHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
+                    // request.setRequestHeader('Access-Control-Allow-Headers', 'Origin, Content-Type, X-Auth-Token');
                 } catch (ex) {
                     console.warn('libx.require: Error setting CORS headers. ', ex);
                 }
