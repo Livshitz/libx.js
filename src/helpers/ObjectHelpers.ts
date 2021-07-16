@@ -302,6 +302,30 @@ export class ObjectHelpers {
         }
         return ret;
     }
+
+    public flatterObjectToDotNotation(objectNotation: Object, prefix?: string) {
+        let set = {};
+
+        for (var key of Object.keys(objectNotation)) {
+            let pre = prefix === undefined ? '' : prefix + '.';
+            let obj = objectNotation[key];
+            if (
+                obj &&
+                typeof obj === 'object' &&
+                Array.isArray(obj) == false &&
+                obj._bsontype == null &&
+                typeof obj.getMonth !== 'function'
+            ) {
+                set = {
+                    ...set,
+                    ...this.flatterObjectToDotNotation(objectNotation[key], pre + key),
+                };
+            } else {
+                set[pre + key] = objectNotation[key];
+            }
+        }
+        return set;
+    }
 }
 
 export const objectHelpers = new ObjectHelpers();

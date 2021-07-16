@@ -348,6 +348,53 @@ test('keyValueToObject-positive-withSubObject', async () => {
     expect(output).toEqual(expected);
 });
 
+describe('other', () => {
+    test('flatterObjectToDotNotation should convert object-notation to dot-notation', async () => {
+        let q = {
+            a: 1,
+            b: {
+                bb: 22,
+                c: {
+                    ccc: 333,
+                },
+            },
+        };
+        let res = objectHelpers.flatterObjectToDotNotation(q);
+        expect(res).toEqual({
+            a: 1,
+            'b.bb': 22,
+            'b.c.ccc': 333,
+        });
+    });
+
+    // test('flatterObjectToDotNotation should not break ObjectId', async () => {
+    //     let id = new ObjectID('5eee53e33f5881111e73efe5');
+    //     let q = {
+    //         a: 1,
+    //         b: id,
+    //     };
+    //     let res = objectHelpers.flatterObjectToDotNotation(q);
+    //     expect(res).toEqual({
+    //         a: 1,
+    //         b: id,
+    //     });
+    // });
+
+    test('flatterObjectToDotNotation should not break array', async () => {
+        let q = {
+            a: 1,
+            b: {
+                bb: ['1', '2', '3'],
+            },
+        };
+        let res = objectHelpers.flatterObjectToDotNotation(q);
+        expect(res).toEqual({
+            a: 1,
+            'b.bb': ['1', '2', '3'],
+        });
+    });
+});
+
 // test('-positive', () => {
 // 	let param = { a: 1 };
 // 	let output = (param);
