@@ -9,6 +9,7 @@ import { log } from '../log';
 export class Firebase {
     private maxDate = new Date('01/01/2200').getTime(); //7258111200000 //32503672800000;
     private entityVersion = 0;
+    private static readonly _DEFAULT_SIZE = 100;
 
     private firebasePathPrefix = null;
     public onReady = new Callbacks();
@@ -98,6 +99,27 @@ export class Firebase {
         return defer.promise();
     }
 
+    public getPage(path: string, lastKey = null, size = Firebase._DEFAULT_SIZE) {
+        path = this._fixPath(path);
+        log.debug('api.firebase.get: Getting "' + path + '"');
+        var defer = helpers.newPromise();
+        let ref = this._database.ref(path).orderByKey();
+
+        if (lastKey != null) {
+            ref = ref.startAt(lastKey);
+        }
+
+        ref.limitToFirst(size)
+            .once('value')
+            .then(function (snp) {
+                var obj = snp.val();
+                defer.resolve(obj);
+            })
+            .catch((ex) => defer.reject(ex));
+
+        return defer.promise();
+    }
+
     public update(path: string, data, avoidFill = true) {
         path = this._fixPath(path);
         log.debug('api.firebase.update: Updating data to "' + path + '"', data);
@@ -169,7 +191,7 @@ export class Firebase {
         return defer.promise();
     }
 
-    public filter(path: string, byChild, byValue) {
+    public filter(path: string, byChild, byValue, lastKey: string = undefined, size = Firebase._DEFAULT_SIZE) {
         path = this._fixPath(path);
         log.debug(
             StringExtensions.format.apply('api.firebase.filter: Querying data from "{0}", by child "{1}", by value "{2}"', [
@@ -179,12 +201,16 @@ export class Firebase {
             ])
         );
         var defer = helpers.newPromise();
-        this._database
-            .ref(path)
-            .orderByChild(byChild)
-            .equalTo(byValue)
-            .once('value')
-            .then(function (snp) {
+        let ref = this._database.ref(path).orderByChild(byChild);
+
+        if (lastKey != undefined) {
+            ref = ref.startAt(byValue, lastKey).limitToFirst(size);
+        } else if (lastKey == null) {
+            ref = ref.equalTo(byValue).limitToFirst(size);
+        }
+
+        ref.once('value')
+            .then((snp) => {
                 var obj = snp.val();
                 if (obj != null) obj = this.dictToArray(obj);
                 defer.resolve(obj);

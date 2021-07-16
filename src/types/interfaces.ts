@@ -1,5 +1,6 @@
 // import Deferred from 'concurrency.libx.js/build/Deferred';
 export { Deferred } from 'concurrency.libx.js';
+import _ from 'lodash';
 
 export {};
 
@@ -150,23 +151,23 @@ export interface IDependencyInjector {
 }
 
 export interface IModuleNetwork {
-    httpGetJson(url: string, _options?: {}): Promise<JSONObject>;
+    httpGetJson<T = JSONObject>(url: string, _options?: {}): Promise<T>;
     httpGetString(url: string, _options?: {}): Promise<String>;
     httpGet(url: string, _options?: {}): Promise<Buffer>;
     httpPost(url: string, data: any, _options?: {}): Promise<Buffer>;
-    httpPostJson(url: string, data: any, _options?: {}): Promise<JSONObject>;
-    httpRequest(url: string, data: any, method: string, _options?: {}): Promise<any>;
-    request(method, url, params?, options?): Promise<any>;
-    get(url, params?, options?): Promise<any>;
-    post(url, data?, options?): Promise<any>;
-    upload(url, fileReadStream?, options?): Promise<any>;
+    httpPostJson<T = JSONObject>(url: string, data: any, _options?: {}): Promise<T>;
+    httpRequest<T = any>(url: string, data: any, method: string, _options?: {}): Promise<T>;
+    request<T = any>(method, url, params?, options?): Promise<T>;
+    get<T = any>(url, params?, options?): Promise<T>;
+    post<T = any>(url, data?, options?): Promise<T>;
+    upload<T = any>(url, fileReadStream?, options?): Promise<T>;
     helpers: {
         fixUrl(url: string, prefixUrl: string): string;
         parseUrl(url: string): string;
         cleanUrl(url: string): string;
         // getFormData(object: Object): any;
         formDataToString(formDataObj: Object): string;
-        params(params: any, keys: Object, isArray?: Boolean): any;
+        params<T = any>(params: any, keys: Object, isArray?: Boolean): T;
     };
 }
 
