@@ -17,7 +17,7 @@ export class Node {
     public prompts = prompts;
 
     public getFiles = (query = '**/*', options?) => {
-        let p = helpers.newPromise();
+        let p = helpers.newPromise<string[]>();
         glob(query, options, function (err, files) {
             if (err) return p.reject(err);
             p.resolve(files);
@@ -43,7 +43,7 @@ export class Node {
         }
     };
 
-    public exec = async (commands: string | string[], verbose: boolean = false): Promise<string> => {
+    public exec = async (commands: string | string[], verbose = false, throwOnFail = true): Promise<string> => {
         var cmd = commands;
         if (Array.isArray(commands)) {
             cmd = '';
@@ -55,17 +55,23 @@ export class Node {
 
         var p = helpers.newPromise();
 
-        var process = exec(<string>cmd, (err, stdout, stderr) => {
-            if (!objectHelpers.isEmpty(err) || !objectHelpers.isEmptyString(stderr)) {
-                p.reject(err || stderr);
-                return;
-            }
-            p.resolve(stdout.slice(0, -1));
-        });
-        if (verbose) {
-            process.stdout.on('data', function (data) {
-                console.log(data.slice(0, -1));
+        try {
+            var process = exec(<string>cmd, (err, stdout, stderr) => {
+                if (!objectHelpers.isEmpty(err) || !objectHelpers.isEmptyString(stderr)) {
+                    if (throwOnFail) {
+                        p.reject(err || stderr);
+                        return;
+                    }
+                }
+                p.resolve(stdout.slice(0, -1));
             });
+            if (verbose) {
+                process.stdout.on('data', function (data) {
+                    console.log(data.slice(0, -1));
+                });
+            }
+        } catch (err) {
+            if (throwOnFail) throw err;
         }
         return p;
     };
@@ -157,7 +163,7 @@ export class Node {
         process
             .on('unhandledRejection', (reason: any, p) => {
                 var err = {
-                    message: reason.response != null ? Buffer.from(reason.response).toString() : reason.message,
+                    message: reason.response != null ? Buffer.from(reason.response).toString() : reason?.message || reason,
                     stack: reason.stack != null ? Buffer.from(reason.stack).toString() : reason.stack,
                 };
                 if (handler) handler(err, reason.statusCode || reason);
@@ -238,6 +244,19 @@ export class Node {
 
         // var projectSecrets = helpers.parseConfig(projectSecretsStr, env);
         return projectConfig;
+    }
+
+    public dump(file: string, data: any, folder = './.tmp') {
+        const path = `${folder}/${file}`;
+        if (!objectHelpers.isString(data)) data = helpers.jsonify(data);
+        fs.writeFileSync(path, data);
+        console.log(`dump: File written in "${path}"`);
+    }
+
+    public read<T = any>(file, folder = './.tmp') {
+        const path = `${folder}/${file}`;
+        const str = fs.readFileSync(path).toString();
+        return <T>JSON.parse(str);
     }
 }
 
