@@ -137,6 +137,8 @@ export class Node {
                 fullPath = fullPath + '/' + path;
             }
 
+            if (path.match(/.+\..+/)) return false;
+
             if (!fs.existsSync(fullPath)) {
                 fs.mkdirSync(fullPath);
             }
