@@ -17,34 +17,34 @@ export class Network {
 
     constructor() {}
 
-    public httpGetJson = async (url, _options) => {
+    public httpGetJson = async (url: string, _options = {}) => {
         _options = objectHelpers.merge({}, _options, { headers: { 'Content-Type': 'application/json; charset=UTF-8' }, enc: 'utf-8' });
         let ret = await this.httpGet(url, _options);
         return JSON.parse(ret);
     };
 
-    public httpGetString = async (url, _options) => {
+    public httpGetString = async (url: string, _options = {}) => {
         _options = objectHelpers.merge({}, _options, { enc: 'utf-8' });
         let ret = await this.httpGet(url, _options);
         return ret.toString(); //Buffer.concat(ret).toString(_options.enc);
     };
 
-    public httpGet = async (url, _options?) => {
+    public httpGet = async (url: string, _options = {}) => {
         let ret = await this.httpRequest(url, null, 'GET', _options);
         return ret;
     };
 
-    public httpPost = async (url, data, _options) => {
+    public httpPost = async (url: string, data, _options = {}) => {
         return await this.httpRequest(url, data, 'POST', _options);
     };
 
-    public httpPostJson = async (url, data, _options) => {
+    public httpPostJson = async (url: string, data, _options = {}) => {
         let ret = await this.httpRequest(url, data, 'POST', _options);
         if (ret == null) return null;
         return JSON.parse(ret.toString());
     };
 
-    public httpRequest = async (url, data, method, _options) => {
+    public httpRequest = async (url: string, data: any, method: string, _options = {}) => {
         var defer = helpers.newPromise();
 
         url = this.helper.fixUrl(url);
@@ -133,7 +133,7 @@ export class Network {
         return defer;
     };
 
-    public request = async (method, url, params = null, data = null, options: any = {}) => {
+    public request = async (method, url: string, params: any = null, data: any = null, options: any = {}) => {
         let p = helpers.newPromise();
         let _options = {
             method: method,
@@ -153,7 +153,7 @@ export class Network {
         return p;
     };
 
-    public get = async (url, params = null, options = {}) => {
+    public get = async (url: string, params: any = null, options = {}) => {
         if (params != null) {
             let includePrefix = url.contains('?') ? false : true;
             let queryString = this.helper.toQueryString(params, !includePrefix);
@@ -164,7 +164,7 @@ export class Network {
         return await this.request('GET', url, params, null, options);
     };
 
-    public post = async (url, data = null, options = {}) => {
+    public post = async (url: string, data = null, options = {}) => {
         let p = helpers.newPromise();
 
         // wrap data with 'body' in case it's not including predefined keyword
@@ -188,7 +188,7 @@ export class Network {
         // return p;
     };
 
-    public upload = async (url, fileReadStream, options: any = {}) => {
+    public upload = async (url: string, fileReadStream, options: any = {}) => {
         let p = helpers.newPromise();
 
         let formData = new FormData();
@@ -219,11 +219,11 @@ export class Network {
 }
 
 class Helper {
-    public toQueryString = (obj, excludePrefix = false) => {
+    public toQueryString = (obj: any, excludePrefix = false) => {
         return helpers.querialize(obj, excludePrefix);
     };
 
-    public fixUrl(url, prefixUrl?) {
+    public fixUrl(url: string, prefixUrl?: string) {
         var sep = '://';
         var pos = url.indexOf(sep);
         if (pos > -1) {
@@ -243,7 +243,7 @@ class Helper {
         return url;
     }
 
-    public parseUrl(url) {
+    public parseUrl(url: string) {
         return urlapi.parse(url);
 
         var l = document.createElement('a');
@@ -251,7 +251,7 @@ class Helper {
         return l;
     }
 
-    public cleanUrl(url) {
+    public cleanUrl(url: string) {
         if (url == null) return null;
         //return url.replace('/(?<!http:)\/\//g', '/');
         return url.replace(new RegExp('([^:]/)/+', 'g'), '$1');
