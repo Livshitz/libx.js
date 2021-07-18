@@ -152,4 +152,4 @@ export class Options {
     saveDeferMS = FireProxy.DefaultSaveDeferTimeMilliseconds;
 }
 
-di.register(FireProxy, 'FireProxy');
+di.register('FireProxy', FireProxy);

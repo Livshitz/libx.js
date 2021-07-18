@@ -66,4 +66,4 @@ export class EventsStream<T = any> {
     }
 }
 
-di.register(EventsStream, 'EventsStream');
+di.register('EventsStream', EventsStream);

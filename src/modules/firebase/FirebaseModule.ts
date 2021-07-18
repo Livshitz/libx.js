@@ -322,4 +322,4 @@ export interface IFirebaseInstance {
     listen(string, callback: Function);
 }
 
-di.register(Firebase, 'Firebase');
+di.register('Firebase', Firebase);

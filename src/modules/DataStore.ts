@@ -16,7 +16,7 @@ export class DataStore implements IDataProvider {
 
     public static async init(prefix: string = ''): Promise<DataStore> {
         let dataProvider: IFirebase = null;
-        await di.require((firebase) => {
+        await di.inject((firebase) => {
             dataProvider = firebase;
         });
         const ret = new DataStore(dataProvider, prefix);

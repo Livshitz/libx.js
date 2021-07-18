@@ -1,21 +1,20 @@
 describe('dependencyInjector tests', () => {
-	let dataset: any = {
-	}
+    let dataset: any = {};
 
-	beforeAll(async (done)=> {
-		
-		done();
-	});
+    beforeAll(async (done) => {
+        done();
+    });
 
-	test('dependencyInjector--positive', async (done) => {
-		expect(true).toBe(true);
-		done();
-	});
+    test('dependencyInjector--positive', async (done) => {
+        expect(true).toBe(true);
+        done();
+    });
 
-	afterAll((done) => {
-	});
+    afterAll((done) => {
+        done();
+    });
 
-	/*
+    /*
 		beforeAll(() => {
 			mongoDB.connect();
 		});
@@ -23,5 +22,4 @@ describe('dependencyInjector tests', () => {
 			mongoDB.disconnect(done);
 		});
 	*/
-})
-
+});
