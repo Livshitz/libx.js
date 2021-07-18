@@ -4094,6 +4094,14 @@ di.libx.js@^0.1.8:
     concurrency.libx.js "^0.2.23"
     typescript "^3.9.3"
 
+di.libx.js@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/di.libx.js/-/di.libx.js-2.0.0.tgz#a0653071eb3c4f5dbbd5b5adccae63f5eaa4e8d9"
+  integrity sha512-GEuJDOgT2PwMkjHyyN9/iFY/PEFVLGQZ4t4XhLLNhkgeWZj/UgaSL8ojUJbTw0YkLAi5Id5gZGYxg6PIhnXmyQ==
+  dependencies:
+    concurrency.libx.js "^0.2.23"
+    typescript "^3.9.3"
+
 diff-sequences@^26.5.0:
   version "26.5.0"
   resolved "https://registry.yarnpkg.com/diff-sequences/-/diff-sequences-26.5.0.tgz#ef766cf09d43ed40406611f11c6d8d9dd8b2fefd"
