@@ -311,4 +311,4 @@ class Helper {
 
 export const network = new Network();
 
-di.register(network, 'network');
+di.register('network', network);

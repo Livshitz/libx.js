@@ -38,4 +38,4 @@ export class ExpiryManager {
     }
 }
 
-di.register(ExpiryManager, 'ExpiryManager');
+di.register('ExpiryManager', ExpiryManager);

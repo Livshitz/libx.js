@@ -53,4 +53,4 @@ export class Callbacks<T = any> {
     }
 }
 
-di.register(Callbacks, 'Callbacks');
+di.register('Callbacks', Callbacks);

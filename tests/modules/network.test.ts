@@ -19,11 +19,12 @@ describe('libx:modules:network tests', () => {
     let server = new mockServer();
 
     beforeAll(async (done) => {
-        networkModule = di.get<IModuleNetwork>('network');
+        networkModule = await di.require<IModuleNetwork>('network');
 
         url = await server.run();
 
         done();
+        return null;
     });
 
     test('module-network-httpRequest-positive', async (done) => {

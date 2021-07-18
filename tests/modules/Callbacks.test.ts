@@ -2,7 +2,7 @@ import { Callbacks } from '../../src/modules/Callbacks';
 
 beforeEach(() => {});
 
-test('subscribe-simple-positive', async (done) => {
+test('subscribe-simple-positive', (done) => {
     const c = new Callbacks();
     c.subscribe((arg) => {
         expect(true).toEqual(true);
@@ -13,7 +13,7 @@ test('subscribe-simple-positive', async (done) => {
     }, 10);
 });
 
-test('subscribe-subsequent-positive', async (done) => {
+test('subscribe-subsequent-positive', (done) => {
     const c = new Callbacks();
     c.subscribe((arg) => {
         expect(arg == 1 || arg == 2).toEqual(true);
@@ -27,7 +27,7 @@ test('subscribe-subsequent-positive', async (done) => {
     }, 20);
 });
 
-test('once-positive', async (done) => {
+test('once-positive', (done) => {
     const c = new Callbacks();
     c.once((arg) => {
         if (arg == 2) throw "Shouldn't get here";
@@ -42,7 +42,7 @@ test('once-positive', async (done) => {
     }, 20);
 });
 
-test('until-after-positive', async (done) => {
+test('until-after-positive', (done) => {
     const c = new Callbacks();
     const stopFn = c.until((arg) => {
         if (arg != 1) throw "Shouldn't get here";
@@ -57,7 +57,7 @@ test('until-after-positive', async (done) => {
     }, 20);
 });
 
-test('until-before-positive', async (done) => {
+test('until-before-positive', (done) => {
     const c = new Callbacks();
     const stopFn = c.until((arg) => {
         throw "Shouldn't get here";
@@ -71,7 +71,7 @@ test('until-before-positive', async (done) => {
     }, 20);
 });
 
-test('clear-positive', async (done) => {
+test('clear-positive', (done) => {
     const c = new Callbacks();
     const handle = c.subscribe((arg) => {
         throw "Shouldn't get here";
@@ -85,7 +85,7 @@ test('clear-positive', async (done) => {
     }, 20);
 });
 
-test('clearAll-positive', async (done) => {
+test('clearAll-positive', (done) => {
     const c = new Callbacks();
     const handle = c.subscribe((arg) => {
         throw "Shouldn't get here";
