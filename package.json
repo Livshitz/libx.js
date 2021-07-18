@@ -32,7 +32,7 @@
         "concurrency.libx.js": "^0.3.5",
         "crypto-js": "^4.0.0",
         "detect.js": "^2.2.3",
-        "di.libx.js": "^1.2.3",
+        "di.libx.js": "^2.0.0",
         "json-bump": "^1.0.2",
         "lodash": "^4.17.21",
         "prompt": "^1.1.0",

@@ -140,7 +140,7 @@ test('helpers.measure-positive', async () => {
     await helpers.delay(100);
     let output = helpers.measure('test');
     await helpers.delay(100);
-    expect(output).toBeLessThanOrEqual(150);
+    expect(output).toBeLessThanOrEqual(180);
     output = helpers.measure('test');
     expect(output).toBeLessThanOrEqual(250);
 });

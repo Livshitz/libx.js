@@ -1,11 +1,11 @@
-import { di } from "./dependencyInjector";
+import { di } from './dependencyInjector';
 
-export default (function(){
-	var Rx = require('rxjs');
+export default (function () {
+    var Rx = require('rxjs');
 
-	Rx.operators = require('rxjs/operators');
+    Rx.operators = require('rxjs/operators');
 
-	di.register(Rx, 'rxjs');
+    di.register('rxjs', Rx);
 
-	return Rx; 
+    return Rx;
 })();

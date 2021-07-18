@@ -5,7 +5,7 @@ log.isShowStacktrace = false;
 log.verbose('libx.node.cli: Starting...');
 
 if (node.args.bump) {
-    var filePath = node.args._[0];
+    var filePath = node.args._[0].toString();
     var releaseType = node.args.bump;
     var res = node.bumpJsonVersion(filePath, <any>releaseType);
     log.info(releaseType, filePath, res);

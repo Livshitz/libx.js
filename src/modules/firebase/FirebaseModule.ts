@@ -33,6 +33,7 @@ export class Firebase {
     }
 
     public async isConnected(callback: Function) {
+        if (this._database == null) return false;
         var ret = this.get('.info/connected');
         if (callback != null) {
             this.listen('.info/connected', (isConnected) => {
