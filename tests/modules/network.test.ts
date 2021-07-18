@@ -24,6 +24,7 @@ describe('libx:modules:network tests', () => {
         url = await server.run();
 
         done();
+        return null;
     });
 
     test('module-network-httpRequest-positive', async (done) => {
