@@ -128,4 +128,4 @@ Read our [contributing guide](/CONTRIBUTING.md) to learn about how you can contr
 
 ## License
 
-All projects and packages in this repository are [MIT licensed](/LICENSE).
+All projects and packages in this repository are [MIT licensed](/LICENSE). 

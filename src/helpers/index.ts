@@ -262,7 +262,7 @@ export class Helpers {
         var base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
 
         // var rawData = window.atob(base64);
-        var rawData = new Buffer(base64, 'base64').toString('binary');
+        var rawData = Buffer.from(base64, 'base64').toString('binary');
         var outputArray = new Uint8Array(rawData.length);
 
         for (var i = 0; i < rawData.length; ++i) {
