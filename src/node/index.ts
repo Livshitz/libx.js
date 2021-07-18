@@ -271,4 +271,4 @@ export enum SemverPart {
 
 export const node = new Node();
 
-di.register(node, 'node');
+di.register('node', node);
