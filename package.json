@@ -28,7 +28,7 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "axios": "^0.21.1",
+        "axios": "^0.21.3",
         "concurrency.libx.js": "^0.3.5",
         "crypto-js": "^4.0.0",
         "detect.js": "^2.2.3",
