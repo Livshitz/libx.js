@@ -7,7 +7,7 @@ import { di } from '../modules/dependencyInjector';
 import { ObjectHelpers, objectHelpers } from '../helpers/ObjectHelpers';
 import { objectExtensions } from '../extensions/ObjectExtensions';
 // import { Deferred } from 'concurrency.libx.js';
-export * as LibxJS from '../types/interfaces';
+// export * as LibxJS from '../types/interfaces';
 
 if (!(<any>global)._libx_avoidExtensions) extensions.applyAllExtensions();
 

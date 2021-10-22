@@ -11,9 +11,10 @@ import { di } from '../modules/dependencyInjector';
 import { log } from '../modules/log';
 import { Crypto } from '../modules/Crypto';
 import prompts from './prompts';
+import { DynamicProperties } from '../types/interfaces';
 
 export class Node {
-    public args = argv;
+    public args: any = argv;
     public prompts = prompts;
 
     public getFiles = (query = '**/*', options?) => {
