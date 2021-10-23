@@ -38,7 +38,8 @@
         "prompt": "^1.1.0",
         "rxjs": "^6.6.3",
         "rxjs-compat": "^6.6.7",
-        "xregexp": "^5.0.2"
+        "xregexp": "^5.0.2",
+        "yargs": "^17.2.1"
     },
     "devDependencies": {
         "@types/crypto-js": "^4.0.2",
