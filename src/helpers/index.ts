@@ -371,6 +371,19 @@ export class Helpers {
         return (!avoidPrefix ? '?' : '') + str.join('&');
     }
 
+    public toUnicode(input: string): string {
+        var unicodeString = '';
+        for (var i = 0; i < input.length; i++) {
+            var theUnicode = input.charCodeAt(i).toString(16).toUpperCase();
+            while (theUnicode.length < 4) {
+                theUnicode = '0' + theUnicode;
+            }
+            theUnicode = '\\u' + theUnicode;
+            unicodeString += theUnicode;
+        }
+        return unicodeString;
+    }
+
     private initConcurrency() {
         this.concurrency = concurrency;
         this.Deferred = concurrency.Deferred;

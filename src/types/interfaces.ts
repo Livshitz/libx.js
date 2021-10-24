@@ -103,6 +103,7 @@ export interface IBrowserHelpers {
     uploadFile(folderName: string, filesInput: any, callback?: Function);
     urlParams();
     urlize(obj: Object): string;
+    toUnicode(input: string): string;
 }
 
 export interface IFirebase {
