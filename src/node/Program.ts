@@ -13,7 +13,6 @@ export default class Program {
         const envConfig = config?.envs?.[env];
 
         try {
-            log.verbose('----------------');
             await script.executeAsScript(config, env, envConfig);
         } catch (err) {
             error = err;
@@ -30,7 +29,6 @@ export default class Program {
         let error: Error = null;
 
         try {
-            log.verbose('----------------');
             await execute();
             log.verbose('DONE');
         } catch (err) {

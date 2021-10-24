@@ -10,12 +10,12 @@ import { objectHelpers } from '../helpers/ObjectHelpers';
 import { di } from '../modules/dependencyInjector';
 import { log } from '../modules/log';
 import { Crypto } from '../modules/Crypto';
-import prompts from './prompts';
+import { Prompts } from './Prompts';
 import { DynamicProperties } from '../types/interfaces';
 
 export class Node {
     public args: any = argv;
-    public prompts = prompts;
+    public prompts = new Prompts();
 
     public getFiles = (query = '**/*', options?) => {
         let p = helpers.newPromise<string[]>();

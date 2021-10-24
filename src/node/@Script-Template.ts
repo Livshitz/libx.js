@@ -17,7 +17,7 @@ const conf = {
 
 // node build/Main.js --env="staging"
 class Script implements IScript<typeof conf> {
-    public executeAsScript(config: typeof conf, env: string = Program.args.env, envConf: typeof conf.envs.prod): Promise<void> {
+    public async executeAsScript(config: typeof conf, env: string = Program.args.env, envConf: typeof conf.envs.prod): Promise<void> {
         log.verbose('Script: Execute: ', 'config:', config, 'env:', env, 'envConf: ', envConf.baseUrl);
         return;
     }
