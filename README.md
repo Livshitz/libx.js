@@ -124,7 +124,7 @@ Read our [contributing guide](/CONTRIBUTING.md) to learn about how you can contr
 
 ## Tests Coverage:
 
-![Code Coverage](https://codecov.io/gh/Livshitz/libx.js/branch/master/graphs/commits.svg)
+![Code Coverage](https://codecov.io/gh/Livshitz/libx.js/graphs/tree.svg)
 
 ## License
 
