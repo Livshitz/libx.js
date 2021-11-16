@@ -1,4 +1,6 @@
+import { async } from 'concurrency.libx.js';
 import each from 'lodash/each';
+import { helpers } from '../helpers';
 import { FuncWithArgs } from '../types/interfaces';
 import { di } from './dependencyInjector';
 
@@ -34,9 +36,22 @@ export class Callbacks<T = any> {
     }
 
     trigger(...args: T[]) {
+        const p = helpers.newPromise();
+        const allP = [];
         each(this.list, (cb: Function) => {
-            if (cb != null) cb.apply(null, args);
+            if (cb == null) return;
+
+            const promise = async(cb).apply(cb, args);
+            allP.push(promise);
         });
+        Promise.all(allP)
+            .then(() => {
+                p.resolve();
+            })
+            .catch((err) => {
+                p.reject(err);
+            });
+        return p;
     }
 
     unsubscribe(id: number) {
