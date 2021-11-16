@@ -27,7 +27,8 @@ export class ProxyCache<T extends object = any> {
             mergedObj,
             {
                 get: (target, path, key) => {
-                    if (path.startsWith('/')) path = path.substr(1, path.length);
+                    path = path + '/' + key.toString();
+                    if (path.startsWith('/')) path = path.substr(1);
                     log.debug(`ProxyCache:get: ${path}`, key);
                     let ret = null;
                     if (target[key] != null) ret = target[key];
@@ -48,7 +49,8 @@ export class ProxyCache<T extends object = any> {
                     return ret;
                 },
                 set: (target, path, key, value) => {
-                    if (path.startsWith('/')) path = path.substr(1, path.length);
+                    path = path + '/' + key.toString();
+                    if (path.startsWith('/')) path = path.substr(1);
                     log.debug(`ProxyCache:changes: ${path}`, key);
                     // console.log('set', path, '=', JSON.stringify(value), target, path, value);
 
@@ -78,6 +80,7 @@ export class ProxyCache<T extends object = any> {
     }
 
     private storeObjectAsKeyValueCache(path: string, value: Object) {
+        if (path.startsWith('/')) path = path.substr(1);
         if (objectHelpers.isObject(value)) {
             const kvObj = objectHelpers.objectToKeyValue(value);
             if (path != '' && !path.endsWith('/')) path += '/';
