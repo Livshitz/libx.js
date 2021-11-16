@@ -482,6 +482,7 @@ export interface IHelper {
     shuffle(a: Array<any>): Array<any>;
     sleep(time: number, callback?: Function): Promise<void>;
     spawnHierarchy(path: string): any;
+    getObjectHash(obj: object): string;
     stringifyOnce(obj: Object, replacer?: (key: string, value: any) => any, indent?: number): string;
     throttle(func: Function, wait: number, immediate?: Boolean): Function;
     type(obj: any): string;
@@ -492,7 +493,7 @@ export interface IHelper {
     node: IModuleNode;
     fileStreamToBuffer(readStream): Promise<Buffer>;
     enumToArray(_enum: any): string[];
-    getDeep(obj: any, path: string): any;
+    getDeep(obj: any, path: string, delimiter?: string): any;
     dictToArray(dict: any);
     arrayToDic(arr: any);
     getObjectByPath(s: string, obj?: any);

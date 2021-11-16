@@ -6,6 +6,7 @@ import transform from 'lodash/transform';
 import isEqual from 'lodash/isEqual';
 import isString from 'lodash/isString';
 import { Mapping } from '../types/interfaces';
+import { StringExtensions } from '../extensions/StringExtensions';
 
 class Dummy {
     constructor() {}
@@ -160,7 +161,8 @@ export class ObjectHelpers {
         }
         for (i; i < length; i++) {
             if ((options = arguments[i]) != null) {
-                for (name in options) {
+                const list = [...Object.getOwnPropertyNames(arguments[i]), ...Object.getOwnPropertySymbols(arguments[i])];
+                for (name of list) {
                     src = target[name];
                     copy = options[name];
                     if (target === copy) {
@@ -188,8 +190,8 @@ export class ObjectHelpers {
         return this.merge(false, {}, obj); // Object.assign({}, obj);
     }
 
-    public getDeep(obj, path) {
-        let parts = path.split('/');
+    public getDeep(obj: Object, path: string, delimiter = '/') {
+        let parts = path.split(delimiter);
         let ret = obj;
         do {
             if (parts.length == 0) return ret;
@@ -204,7 +206,8 @@ export class ObjectHelpers {
         return obj == undefined || obj == null;
     }
     public isEmptyObject(obj) {
-        for (var name in obj) {
+        const props = this.getCustomProperties(obj);
+        for (var name in props) {
             return false;
         }
         return true;
@@ -246,11 +249,11 @@ export class ObjectHelpers {
     }
 
     public getCustomProperties(obj) {
-        var currentPropList = Object.getOwnPropertyNames(obj);
+        var currentPropList = [...Object.getOwnPropertyNames(obj), ...Object.getOwnPropertySymbols(obj)];
 
         const findDuplicate = (propName) => this.globalProperties.indexOf(propName) === -1;
 
-        return currentPropList.filter(findDuplicate);
+        return currentPropList.filter(findDuplicate) as string[];
     }
 
     public spawnHierarchy(path: string, root: any = {}, putValue: any = null, delimiter = '.'): any {
@@ -261,11 +264,12 @@ export class ObjectHelpers {
         let prev = null;
         for (let i = 0; i < p.length; i++) {
             next = p[i];
+            if (cur == null) cur = prev[p[i - 1]] = {};
             if (typeof cur[next] == 'undefined') cur[next] = {};
             prev = cur;
             cur = cur[next];
         }
-        if (putValue != null) prev[next] = putValue;
+        prev[next] = putValue;
         return root;
     }
 
@@ -325,6 +329,11 @@ export class ObjectHelpers {
             }
         }
         return set;
+    }
+
+    public getObjectHash(obj: Object) {
+        if (obj == null) return '';
+        return StringExtensions.hashCode.call(JSON.stringify(obj));
     }
 }
 
