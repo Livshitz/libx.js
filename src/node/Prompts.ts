@@ -10,13 +10,14 @@ export class Prompts {
         process.stdin.setRawMode(true);
         process.stdin.resume();
         process.stdin.on('data', () => {
+            // console.log('Prompts:waitForAnyKey: onData');
             p.resolve();
             if (shouldExit) process.exit(0);
         });
         return p;
     }
 
-    public async readKey(callback?: (key: string) => Promise<void>, message = 'Press any key', outputKeys = true) {
+    public async readKey(callback?: (key: string) => Promise<boolean | void>, message = 'Press any key', outputKeys = true) {
         const p = new Deferred();
         const collected = [];
         console.log(message);
@@ -30,7 +31,11 @@ export class Prompts {
             }
 
             collected.push(key);
-            if (callback != null) callback(key.toString());
+            if (callback != null) {
+                callback(key.toString()).then((res) => {
+                    if (res == false) p.resolve(collected.join());
+                });
+            }
 
             // write the key to stdout all normal like
             if (outputKeys) process.stdout.write(key);
