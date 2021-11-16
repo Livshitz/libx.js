@@ -6,7 +6,7 @@ import { QueueWorker } from '../../src/modules/QueueWorker';
 // private async processItem(item: PackageInfo): Promise<PackageInfo> {
 
 const delay = 100;
-const delayPadded = delay + delay * 0.1 + 50;
+const delayPadded = delay + delay * 0.2 + 50;
 
 const processItem = (input: string, id: string): Promise<string> => {
     let p = helpers.newPromise<string>();
