@@ -1,6 +1,6 @@
 // helpers.getMeasure-positive
 // import iMyModule from '../interfaces/IMyModule';
-import Queue from '../../src/modules/Queue';
+import { Queue } from '../../src/modules/Queue';
 
 let obj: Queue<string>;
 
@@ -38,4 +38,13 @@ test('queue forEach', () => {
 
 test('queue index', () => {
     expect(obj.get(1)).toBe('b');
+});
+
+test('queue trigger', async (done) => {
+    const obj = new Queue<string>(['a', 'b', 'c', 'd']);
+    obj.onEnqueue.subscribe((newItem) => {
+        expect(newItem).toBe('e');
+        done();
+    });
+    obj.enqueue('e');
 });

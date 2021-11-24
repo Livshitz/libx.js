@@ -5,21 +5,25 @@ import { FuncWithArgs } from '../types/interfaces';
 import { di } from './dependencyInjector';
 
 export class Callbacks<T = any> {
-    counter: number;
-    list: {};
-    constructor() {
+    private counter: number;
+    private list: {};
+    private options = new ModuleOptions();
+
+    constructor(options?: ModuleOptions<T>) {
+        this.options = { ...this.options, ...options };
         this.counter = 0;
         this.list = {};
+        if (this.options.cb != null) this.subscribe(this.options.cb);
     }
 
-    subscribe(cb: FuncWithArgs<T>): number {
+    public subscribe(cb: FuncWithArgs<T>): number {
         this.list[this.counter] = cb;
         var ret = this.counter;
         this.counter++;
         return ret;
     }
 
-    once(cb: FuncWithArgs<T>) {
+    public once(cb: FuncWithArgs<T>) {
         let _this = this;
         let handle = this.subscribe(function () {
             _this.clear(handle);
@@ -27,7 +31,7 @@ export class Callbacks<T = any> {
         });
     }
 
-    until(cb: FuncWithArgs<T>): () => void {
+    public until(cb: FuncWithArgs<T>): () => void {
         let handle = this.subscribe(cb);
         let untilFn = () => {
             this.clear(handle);
@@ -35,7 +39,7 @@ export class Callbacks<T = any> {
         return untilFn;
     }
 
-    trigger(...args: T[]) {
+    public trigger(...args: T[]) {
         const p = helpers.newPromise();
         const allP = [];
         each(this.list, (cb: Function) => {
@@ -54,18 +58,26 @@ export class Callbacks<T = any> {
         return p;
     }
 
-    unsubscribe(id: number) {
+    public unsubscribe(id: number) {
         return this.clear(id);
     }
 
-    clear(id: number) {
+    public clear(id: number) {
         delete this.list[id];
     }
 
-    clearAll() {
+    public clearAll() {
         delete this.list;
         this.list = {};
     }
+
+    public getSubscribersCount() {
+        return this.counter;
+    }
+}
+
+export class ModuleOptions<T> {
+    cb?: FuncWithArgs<T>;
 }
 
 di.register('Callbacks', Callbacks);

@@ -4,10 +4,9 @@ import { log } from '../modules/log';
 import { network } from '../modules/Network';
 
 declare const jQuery: any;
-
 export class BrowserHelpers {
     public urlParams;
-    public isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    public isiOS = () => /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     public lastSeen: number;
 
     public constructor() {
@@ -464,11 +463,11 @@ export class BrowserHelpers {
         return p.promise();
     };
 
-    public queryString = function (name) {
+    public queryString = function (name, url = window.location.href) {
         name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
         var regexS = '[\\?&]' + name + '=([^&#]*)';
         var regex = new RegExp(regexS);
-        var results = regex.exec(window.location.href);
+        var results = regex.exec(url);
         if (results == null) return '';
         else return decodeURIComponent(results[1].replace(/\+/g, ' '));
     };
