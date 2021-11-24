@@ -257,6 +257,86 @@ test('helpers.formatify', () => {
     });
 });
 
+describe('helpers.parseUrl', () => {
+    test('helpers.parseUrl-simple-positive', () => {
+        let output = helpers.parseUrl('http://domain.com/my-service/resource/id112233?queryParam1=1&queryParam2=aa');
+        expect(output).toMatchObject({
+            domainExt: 'com',
+            domainName: 'domain',
+            protocol: 'http',
+            path: 'my-service/resource/id112233',
+            queryParams: 'queryParam1=1&queryParam2=aa',
+            segments: ['my-service', 'resource', 'id112233'],
+            params: {
+                queryParam1: '1',
+                queryParam2: 'aa',
+            },
+        });
+    });
+
+    test('helpers.parseUrl-onlyPath-positive', () => {
+        let output = helpers.parseUrl('/my-service/resource/id112233?queryParam1=1&queryParam2=aa');
+        expect(output).toMatchObject({
+            path: 'my-service/resource/id112233',
+            queryParams: 'queryParam1=1&queryParam2=aa',
+            segments: ['my-service', 'resource', 'id112233'],
+            params: {
+                queryParam1: '1',
+                queryParam2: 'aa',
+            },
+        });
+    });
+
+    test('helpers.parseUrl-1queryParam-positive', () => {
+        let output = helpers.parseUrl('/my-service/resource/id112233?queryParam1=1');
+        expect(output).toMatchObject({
+            path: 'my-service/resource/id112233',
+            queryParams: 'queryParam1=1',
+            segments: ['my-service', 'resource', 'id112233'],
+            params: {
+                queryParam1: '1',
+            },
+        });
+    });
+
+    test('helpers.parseUrl-1path-positive', () => {
+        let output = helpers.parseUrl('/my-service/?queryParam1=1');
+        expect(output).toMatchObject({
+            path: 'my-service',
+            queryParams: 'queryParam1=1',
+            segments: ['my-service'],
+            params: {
+                queryParam1: '1',
+            },
+        });
+    });
+
+    test('helpers.parseUrl-noQValue-positive', () => {
+        let output = helpers.parseUrl('/my-service/?queryParam1');
+        expect(output).toMatchObject({
+            path: 'my-service',
+            queryParams: 'queryParam1',
+            segments: ['my-service'],
+            params: {
+                queryParam1: true,
+            },
+        });
+    });
+
+    test('helpers.parseUrl-onlyPath-positive', () => {
+        let output = helpers.parseUrl('/my-service');
+        expect(output).toMatchObject({
+            path: 'my-service',
+            segments: ['my-service'],
+        });
+    });
+
+    test('helpers.parseUrl-negative', () => {
+        let output = helpers.parseUrl('my-service!@#');
+        expect(output).toEqual(null);
+    });
+});
+
 // test('helpers.-positive', () => {
 // 	let param = { a: 1 };
 // 	let output = helpers.(param);
