@@ -88,7 +88,7 @@ export interface IBrowserHelpers {
     injectCss(filename: string);
     injectScript(src: string, onReady: Function);
     isIframe(): Boolean;
-    isiOS: Boolean;
+    isiOS(): Boolean;
     jQueryExt: {
         setup($);
         applyReveal();
@@ -98,7 +98,7 @@ export interface IBrowserHelpers {
         broadcast(channelName, message);
     };
     querialize(obj: Object, avoidPrefix: Boolean): string;
-    queryString(name: string): string;
+    queryString(name: string, url?: string): string;
     reload();
     uploadFile(folderName: string, filesInput: any, callback?: Function);
     urlParams();

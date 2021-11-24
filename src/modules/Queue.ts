@@ -1,35 +1,44 @@
-export default class Queue<T> implements Iterable<T>{
-	public array: T[];
+import { Callbacks } from './Callbacks';
 
-	public constructor(items: T[] = []) {
-		this.array = items;
-	}
+export class Queue<T = any> implements Iterable<T> {
+    public array: T[];
+    public onEnqueue = new Callbacks();
+    private options = new ModuleOptions();
 
-	public enqueue(item: T): Queue<T> {
-		this.array.push(item);
-		return this;
-	}
+    public constructor(items: T[] = [], options?: ModuleOptions<T>) {
+        this.options = { ...this.options, ...options };
+        this.array = items;
+        if (this.options.onEnqueueCallback != null) this.onEnqueue.subscribe(this.options.onEnqueueCallback);
+    }
 
-	public dequeue(): T {
-		if (this.array == null || this.array.length == 0) return null;
-		return this.array.shift();
-	}
+    public enqueue(item: T): Queue<T> {
+        this.array.push(item);
+        setTimeout(() => {
+            this.onEnqueue?.trigger(item);
+        }, 0);
+        return this;
+    }
 
-	public count() :number {
-		return this.array.length;
-	}
+    public dequeue(): T {
+        if (this.array == null || this.array.length == 0) return null;
+        return this.array.shift();
+    }
 
-	public get(index: number): T {
-		return this.array[index];
-	}
-
-	public get length(): number {
+    public count(): number {
         return this.array.length;
-	}
+    }
 
-	// private counter = 0;
-	// [Symbol.iterator](): Iterator<T, any, undefined> {
-	// 	return {
+    public get(index: number): T {
+        return this.array[index];
+    }
+
+    public get length(): number {
+        return this.array.length;
+    }
+
+    // private counter = 0;
+    // [Symbol.iterator](): Iterator<T, any, undefined> {
+    // 	return {
     //         next: function() {
     //             return {
     //                 done: this.counter === 5,
@@ -37,11 +46,15 @@ export default class Queue<T> implements Iterable<T>{
     //             }
     //         }.bind(this)
     //     }
-	// }
+    // }
 
-	*[Symbol.iterator](): Iterator<T> {
+    *[Symbol.iterator](): Iterator<T> {
         for (let key of Object.keys(this.array)) {
             yield this.array[key];
         }
     }
+}
+
+export class ModuleOptions<T> {
+    onEnqueueCallback?: (T) => Promise<void>;
 }

@@ -210,7 +210,7 @@ export class Node {
             }
         };
 
-        if (this.onExitCallbacks.counter == 1) {
+        if (this.onExitCallbacks.getSubscribersCount() == 1) {
             // register to this event only once
             const relevantEvents = [
                 'beforeExit',

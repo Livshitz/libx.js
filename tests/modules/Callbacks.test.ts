@@ -14,6 +14,18 @@ test('subscribe-simple-positive', (done) => {
     }, 10);
 });
 
+test('subscribe-simple-ctor-positive', (done) => {
+    const c = new Callbacks({
+        cb: (arg) => {
+            expect(true).toEqual(true);
+            done();
+        },
+    });
+    setTimeout(() => {
+        c.trigger(1);
+    }, 10);
+});
+
 test('subscribe-subsequent-positive', (done) => {
     const c = new Callbacks();
     c.subscribe((arg) => {
