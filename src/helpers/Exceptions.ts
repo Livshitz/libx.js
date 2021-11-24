@@ -1,4 +1,4 @@
-export default class Exception extends Error {
+export class Exception extends Error {
     public message: string;
     public metadata: string;
     public stack: string;
@@ -94,3 +94,5 @@ export class NotImplemented extends Exception {
         super('Not Implemented!');
     }
 }
+
+export default Exception;
