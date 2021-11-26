@@ -3658,10 +3658,15 @@ concurrency.libx.js@^0.2.23:
   resolved "https://registry.yarnpkg.com/concurrency.libx.js/-/concurrency.libx.js-0.2.25.tgz#045735b83cf0405bc05bcbcf791cb9f79d56b79b"
   integrity sha512-aYvgorK8d6hoWgkWdyy8vc+hiGQbMTJllewe0fpdn8pt9Bg9AZNwSbdcFPfwZoh73vnHFX8wfULxS693aT7jEA==
 
-concurrency.libx.js@^0.3.3, concurrency.libx.js@^0.3.5:
+concurrency.libx.js@^0.3.3:
   version "0.3.5"
   resolved "https://registry.yarnpkg.com/concurrency.libx.js/-/concurrency.libx.js-0.3.5.tgz#5c02cdb7b2f464aef0d2fe097a1b05c68f523990"
   integrity sha512-QZ6mrE1Ej5t4yBHsijnxZ4YzK9Tfg1I71dRwhV/XvTnvYzRynsFnPsLNJJvZIxwO/dxJ7Cd9mFtF0c0spO9SfQ==
+
+concurrency.libx.js@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/concurrency.libx.js/-/concurrency.libx.js-1.0.1.tgz#5bd390dda8da115eb86b84fe1e4d8f93bff4a464"
+  integrity sha512-oJv7/Q8aRGj5clb/PYmPDkNQTOOAicf5LOyoUJG6bDFBNfTChi9F7D2mnVTSJOn0yqN75euaJcdxJqugVyCxpg==
 
 connect-livereload@^0.6.0:
   version "0.6.1"
@@ -4188,10 +4193,10 @@ di.libx.js@^0.1.8:
     concurrency.libx.js "^0.2.23"
     typescript "^3.9.3"
 
-di.libx.js@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/di.libx.js/-/di.libx.js-2.1.0.tgz#8f5584e38a1b91d892b1853e48be102d8abdf87a"
-  integrity sha512-1/G/p+QNSFzqf03wDt02NEzApomi2Ih5lcnyz5+0UTa8/8W5L8WEKg7X1wjcQXrtWmteAxvVRoeWYCtqbAeTWQ==
+di.libx.js@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/di.libx.js/-/di.libx.js-2.1.1.tgz#1dc502c5be6299bd02f655e780db451d36931c09"
+  integrity sha512-PdUsUMvtlTJNrpyitLhwB6KW63Ms9vpqvfzyA56m7Y0fFXdgioqEi907muvvRF3RI9Rrl5Oj3M5X+zcEum8tAA==
   dependencies:
     concurrency.libx.js "^0.2.23"
     typescript "^3.9.3"
