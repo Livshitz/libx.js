@@ -18,7 +18,7 @@ export default class Program {
             error = err;
         } finally {
             if (error) {
-                libx.log.fatal('Program: Fatal error: \n ', error);
+                libx.log.fatal('Program: Fatal error: \n ', error.toString());
                 return process.exit(1);
             }
             process.exit(0);
