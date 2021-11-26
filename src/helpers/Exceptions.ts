@@ -13,8 +13,8 @@ export class Exception extends Error {
         if (json != '') msg += '\nMetadata: ' + json;
         super(msg);
         this.name = 'Exception';
-        this.metadataObj = metadata;
         this.message = message;
+        this.metadataObj = metadata;
         this.metadata = json;
         this.stack = stack;
     }

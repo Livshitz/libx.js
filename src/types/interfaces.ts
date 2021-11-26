@@ -298,6 +298,6 @@ export interface ILodash extends _.LoDashStatic {
     // fp(): any;
 }
 
-export class DependencyInjector {
-    constructor() {}
-}
+// export class DependencyInjector {
+//     constructor() {}
+// }
