@@ -34,4 +34,16 @@ export class LehmerRandomNumberGenerator implements IPseudoRandomGenerator {
     public static oneTime(input: number) {
         return (input * NATURAL_NUMBER) % 2147483647;
     }
+
+    public nextRange(start: number, end: number) {
+        // returns in range [start, end): including start, excluding end
+        // can't modulu nextInt because of weak randomness in lower bits
+        var rangeSize = end - start;
+        var randomUnder1 = (this.next() % 1000000) / 1000000;
+        return start + Math.floor(randomUnder1 * rangeSize);
+    }
+
+    public choice(array: any[]) {
+        return array[this.nextRange(0, array.length)];
+    }
 }
