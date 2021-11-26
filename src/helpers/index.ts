@@ -65,7 +65,8 @@ export class Helpers {
     public waitUntil: (conditionFn: any, callback?: any, interval?: number, timeout?: number) => Promise<any>;
     public measurements: typeof concurrency.measurements;
     public measure: typeof concurrency.measurements.measure;
-    public getMeasure: typeof concurrency.measurements.getMeasure;
+    public startMeasure: typeof concurrency.measurements.startMeasure;
+    public peekMeasure: typeof concurrency.measurements.peekMeasure;
     public getMeasureAndReset: typeof concurrency.measurements.getMeasureAndReset;
     public chainTasks: (tasks: any, eachCb?: any) => Promise<void>;
     public sleep: (millis: any) => Promise<unknown>;
@@ -435,7 +436,8 @@ export class Helpers {
         this.waitUntil = concurrency.waitUntil;
         this.measurements = concurrency.measurements;
         this.measure = this.measurements.measure;
-        this.getMeasure = this.measurements.getMeasure;
+        this.startMeasure = this.measurements.startMeasure;
+        this.peekMeasure = this.measurements.peekMeasure;
         this.getMeasureAndReset = this.measurements.getMeasureAndReset;
         this.chainTasks = concurrency.chain.chainTasks;
         this.sleep = concurrency.sleep;
