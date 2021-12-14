@@ -195,6 +195,21 @@ test('unsubscribe-viaModule-positive', async (done) => {
     setTimeout(done, 10);
 });
 
+test('getAll-positive', async () => {
+    const mod = new EventsStream<IMyPayload>([{ payload: { test: 1 } }, { payload: { test: 2 } }]);
+    const output = mod.getAll();
+    expect(output).toEqual([{ payload: { test: 1 } }, { payload: { test: 2 } }]);
+});
+
+test('getAll-transformer-positive', async () => {
+    const mod = new EventsStream<IMyPayload>([{ payload: { test: 1 } }, { payload: { test: 2 } }]);
+    const output = mod.getAll(
+        (ev) => ev.payload,
+        (ev) => ev.payload?.test != 1
+    );
+    expect(output).toEqual([{ test: 2 }]);
+});
+
 // test('-positive', () => {
 // 	const param = { a: 1 };
 // 	const handler = mod.(param);
