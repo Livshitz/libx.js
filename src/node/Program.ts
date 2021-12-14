@@ -4,7 +4,7 @@ import { IConfig, IScript } from '../helpers/IScript';
 import { argv } from 'yargs';
 import { log } from '../modules/log';
 
-export default class Program {
+export class Program {
     public static args: any = argv;
 
     public static async run<TConfig = null>(script: IScript<IConfig>, config: IConfig = null, env: string = null) {
@@ -44,3 +44,5 @@ export default class Program {
         }
     }
 }
+
+export default Program;

@@ -1,7 +1,7 @@
 import { libx } from 'libx.js/build/bundles/node.essentials';
 import { IScript } from '../helpers/IScript';
 import { log } from '../modules/log';
-import Program from './Program';
+import { Program } from './Program';
 
 const conf = {
     field: 1,
