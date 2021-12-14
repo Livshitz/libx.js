@@ -61,7 +61,15 @@ export class EventsStream<T = any> {
         handler.unsubscribe();
     }
 
-    public newEvent(payload, type) {
+    public getAll(transformer?: (ev: IEvent<T>) => any, predicate?: Predicate<T>): IEvent<T>[] {
+        const ret: IEvent<T>[] = [];
+        if (predicate == null) predicate = this._defaultPredicate;
+
+        this.channels.history.pipe(filter(predicate)).forEach((ev) => ret.push(transformer ? transformer(ev) : ev));
+        return ret;
+    }
+
+    private newEvent(payload, type) {
         return { payload, type };
     }
 }
