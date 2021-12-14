@@ -12,6 +12,7 @@ export class Prompts {
         process.stdin.on('data', () => {
             // console.log('Prompts:waitForAnyKey: onData');
             p.resolve();
+            process.stdin.pause();
             if (shouldExit) process.exit(0);
         });
         return p;
