@@ -100,6 +100,11 @@ test('string.removeLastPart-positive-3', () => {
     let output = source.removeLastPart('.');
     expect(output).toBe('a.b');
 });
+test('string.getAbbreviation-positive', () => {
+    let source = 'Israel Standard Time';
+    let output = source.getAbbreviation();
+    expect(output).toBe('IST');
+});
 
 // [[[[[[[[[[  Date Extensions  ]]]]]]]]]]
 

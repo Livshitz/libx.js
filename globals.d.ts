@@ -77,6 +77,7 @@ declare namespace LibxJSExtensions {
         startsWith(prefix: string): boolean;
         isEmpty(input?: string): boolean;
         removeLastPart(delimiter = '/'): string;
+        getAbbreviation(): string;
     }
 
     interface IExtensionsDate {
