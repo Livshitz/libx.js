@@ -19,14 +19,24 @@ test('Time - basic', () => {
 
     output = new Time(`12:00`, baseDateDTS, timezone);
     expect(output.toString()).toEqual('12:00 IDT');
-
-    // expect(output.toString(timezone, baseDate)).toEqual('14:00 IST');
-    // expect(output.toString(timezone, baseDateDTS)).toEqual('15:00 IDT');
 });
 
 test('Time - Timezone with fractional offset', () => {
     let output = new Time(`19:35`, new Date(1639659695089), 'Asia/Yangon');
     expect(output.toString('Asia/Jerusalem')).toEqual('15:05 IST');
+
+    output = new Time(`16:45`, new Date(1639665852052), 'Asia/Jerusalem');
+    expect(output.toString('Asia/Yangon')).toEqual('21:15 MT');
+});
+
+test('Time - Timezone with overflow', () => {
+    let output = new Time(`19:35`, new Date(1639659695089), 'Australia/Sydney');
+    expect(output.toString('Asia/Jerusalem')).toEqual('10:35 IST');
+});
+
+test('Time - Default Now', () => {
+    let output = new Time(null, new Date(1639668944470), 'Australia/Sydney');
+    expect(output.toString()).toEqual('02:35 AEDT');
 });
 
 test('Time - add', () => {

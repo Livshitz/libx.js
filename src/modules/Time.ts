@@ -7,10 +7,10 @@ export class Time {
     public totalSeconds = 0;
     constructor(hoursMinSecStr?: string, private baseTimestamp?: Date, public timezone?: string) {
         // notice: timestamp is Date object without timezone info
+        const isNow = hoursMinSecStr == null;
         baseTimestamp = baseTimestamp != null ? new Date(baseTimestamp.getTime()) : new Date();
 
-        if (hoursMinSecStr == null)
-            hoursMinSecStr = `${baseTimestamp.getUTCHours()}:${baseTimestamp.getUTCMinutes()}:${baseTimestamp.getUTCSeconds()}`;
+        if (isNow) hoursMinSecStr = `${baseTimestamp.getUTCHours()}:${baseTimestamp.getUTCMinutes()}:${baseTimestamp.getUTCSeconds()}`;
 
         const matches = helpers.getMatches(hoursMinSecStr, /(?<hour>\d+)\:(?<min>\d+)(\:(?<sec>\d+))?\s?(?<timezone>.*)?/, true);
         if (matches == null || matches.length == 0) throw new Exception('Time: Unable to parse time input', { hoursMinSecStr });
@@ -19,7 +19,7 @@ export class Time {
             min = parseInt(matches[0]?.min) || 0,
             sec = parseInt(matches[0]?.sec) || 0;
 
-        if (timezone != null) {
+        if (timezone != null && !isNow) {
             this.offsetHours = Time.getTimezoneOffset(timezone, baseTimestamp);
             hour = hour - Math.floor(this.offsetHours);
             min = Math.abs(min - (this.offsetHours % 1) * 60);
@@ -30,19 +30,19 @@ export class Time {
     }
 
     public get hour() {
-        return Math.floor(this.totalSeconds / 3600);
+        return Time.totalSecondsToHoursMinutesSeconds(this.totalSeconds).hours;
     }
     public set hour(value: number) {
         this.totalSeconds = this.totalSeconds - Math.floor(this.totalSeconds / 60 / 60) * 60 * 60 + value * 60 * 60;
     }
     public get min() {
-        return Math.floor((this.totalSeconds % 3600) / 60);
+        return Time.totalSecondsToHoursMinutesSeconds(this.totalSeconds).minutes;
     }
     public set min(value: number) {
         this.totalSeconds = this.totalSeconds - Math.floor((this.totalSeconds % 3600) / 60) * 60 + value * 60;
     }
     public get sec() {
-        return Math.floor(this.totalSeconds % 60);
+        return Time.totalSecondsToHoursMinutesSeconds(this.totalSeconds).seconds;
     }
     public set sec(value: number) {
         this.totalSeconds = this.totalSeconds - Math.floor(this.totalSeconds % 60) + value;
@@ -83,20 +83,23 @@ export class Time {
         return a == b ? 0 : a > b ? 1 : a < b ? -1 : null;
     }
 
-    public toString(timezone?: string, baseTimestamp?: Date, includeSeconds = false) {
-        const sec = includeSeconds == true && this.sec != null ? `:${StringExtensions.padNumber.call(Math.abs(this.sec), 2)}` : '';
+    public toString(timezone?: string, baseTimestamp?: Date, includeSeconds = false, asDuration = false) {
         let tzOffset = this.offsetHours;
-        if (timezone != null) tzOffset = Time.getTimezoneOffset(timezone, this.toDate(baseTimestamp || this.baseTimestamp));
         const tz = timezone || this.timezone;
+        if (tz != null) tzOffset = Time.getTimezoneOffset(tz, this.toDate(baseTimestamp || this.baseTimestamp));
         const tzAbbr = Time.getTimeZoneName(tz, baseTimestamp || this.baseTimestamp, true);
         const tzStr = tz != null ? ` ${tzAbbr}` : '';
 
         let isNegative = this.totalSeconds < 0;
 
-        const sign = isNegative ? '-' : '',
-            h = Math.abs(this.hour + Math.floor(tzOffset)),
-            m = Math.abs(this.min + (tzOffset % 1) * 60);
-        return `${sign}${StringExtensions.padNumber.call(h, 2)}:${StringExtensions.padNumber.call(m, 2)}${sec}${tzStr}`;
+        const newTime = Time.totalSecondsToHoursMinutesSeconds(this.totalSeconds + tzOffset * 60 * 60);
+
+        let sign = isNegative ? '-' : '',
+            h = StringExtensions.padNumber.call(Math.abs(asDuration ? newTime.hours : newTime.hours % 24), 2),
+            m = StringExtensions.padNumber.call(Math.abs(newTime.minutes), 2),
+            s = includeSeconds == true && this.sec != null ? `:${StringExtensions.padNumber.call(Math.abs(newTime.seconds), 2)}` : '';
+
+        return `${sign}${h}:${m}${s}${tzStr}`;
     }
 
     public static getTimezoneOffset(timezone: string, hereDate = new Date()) {
@@ -125,6 +128,14 @@ export class Time {
         if (inAbbreviation && !ret.startsWith('GMT')) ret = StringExtensions.getAbbreviation.call(ret);
 
         return ret;
+    }
+
+    public static totalSecondsToHoursMinutesSeconds(totalSeconds: number) {
+        return {
+            hours: Math.floor(totalSeconds / 3600),
+            minutes: Math.floor((totalSeconds % 3600) / 60),
+            seconds: Math.floor(totalSeconds % 60),
+        };
     }
 
     public static readonly TimeZones = [
