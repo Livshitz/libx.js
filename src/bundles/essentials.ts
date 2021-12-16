@@ -8,6 +8,7 @@ import { ObjectHelpers, objectHelpers } from '../helpers/ObjectHelpers';
 import { objectExtensions } from '../extensions/ObjectExtensions';
 import { BitwiseEnumHelper } from '../helpers/BitwiseEnumHelper';
 import { ObjectId } from '../helpers/ObjectId';
+import { Time } from '../modules/Time';
 // import { Deferred } from 'concurrency.libx.js';
 // export * as LibxJS from '../types/interfaces';
 
@@ -23,6 +24,7 @@ const libxBase = {
     di,
     enum: BitwiseEnumHelper,
     objectId: ObjectId,
+    Time,
 };
 
 const exLibx = objectExtensions.extend(libxBase, objectHelpers);
