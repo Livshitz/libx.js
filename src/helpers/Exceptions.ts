@@ -38,6 +38,10 @@ export class Exception extends Error {
             if (isNull || isFalse) throw new exceptionType(message, metadata);
         }
     }
+
+    public toString() {
+        return (this.message += '\n\tMetadata: ' + this.metadata);
+    }
 }
 
 export class ErrorNotFound extends Exception {
