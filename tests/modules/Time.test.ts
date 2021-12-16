@@ -52,6 +52,13 @@ test('Time.formDate - UTC', () => {
     expect(output.toString(null, baseDate)).toEqual('07:03');
 });
 
+test.only('Time.formDate - With TZ', () => {
+    let output = Time.formDate(baseDateDTS, timezone);
+    expect(output.toString(null)).toEqual('11:43 IDT');
+    output = Time.formDate(baseDate, timezone);
+    expect(output.toString(null)).toEqual('07:03 IST');
+});
+
 test('Time.parse', () => {
     const output = new Time('14:43');
     expect(output.isUTC()).toEqual(true);
