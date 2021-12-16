@@ -11,32 +11,51 @@ test('Time - basic', () => {
     expect(output.toString(timezone, baseDate)).toEqual('14:00 IST');
     expect(output.toString(timezone, baseDateDTS)).toEqual('15:00 IDT');
 
-    output = new Time(`12:00`, baseDate);
+    output = new Time(`12:00`, null, baseDate);
     expect(output.toString()).toEqual('12:00');
 
-    output = new Time(`12:00`, baseDateDTS);
+    output = new Time(`12:00`, null, baseDateDTS);
     expect(output.toString()).toEqual('12:00');
 
-    output = new Time(`12:00`, baseDateDTS, timezone);
+    output = new Time(`12:00`, timezone, baseDateDTS);
     expect(output.toString()).toEqual('12:00 IDT');
 });
 
 test('Time - Timezone with fractional offset', () => {
-    let output = new Time(`19:35`, new Date(1639659695089), 'Asia/Yangon');
+    let output = new Time(`19:35`, 'Asia/Yangon', new Date(1639659695089));
     expect(output.toString('Asia/Jerusalem')).toEqual('15:05 IST');
 
-    output = new Time(`16:45`, new Date(1639665852052), 'Asia/Jerusalem');
+    output = new Time(`16:45`, 'Asia/Jerusalem', new Date(1639665852052));
     expect(output.toString('Asia/Yangon')).toEqual('21:15 MT');
 });
 
 test('Time - Timezone with overflow', () => {
-    let output = new Time(`19:35`, new Date(1639659695089), 'Australia/Sydney');
+    let output = new Time(`19:35`, 'Australia/Sydney', new Date(1639659695089));
     expect(output.toString('Asia/Jerusalem')).toEqual('10:35 IST');
 });
 
 test('Time - Default Now', () => {
-    let output = new Time(null, new Date(1639668944470), 'Australia/Sydney');
+    let output = new Time(null, 'Australia/Sydney', new Date(1639668944470));
     expect(output.toString()).toEqual('02:35 AEDT');
+});
+
+test('Time - Check fromDate vs localized', () => {
+    let a = new Time('12:00', null, baseDateDTS);
+    const date = new Date(baseDateDTS);
+    date.setHours(12, 0, 0);
+    let b = Time.formDate(date);
+    expect(a.toString(timezone)).toEqual(b.toString(timezone));
+    expect(a.totalSeconds).toEqual(b.totalSeconds);
+});
+
+test('Time.parse', () => {
+    let output = Time.parse('12:01:30 Asia/Jerusalem');
+    expect(output).toMatchObject({
+        hours: 12,
+        minutes: 1,
+        seconds: 30,
+        timezone: 'Asia/Jerusalem',
+    });
 });
 
 test('Time - add', () => {
@@ -52,11 +71,11 @@ test('Time.formDate - UTC', () => {
     expect(output.toString(null, baseDate)).toEqual('07:03');
 });
 
-test.only('Time.formDate - With TZ', () => {
-    let output = Time.formDate(baseDateDTS, timezone);
-    expect(output.toString(null)).toEqual('11:43 IDT');
-    output = Time.formDate(baseDate, timezone);
-    expect(output.toString(null)).toEqual('07:03 IST');
+test('Time.formDate - With TZ', () => {
+    let output = Time.formDate(baseDateDTS);
+    expect(output.toString(timezone)).toEqual('14:43 IDT');
+    output = Time.formDate(baseDate);
+    expect(output.toString(timezone)).toEqual('09:03 IST');
 });
 
 test('Time.parse', () => {
@@ -66,11 +85,11 @@ test('Time.parse', () => {
 });
 
 test('Time - toString & parse', () => {
-    const time = Time.formDate(baseDateDTS, timezone);
-    let output = new Time(time.toString(), baseDateDTS, timezone);
+    const time = Time.formDate(baseDateDTS);
+    let output = new Time(time.toString(), timezone, baseDateDTS);
     expect(output.toString()).toEqual('11:43 IDT');
 
-    output = new Time(time.toString(), baseDateDTS); // input considered as UTC
+    output = new Time(time.toString(), null, baseDateDTS); // input considered as UTC
     expect(output.toString()).toEqual('11:43');
 });
 
@@ -133,7 +152,7 @@ describe('timezones', () => {
     });
 
     test('Time.parse', () => {
-        const output = new Time('14:43 IST', null, timezone);
+        const output = new Time('14:43 IST', timezone, null);
         expect(output.toString()).toEqual('14:43 IST');
     });
 
