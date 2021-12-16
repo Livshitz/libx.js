@@ -5,28 +5,23 @@ import Exception from '../helpers/Exceptions';
 export class Time {
     private offsetHours = 0;
     public totalSeconds = 0;
-    constructor(hoursMinSecStr?: string, private baseTimestamp?: Date, public timezone?: string) {
+    constructor(hoursMinSecStr?: string, public timezone?: string, private baseTimestamp?: Date) {
         // notice: timestamp is Date object without timezone info
         const isNow = hoursMinSecStr == null;
         baseTimestamp = baseTimestamp != null ? new Date(baseTimestamp.getTime()) : new Date();
 
         if (isNow) hoursMinSecStr = `${baseTimestamp.getUTCHours()}:${baseTimestamp.getUTCMinutes()}:${baseTimestamp.getUTCSeconds()}`;
 
-        const matches = helpers.getMatches(hoursMinSecStr, /(?<hour>\d+)\:(?<min>\d+)(\:(?<sec>\d+))?\s?(?<timezone>.*)?/, true);
-        if (matches == null || matches.length == 0) throw new Exception('Time: Unable to parse time input', { hoursMinSecStr });
-
-        let hour = parseInt(matches[0]?.hour) || 0,
-            min = parseInt(matches[0]?.min) || 0,
-            sec = parseInt(matches[0]?.sec) || 0;
+        const parts = Time.parse(hoursMinSecStr);
 
         if (timezone != null && !isNow) {
             this.offsetHours = Time.getTimezoneOffset(timezone, baseTimestamp);
-            hour = hour - Math.floor(this.offsetHours);
-            min = Math.abs(min - (this.offsetHours % 1) * 60);
+            parts.hours = parts.hours - Math.floor(this.offsetHours);
+            parts.minutes = Math.abs(parts.minutes - (this.offsetHours % 1) * 60);
         }
-        baseTimestamp.setUTCHours(hour, min, sec);
+        baseTimestamp.setUTCHours(parts.hours, parts.minutes, parts.seconds);
 
-        this.totalSeconds = (sec || 0) + min * 60 + hour * 60 * 60;
+        this.totalSeconds = (parts.seconds || 0) + parts.minutes * 60 + parts.hours * 60 * 60;
     }
 
     public get hour() {
@@ -61,12 +56,24 @@ export class Time {
 
     public isUTC = () => this.offsetHours == 0;
 
-    public static formDate(date: Date, timezone?: string) {
+    public static parse(input: string) {
+        const matches = helpers.getMatches(input, /(?<hour>\d+)\:(?<min>\d+)(\:(?<sec>\d+))?\s?(?<timezone>.*)?/, true);
+        if (matches == null || matches.length == 0) throw new Exception('Time: Unable to parse time input', { input });
+
+        return {
+            hours: parseInt(matches[0]?.hour) || 0,
+            minutes: parseInt(matches[0]?.min) || 0,
+            seconds: parseInt(matches[0]?.sec) || 0,
+            timezone: matches[0]?.timezone,
+        };
+    }
+
+    public static formDate(date: Date) {
         const hour = date.getUTCHours();
         const min = date.getUTCMinutes();
         const sec = date.getUTCSeconds();
 
-        const ret = new Time(`${hour}:${min}:${sec}`, date, timezone);
+        const ret = new Time(`${hour}:${min}:${sec}`, null, date);
         return ret;
     }
 
@@ -86,9 +93,12 @@ export class Time {
     public toString(timezone?: string, baseTimestamp?: Date, includeSeconds = false, asDuration = false) {
         let tzOffset = this.offsetHours;
         const tz = timezone || this.timezone;
-        if (tz != null) tzOffset = Time.getTimezoneOffset(tz, this.toDate(baseTimestamp || this.baseTimestamp));
-        const tzAbbr = Time.getTimeZoneName(tz, baseTimestamp || this.baseTimestamp, true);
-        const tzStr = tz != null ? ` ${tzAbbr}` : '';
+        let tzStr = '';
+        if (tz != null) {
+            tzOffset = Time.getTimezoneOffset(tz, this.toDate(baseTimestamp || this.baseTimestamp));
+            const tzAbbr = Time.getTimeZoneName(tz, baseTimestamp || this.baseTimestamp, true);
+            tzStr = ` ${tzAbbr}`;
+        }
 
         let isNegative = this.totalSeconds < 0;
 
