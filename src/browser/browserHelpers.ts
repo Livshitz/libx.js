@@ -6,7 +6,7 @@ import { network } from '../modules/Network';
 declare const jQuery: any;
 export class BrowserHelpers {
     public urlParams;
-    public isiOS = () => /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    public isiOS = () => /iPad|iPhone|iPod/.test(navigator.userAgent) && !(<any>window).MSStream;
     public lastSeen: number;
 
     public constructor() {
