@@ -34,6 +34,7 @@ class mod {
         let app = (this.app = express());
         // app.use(bodyParser.json());
         // app.use(bodyParser.urlencoded({ extended: true }));
+
         app.use(
             formidable({
                 encoding: 'utf-8',
@@ -60,21 +61,22 @@ class mod {
         });
         app.post('/echoFormdata', (req, res) => {
             let data = req.body || req.fields || req.files;
-            log.v('request: "/echoFormdata": req.fields: ', req.data);
+            log.v('request: "/echoFormdata": req.fields: ', data);
             res.status(200).send(JSON.stringify(data));
             log.v('----------');
         });
         app.post('/echoUpload', (req, res) => {
             let data = req.body || req.fields || req.files;
+            const files = req.files as { [fieldname: string]: any };
             let file = null;
             let content = null;
             log.v('request: "/echoUpload": req.fields: ', req.fields);
-            log.v('request: "/echoUpload": req.files: ', helpers.jsonify(req.files, true));
+            log.v('request: "/echoUpload": req.files: ', helpers.jsonify(files, true));
             if (req.files) {
-                content = fs.readFileSync(req.files.file.path).toString();
-                fs.writeFileSync(this.options.uploadFolder + '/' + 'tmp_' + req.files.file.name, content);
+                content = fs.readFileSync(files.file.path).toString();
+                fs.writeFileSync(this.options.uploadFolder + '/' + 'tmp_' + files.file.name, content);
             }
-            res.status(200).json({ data: data, size: req.files.file.size, content: content });
+            res.status(200).json({ data: data, size: files.file.size, content: content });
             log.v('----------');
         });
         this.server = app.listen(this.options.port, () => {
