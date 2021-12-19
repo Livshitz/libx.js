@@ -3,10 +3,10 @@ import { ProxyCache } from '../../src/modules/ProxyCache';
 import { LocalStorageMock } from '../helpers/LocalStorageMock';
 
 let localStorage: LocalStorageMock = null;
-const existingObj = { a: 1, b: 2, c: { ca: 11, cb: 22 } };
 let proxyCache: ProxyCache;
 
 beforeEach(() => {
+    const existingObj = { a: 1, b: 2, c: { ca: 11, cb: 22 } };
     localStorage = new LocalStorageMock();
     localStorage['test/a'] = 10;
     localStorage['test/x'] = 111;

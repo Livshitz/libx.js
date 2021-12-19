@@ -10,11 +10,14 @@ import { objectHelpers } from '../helpers/ObjectHelpers';
 import { di } from '../modules/dependencyInjector';
 import { log } from '../modules/log';
 import { Crypto } from '../modules/Crypto';
-import prompts from './prompts';
+import { Prompts } from './Prompts';
+import { DynamicProperties } from '../types/interfaces';
+import { Callbacks } from '../modules/Callbacks';
 
 export class Node {
-    public args = argv;
-    public prompts = prompts;
+    public args: any = argv;
+    public prompts = new Prompts();
+    private onExitCallbacks = new Callbacks();
 
     public getFiles = (query = '**/*', options?) => {
         let p = helpers.newPromise<string[]>();
@@ -187,35 +190,53 @@ export class Node {
             });
     };
 
-    public onExit = (exitHandler = null) => {
-        process.stdin.resume(); //so the program will not close instantly
+    public onExit = (exitHandler: (options?: Object, exitCode?: number) => void = null) => {
+        // process.stdin.resume(); //so the program will not close instantly
         var __alreadyHandledExit = false;
+        this.onExitCallbacks.subscribe(exitHandler);
 
-        function wrapper(options, exitCode) {
+        const wrapper = (options, exitCode) => {
             try {
                 if (__alreadyHandledExit) return;
                 __alreadyHandledExit = true;
-                if (exitHandler) exitHandler(options, exitCode);
+                this.onExitCallbacks.trigger(options, exitCode).finally(() => {
+                    log.d('libx.node:onExit: Completed handling exit, now really exiting');
+                    process.exit();
+                });
             } catch (ex) {
-                console.error('libx.node:onExit: Failed to run handler. ex: ', ex);
+                console.error('libx.node:onExit: Failed to run exit handlers. ex: ', ex);
+                process.exit(1);
             } finally {
-                process.exit();
             }
+        };
+
+        if (this.onExitCallbacks.getSubscribersCount() == 1) {
+            // register to this event only once
+            const relevantEvents = [
+                'beforeExit',
+                'exit',
+                'uncaughtException',
+                'unhandledRejection',
+                'SIGHUP',
+                'SIGINT',
+                'SIGQUIT',
+                'SIGILL',
+                'SIGTRAP',
+                'SIGABRT',
+                'SIGBUS',
+                'SIGFPE',
+                'SIGUSR1',
+                'SIGSEGV',
+                'SIGUSR2',
+                'SIGTERM',
+            ];
+            relevantEvents.forEach((evt) => process.on(evt, wrapper.bind(exitHandler)));
         }
-
-        //do something when app is closing
-        process.on('exit', wrapper.bind(exitHandler, { cleanup: true }));
-
-        //catches ctrl+c event
-        process.on('SIGINT', wrapper.bind(exitHandler, { exit: true }));
-
-        // catches "kill pid" (for example: nodemon restart)
-        process.on('SIGUSR1', wrapper.bind(exitHandler, { exit: true }));
-        process.on('SIGUSR2', wrapper.bind(exitHandler, { exit: true }));
-
-        //catches uncaught exceptions
-        process.on('uncaughtException', wrapper.bind(exitHandler, { exit: true }));
     };
+
+    public cleanExit() {
+        return process.kill(process.pid, 'SIGINT');
+    }
 
     public readJsonFileStripComments<T = any>(filePath: string, decryptKey?: string): T {
         let fileContent = fs.readFileSync(filePath)?.toString();

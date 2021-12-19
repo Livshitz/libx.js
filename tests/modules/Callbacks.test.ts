@@ -1,3 +1,4 @@
+import { delay } from 'concurrency.libx.js';
 import { Callbacks } from '../../src/modules/Callbacks';
 
 beforeEach(() => {});
@@ -7,6 +8,18 @@ test('subscribe-simple-positive', (done) => {
     c.subscribe((arg) => {
         expect(true).toEqual(true);
         done();
+    });
+    setTimeout(() => {
+        c.trigger(1);
+    }, 10);
+});
+
+test('subscribe-simple-ctor-positive', (done) => {
+    const c = new Callbacks({
+        cb: (arg) => {
+            expect(true).toEqual(true);
+            done();
+        },
     });
     setTimeout(() => {
         c.trigger(1);
@@ -97,6 +110,23 @@ test('clearAll-positive', (done) => {
     setTimeout(() => {
         done();
     }, 20);
+});
+
+test('subscribe-trigger-all-promise', async (done) => {
+    const c = new Callbacks();
+    let counter = { a: 0, b: 0 };
+    c.subscribe(async (arg) => {
+        await delay(5);
+        counter.a = 1;
+    });
+    c.subscribe(async (arg) => {
+        await delay(5);
+        counter.b = 1;
+    });
+    await c.trigger();
+
+    expect(counter).toEqual({ a: 1, b: 1 });
+    done();
 });
 
 // test('-positive', () => {

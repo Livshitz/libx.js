@@ -13,7 +13,7 @@ export interface IDeferredJS {
 
 export type Key = string | number | symbol;
 
-export type ObjectLiteral = { [key: string]: any };
+export type ObjectLiteral<T = any> = { [key: string]: T };
 export type DynamicProperties<T = any> = { [P in keyof T]: T[P] };
 export const DynamicProps = class {
     [key: string]: any;
@@ -88,7 +88,7 @@ export interface IBrowserHelpers {
     injectCss(filename: string);
     injectScript(src: string, onReady: Function);
     isIframe(): Boolean;
-    isiOS: Boolean;
+    isiOS(): Boolean;
     jQueryExt: {
         setup($);
         applyReveal();
@@ -98,11 +98,12 @@ export interface IBrowserHelpers {
         broadcast(channelName, message);
     };
     querialize(obj: Object, avoidPrefix: Boolean): string;
-    queryString(name: string): string;
+    queryString(name: string, url?: string): string;
     reload();
     uploadFile(folderName: string, filesInput: any, callback?: Function);
     urlParams();
     urlize(obj: Object): string;
+    toUnicode(input: string): string;
 }
 
 export interface IFirebase {
@@ -186,7 +187,7 @@ export interface IModuleNode {
     mkdirRecursiveSync(path: string): void;
     rmdirRecursiveSync(path: string): void;
     catchErrors(handler?: Function, shouldExit?: boolean): void;
-    onExit(exitHandler?: Function): void;
+    onExit(exitHandler?: (options?: Object, exitCode?: number) => void): void;
     getFilenameWithoutExtension(filePath: string): string;
     getProjectConfig(containingFolder: string, secret: string): any;
     getFiles(query?: string, options?: JSONObject): string[];
@@ -297,6 +298,6 @@ export interface ILodash extends _.LoDashStatic {
     // fp(): any;
 }
 
-export class DependencyInjector {
-    constructor() {}
-}
+// export class DependencyInjector {
+//     constructor() {}
+// }

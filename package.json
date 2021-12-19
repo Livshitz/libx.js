@@ -1,6 +1,6 @@
 {
     "name": "libx.js",
-    "version": "1.6.2",
+    "version": "2.16.1",
     "description": "",
     "main": "./build/bundles/essentials",
     "types": "./globals.d.ts",
@@ -21,6 +21,7 @@
         "browser/**",
         "node/**",
         "modules/**",
+        "tools/**",
         "src/**",
         "*.js",
         "*.ts"
@@ -29,19 +30,25 @@
     "license": "ISC",
     "dependencies": {
         "axios": "^0.21.3",
-        "concurrency.libx.js": "^0.3.5",
+        "concurrency.libx.js": "^1.0.1",
+        "cors": "^2.8.5",
         "crypto-js": "^4.0.0",
         "detect.js": "^2.2.3",
-        "di.libx.js": "^2.1.0",
+        "di.libx.js": "^2.1.1",
+        "form-data": "^4.0.0",
+        "glob": "^7.2.0",
         "json-bump": "^1.0.2",
         "lodash": "^4.17.21",
         "prompt": "^1.1.0",
         "rxjs": "^6.6.3",
         "rxjs-compat": "^6.6.7",
-        "xregexp": "^5.0.2"
+        "xregexp": "^5.0.2",
+        "yargs": "^17.2.1"
     },
     "devDependencies": {
         "@types/crypto-js": "^4.0.2",
+        "@types/express": "^4.17.13",
+        "@types/express-formidable": "^1.2.0",
         "@types/jest": "^26.0.24",
         "@types/lodash": "^4.14.171",
         "@types/node": "^16.3.3",
@@ -49,7 +56,6 @@
         "express": "^4.17.1",
         "express-formidable": "^1.2.0",
         "firebase": "^8.7.1",
-        "form-data": "^4.0.0",
         "jest": "^26.6.1",
         "jest-junit": "^12.0.0",
         "jest-junit-reporter": "^1.1.0",

@@ -28,9 +28,8 @@ export class StringExtensions {
         }).replace(/\s+|\-/g, '');
     };
 
-    public static padNumber = function (width, z) {
+    public static padNumber = function (width: number, z = '0') {
         var args = arguments;
-        z = z || '0';
         var n = this + '';
         return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
     };
@@ -99,5 +98,9 @@ export class StringExtensions {
 
     public static replaceAt = function (index, replacement) {
         return this.substr(0, index) + replacement + this.substr(index + replacement.length);
+    };
+
+    public static getAbbreviation = function () {
+        return this.match(/\b([A-Z])/g).join('');
     };
 }

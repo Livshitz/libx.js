@@ -22,7 +22,7 @@ test('DeepProxy-get-simple', () => {
     };
     const proxy = DeepProxy.create(obj, {
         get: (target, path, key) => {
-            expect(path).toEqual('/a');
+            expect(path).toEqual('');
             expect(key).toEqual('a');
         },
         set: (target, path, key, value) => {},
@@ -39,7 +39,7 @@ test('DeepProxy-get-symbol', () => {
 
     const proxy = DeepProxy.create(obj, {
         get: (target, path, key) => {
-            expect(path).toEqual('/Symbol(a)');
+            expect(path).toEqual('');
             expect(key).toEqual(keySymbol);
         },
         set: (target, path, key, value) => {},
@@ -64,7 +64,7 @@ test('DeepProxy-toString', () => {
 test('DeepProxy-get-deep', () => {
     const proxy = DeepProxy.create(existingObj, {
         get: (target, path, key) => {
-            expect(path).toEqual('/a');
+            expect(path).toEqual('');
             expect(key).toEqual('a');
         },
         set: (target, path, key, value) => {},
@@ -81,11 +81,11 @@ test('DeepProxy-get-additional', () => {
                 case 'c':
                     return;
                 case 'e':
-                    expect(path).toEqual('/c/e');
+                    expect(path).toEqual('/c');
                     expect(key).toEqual('e');
                     break;
                 case 'ea':
-                    expect(path).toEqual('/c/e/ea');
+                    expect(path).toEqual('/c/e');
                     expect(key).toEqual('ea');
                     break;
                 default:
@@ -93,7 +93,7 @@ test('DeepProxy-get-additional', () => {
             }
         },
         set: (target, path, key, value) => {
-            expect(path).toEqual('/c/e');
+            expect(path).toEqual('/c');
             expect(key).toEqual('e');
             expect(value.ea).toEqual(555);
         },
@@ -109,7 +109,7 @@ test('DeepProxy-set-positive', () => {
     const proxy = DeepProxy.create(existingObj, {
         get: (target, path, key) => {},
         set: (target, path, key, value) => {
-            expect(path).toEqual('/a');
+            expect(path).toEqual('');
             expect(key).toEqual('a');
             expect(value).toEqual(2);
         },
@@ -124,7 +124,7 @@ test('DeepProxy-delete-positive', () => {
     const proxy = DeepProxy.create(existingObj, {
         get: (target, path, key) => {},
         set: (target, path, key, value) => {
-            expect(path).toEqual('/a');
+            expect(path).toEqual('');
             expect(key).toEqual('a');
             expect(value).toEqual(null);
         },
@@ -141,7 +141,7 @@ test('DeepProxy-delete-null', () => {
         {
             get: (target, path, key) => {},
             set: (target, path, key, value) => {
-                expect(path).toEqual('/b');
+                expect(path).toEqual('');
                 expect(key).toEqual('b');
                 expect(value).toEqual(null);
             },
@@ -156,17 +156,14 @@ test('DeepProxy-delete-null', () => {
 test('DeepProxy-set-object (should proxify it as well)', () => {
     const proxy = DeepProxy.create(existingObj, {
         get: (target, path, key) => {},
-        set: (target, path, key, value) => {
-            // expect(path).toEqual('/a/b');
-            // expect(key).toEqual('b');
-            // expect(value).toEqual(2);
-        },
+        set: (target, path, key, value) => {},
     });
 
     proxy.a = { b: 2 };
-    // proxy.a.b = 3;
     const param = proxy.a.b;
     expect(param).toEqual(2);
+    expect(existingObj.a?.b).toEqual(2);
+    expect(existingObj.a.isProxy).toBeUndefined();
     expect(proxy.a.isProxy).toEqual(true);
 });
 
@@ -174,7 +171,7 @@ test('DeepProxy-setAndGetArray', () => {
     const proxy = DeepProxy.create(existingObj, {
         get: (target, path, key) => {},
         set: (target, path, key, value) => {
-            expect(path).toEqual('/b');
+            expect(path).toEqual('');
             expect(key).toEqual('b');
         },
     });
@@ -188,7 +185,7 @@ test('DeepProxy-merge-primitives', () => {
     const proxy = DeepProxy.create(existingObj, {
         get: (target, path, key) => {},
         set: (target, path, key, value) => {
-            expect(path).toEqual('/b');
+            expect(path).toEqual('');
             expect(key).toEqual('b');
             expect(value).toEqual(str);
         },

@@ -14,7 +14,18 @@ import join from 'lodash/join';
 import has from 'lodash/has';
 import { extensions } from '../extensions/index';
 import { ILog, log } from '../modules/log';
-import { IAny, IBrowser, ICallbacks, IDeferred, IDeferredJS, IExtensions, ILodash, IModuleNode, IPromise } from '../types/interfaces';
+import {
+    IAny,
+    IBrowser,
+    ICallbacks,
+    IDeferred,
+    IDeferredJS,
+    IExtensions,
+    ILodash,
+    IModuleNode,
+    IPromise,
+    Mapping,
+} from '../types/interfaces';
 import { ObjectHelpers, objectHelpers } from './ObjectHelpers';
 import { StringExtensions } from '../extensions/StringExtensions';
 
@@ -54,7 +65,8 @@ export class Helpers {
     public waitUntil: (conditionFn: any, callback?: any, interval?: number, timeout?: number) => Promise<any>;
     public measurements: typeof concurrency.measurements;
     public measure: typeof concurrency.measurements.measure;
-    public getMeasure: typeof concurrency.measurements.getMeasure;
+    public startMeasure: typeof concurrency.measurements.startMeasure;
+    public peekMeasure: typeof concurrency.measurements.peekMeasure;
     public getMeasureAndReset: typeof concurrency.measurements.getMeasureAndReset;
     public chainTasks: (tasks: any, eachCb?: any) => Promise<void>;
     public sleep: (millis: any) => Promise<unknown>;
@@ -371,6 +383,47 @@ export class Helpers {
         return (!avoidPrefix ? '?' : '') + str.join('&');
     }
 
+    public toUnicode(input: string): string {
+        var unicodeString = '';
+        for (var i = 0; i < input.length; i++) {
+            var theUnicode = input.charCodeAt(i).toString(16).toUpperCase();
+            while (theUnicode.length < 4) {
+                theUnicode = '0' + theUnicode;
+            }
+            theUnicode = '\\u' + theUnicode;
+            unicodeString += theUnicode;
+        }
+        return unicodeString;
+    }
+
+    public parseUrl(url: string): parseUrlReturn {
+        const match = this.getMatches(
+            url,
+            /((?<protocol>\w+):\/\/(?<domainName>[\w\d]+)\.(?<domainExt>[\w\d]+))?\/(?<path>[^\?]+)\/?([\?\&](?<queryParams>.*))?/g,
+            true
+        )?.[0];
+
+        if (match == null) return null;
+
+        if (match.path?.endsWith('/')) match.path = match.path.slice(0, -1);
+
+        const params = match.queryParams?.split('&').reduce((agg, x) => {
+            const parts = x.split('=');
+            agg[parts[0]] = parts[1] || true;
+            return agg;
+        }, {});
+
+        return {
+            ...match,
+            segments: match.path?.split('/'),
+            params,
+        };
+        // libx.getMatches(
+        //     'http://domain.com/my-service/resource/id112233?queryParam1=1&queryParam2=aa',
+        //     /(?<protocol>\w+):\/\/(?<domain>[\w\d]+\.[\w\d]+)\/(?<path>.+)\/?[\?\&](?<queryParams>.*)|[\?\&](?<queryParams>.*)/g, true);
+        // this.getMatche('')
+    }
+
     private initConcurrency() {
         this.concurrency = concurrency;
         this.Deferred = concurrency.Deferred;
@@ -383,7 +436,8 @@ export class Helpers {
         this.waitUntil = concurrency.waitUntil;
         this.measurements = concurrency.measurements;
         this.measure = this.measurements.measure;
-        this.getMeasure = this.measurements.getMeasure;
+        this.startMeasure = this.measurements.startMeasure;
+        this.peekMeasure = this.measurements.peekMeasure;
         this.getMeasureAndReset = this.measurements.getMeasureAndReset;
         this.chainTasks = concurrency.chain.chainTasks;
         this.sleep = concurrency.sleep;
@@ -409,6 +463,17 @@ export class Helpers {
 
 export const helpers = new Helpers();
 
+type parseUrlReturn = {
+    domainExt: string;
+    domainName: string;
+    protocol: string;
+    path: string;
+    queryParams: string;
+    segments: string[];
+    params: Mapping<string>;
+};
+
+/*
 export interface IHelper {
     _: ILodash;
     $: IAny;
@@ -469,6 +534,7 @@ export interface IHelper {
     shuffle(a: Array<any>): Array<any>;
     sleep(time: number, callback?: Function): Promise<void>;
     spawnHierarchy(path: string): any;
+    getObjectHash(obj: object): string;
     stringifyOnce(obj: Object, replacer?: (key: string, value: any) => any, indent?: number): string;
     throttle(func: Function, wait: number, immediate?: Boolean): Function;
     type(obj: any): string;
@@ -479,13 +545,14 @@ export interface IHelper {
     node: IModuleNode;
     fileStreamToBuffer(readStream): Promise<Buffer>;
     enumToArray(_enum: any): string[];
-    getDeep(obj: any, path: string): any;
+    getDeep(obj: any, path: string, delimiter?: string): any;
     dictToArray(dict: any);
     arrayToDic(arr: any);
     getObjectByPath(s: string, obj?: any);
     keys(obj: any): string[];
     values(obj: any): string[];
 }
+*/
 
 /*
 this._projectConfig = null;

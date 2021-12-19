@@ -6,8 +6,11 @@ import { extensions } from '../extensions/';
 import { di } from '../modules/dependencyInjector';
 import { ObjectHelpers, objectHelpers } from '../helpers/ObjectHelpers';
 import { objectExtensions } from '../extensions/ObjectExtensions';
+import { BitwiseEnumHelper } from '../helpers/BitwiseEnumHelper';
+import { ObjectId } from '../helpers/ObjectId';
+import { Time } from '../modules/Time';
 // import { Deferred } from 'concurrency.libx.js';
-export * as LibxJS from '../types/interfaces';
+// export * as LibxJS from '../types/interfaces';
 
 if (!(<any>global)._libx_avoidExtensions) extensions.applyAllExtensions();
 
@@ -19,6 +22,9 @@ const libxBase = {
     extensions,
     log,
     di,
+    enum: BitwiseEnumHelper,
+    objectId: ObjectId,
+    Time,
 };
 
 const exLibx = objectExtensions.extend(libxBase, objectHelpers);

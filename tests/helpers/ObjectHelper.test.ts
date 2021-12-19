@@ -121,6 +121,15 @@ test('clone-positive-2', () => {
     param.a = 10; // modify source
     expect(output).toEqual({ a: 1 });
 });
+test('clone-positive-symbbol', () => {
+    const keySymbol = Symbol('a');
+    const param = {};
+    param[keySymbol] = 1;
+
+    let output = objectHelpers.clone(param);
+    param[keySymbol] = 10; // modify source
+    expect(objectHelpers.isEmptyObject(output)).toEqual(false);
+});
 
 test('extend-positive-deep', () => {
     let param = { a: 1, b: { c: 3 } };
@@ -240,7 +249,7 @@ test('getDeep-positive-slashAtStart', async () => {
 test('spawnHierarchy-positive', () => {
     let param = 'a.b.c';
     let output = objectHelpers.spawnHierarchy(param);
-    expect(output).toEqual({ a: { b: { c: {} } } });
+    expect(output).toEqual({ a: { b: { c: null } } });
 });
 test('spawnHierarchy-existinObj-positive', () => {
     let param = 'a.b.c';
@@ -250,10 +259,10 @@ test('spawnHierarchy-existinObj-positive', () => {
         },
     };
     let output = objectHelpers.spawnHierarchy(param, obj);
-    expect(output).toEqual({ a: { b: { c: {} }, d: 4 } });
+    expect(output).toEqual({ a: { b: { c: null }, d: 4 } });
 
     let output2 = objectHelpers.spawnHierarchy('a.b.e', obj);
-    expect(output2).toEqual({ a: { b: { c: {}, e: {} }, d: 4 } });
+    expect(output2).toEqual({ a: { b: { c: null, e: null }, d: 4 } });
 });
 test('spawnHierarchy-putValue-positive', () => {
     let param = 'a.b.c';
@@ -346,6 +355,18 @@ test('keyValueToObject-positive-withSubObject', async () => {
         },
     };
     expect(output).toEqual(expected);
+});
+
+test('getObjectHash-positive-simple', () => {
+    let param = { a: 1 };
+    let output = objectHelpers.getObjectHash(param);
+    expect(output).toEqual('-1442153986');
+});
+
+test('getObjectHash-positive-null', () => {
+    let param = null;
+    let output = objectHelpers.getObjectHash(param);
+    expect(output).toEqual('');
 });
 
 describe('other', () => {
