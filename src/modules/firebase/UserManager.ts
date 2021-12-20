@@ -36,7 +36,7 @@ export class UserManager {
         if (this.firebase.auth == null) throw new Error('Firebase.Auth is not defined. Did you import "firebase-auth" package?');
         this.auth = this.firebase.auth();
 
-        // this.events.broadcast({ step: 'init' }, 'user');
+        // this.events.emit({ step: 'init' }, 'user');
 
         // this.onSignIn.subscribe(() => {
         //     this.observeProfile();
@@ -214,7 +214,7 @@ export class UserManager {
         if (user == null) {
             this.data = null;
             this.onSignOut.trigger(this.data);
-            this.events.broadcast({ step: 'signed-out' }, 'user');
+            this.events.emit({ step: 'signed-out' }, 'user');
             delete localStorage.loggedInUserId;
             this.onReady.trigger(null);
             return;
@@ -245,7 +245,7 @@ export class UserManager {
 
         localStorage.loggedInUserId = user.uid;
 
-        this.events.broadcast({ step: 'signed-in' }, 'user');
+        this.events.emit({ step: 'signed-in' }, 'user');
         this.onSignIn.trigger(this.data);
 
         this.onReady.trigger(this.data);

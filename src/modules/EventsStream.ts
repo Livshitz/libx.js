@@ -37,7 +37,7 @@ export class EventsStream<T = any> {
     public constructor(initialEvents?: IEvent<T>[]) {
         from<IEvent<T>[]>(initialEvents || [])
             .pipe()
-            .subscribe((i) => this.broadcast(i.payload, i.type));
+            .subscribe((i) => this.emit(i.payload, i.type));
     }
 
     public subscribe(action: Action<T>, predicate?: Predicate<T>, channel?: OneOfChannels<T>) {
@@ -50,7 +50,7 @@ export class EventsStream<T = any> {
         return (channel || this.channels.future).pipe(filter(predicate), take(1)).subscribe(action);
     }
 
-    public broadcast(payload: T, type?: string) {
+    public emit(payload: T, type?: string) {
         var ev = this.newEvent(payload, type);
         this.channels.history.next(ev);
         this.channels.state.next(ev);

@@ -20,7 +20,7 @@ test('subscribe-state-positive', async (done) => {
             return event?.payload?.test == 1;
         }
     );
-    mod.broadcast({ test: 1 });
+    mod.emit({ test: 1 });
 });
 
 test('subscribe-state-emitCurrent-noTrigger-positive', async (done) => {
@@ -87,7 +87,7 @@ test('subscribe-future-noEmit-withTrigger-positive', async (done) => {
         },
         mod.channels.future
     );
-    mod.broadcast({ test: 1 });
+    mod.emit({ test: 1 });
 });
 
 test('subscribe-withTypePredicate-positive', async (done) => {
@@ -111,9 +111,9 @@ test('subscribe-withTypePredicate-positive', async (done) => {
     mod.subscribe(onDbStateChange, (event) => event.type == 'database', mod.channels.future);
     mod.subscribe(onCatchAll, null, mod.channels.future);
 
-    mod.broadcast({ test: 111 }, 'network');
-    mod.broadcast({ test: 222 }, 'database');
-    mod.broadcast({ test: 0 });
+    mod.emit({ test: 111 }, 'network');
+    mod.emit({ test: 222 }, 'database');
+    mod.emit({ test: 0 });
 });
 
 test('subscribeOnce-defaultFuture-positive', async (done) => {
@@ -130,8 +130,8 @@ test('subscribeOnce-defaultFuture-positive', async (done) => {
             return true;
         }
     );
-    mod.broadcast({ test: 999 });
-    mod.broadcast({ test: 0 });
+    mod.emit({ test: 999 });
+    mod.emit({ test: 0 });
 });
 
 test('subscribeOnce-state-positive', async (done) => {
@@ -149,8 +149,8 @@ test('subscribeOnce-state-positive', async (done) => {
         },
         mod.channels.state
     );
-    mod.broadcast({ test: 999 });
-    mod.broadcast({ test: 0 });
+    mod.emit({ test: 999 });
+    mod.emit({ test: 0 });
 });
 
 test('unsubscribe-viaHandler-positive', async (done) => {
@@ -167,10 +167,10 @@ test('unsubscribe-viaHandler-positive', async (done) => {
             return event?.payload?.test == 1;
         }
     );
-    mod.broadcast({ test: 10 });
-    mod.broadcast({ test: 20 });
+    mod.emit({ test: 10 });
+    mod.emit({ test: 20 });
     handler.unsubscribe();
-    mod.broadcast({ test: 3 });
+    mod.emit({ test: 3 });
     setTimeout(done, 10);
 });
 
@@ -188,10 +188,10 @@ test('unsubscribe-viaModule-positive', async (done) => {
             return event?.payload?.test == 1;
         }
     );
-    mod.broadcast({ test: 10 });
-    mod.broadcast({ test: 20 });
+    mod.emit({ test: 10 });
+    mod.emit({ test: 20 });
     mod.unsubscribe(handler);
-    mod.broadcast({ test: 3 });
+    mod.emit({ test: 3 });
     setTimeout(done, 10);
 });
 
