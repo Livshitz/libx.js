@@ -38,7 +38,7 @@ export class Firebase {
         if (callback != null) {
             this.listen('.info/connected', (isConnected) => {
                 callback(isConnected);
-                // this.events.broadcast({ step: 'connection-changed', value: isConnected }, 'firebase');
+                // this.events.emit({ step: 'connection-changed', value: isConnected }, 'firebase');
             });
         }
         return ret;

@@ -1,0 +1,75 @@
+<html>
+    <head>
+        <meta http-equiv="cache-control" content="max-age=0" />
+        <meta http-equiv="cache-control" content="no-cache" />
+        <meta http-equiv="expires" content="0" />
+        <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+        <meta http-equiv="pragma" content="no-cache" />
+        <!-- execute the script 'browsrify.sh' to compile libx to browser-friendly bundle -->
+        
+        <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-database.js"></script>
+        <script src="../.tmp/forBrowser.min.js?1"></script>
+        <style>
+            body { background-color: #333; color: #eee; }
+        </style>
+    </head>
+    <body>
+        <h3>Examples</h3>
+        <p>Open devtools to see console logs. Type `libx` to use it in browser.</p>
+
+        <p>Run local https server: 
+            <code>http-server -S -C .tmp/cert.pem -K .tmp/key.pem -o</code>
+            <br/> 
+            open https://127.0.0.1:8080/
+        </p>
+    </body>
+    <script>
+        console.log('- page loaded!');
+        
+        // Example how to require a module, initialize it from JS and call it's functions:
+        libx.di.require((log) => {
+            log.isBrowser = true;
+            log.filterLevel = log.severities.Debug;
+            // log.isDebug = true;
+            libx.log.isShowTime = false;
+            log.isShowStacktrace = true;
+            log.d('hello from browser via libx.js!');
+        });
+
+        libx.di.register(libx.log, 'log');
+
+        firebaseConfig = {
+            apiKey: "AIzaSyAN6h-T7Xfz8n3UzSa3_2dXafi7HjeOU54",
+            authDomain: "feedox-1113.firebaseapp.com",
+            databaseURL: "https://feedox-1113.firebaseio.com",
+            projectId: "feedox-1113",
+            storageBucket: "feedox-1113.appspot.com",
+            messagingSenderId: "112060408130",
+            appId: "1:112060408130:web:0298e1c143c8c090b6e8db"
+        };
+        firebaseApp = window.firebase.initializeApp(firebaseConfig);
+        f = new libx.Firebase(firebaseApp, firebase);
+
+        obj = { a:1, b:2, c:3 }; 
+        fp = new libx.FireProxy(f, '/test', obj, { isSyncOnInit: true });
+        fp.onReady.subscribe((proxy)=> {
+            libx.log.v('FireProxy is ready', proxy)
+            // libx.log.v('fp.proxy.c.aa.hello: ', fp.proxy.c.aa.hello);
+        });
+
+        um = new libx.UserManager(f);
+        const onReadyHandler = um.onReady.subscribe(data=> {
+            if (data == null || libx.isEmptyObject(data)) {
+                libx.log.v('UserManager:onReady: Ready but singed out');
+                return;
+            }
+            alert(data.public.displayName);
+            um.onReady.unsubscribe(onReadyHandler);
+            // if (data && data.public) {
+            // }
+        })
+
+    </script>
+</html>
