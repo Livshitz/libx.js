@@ -16,6 +16,7 @@ psm.sh
 
 packages/*
 
+.yarn
 .npmrc
 build
 .tmp
