@@ -1,6 +1,6 @@
 {
     "name": "libx.js",
-    "version": "2.17.4",
+    "version": "2.18.0",
     "description": "",
     "main": "./build/bundles/essentials",
     "types": "./globals.d.ts",
@@ -62,7 +62,7 @@
         "pax.libx.js": "^0.5.1",
         "ts-jest": "^26.4.3",
         "ts-node": "^10.1.0",
-        "typescript": "^4.0.5"
+        "typescript": "^4.5.4"
     },
     "not-in-use-dependencies": {
         "bignumber.js": "^8.0.1",

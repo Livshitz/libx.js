@@ -18,6 +18,7 @@ packages/*
 
 .yarn
 .npmrc
+.yarn
 build
 .tmp
 junit.xml
@@ -29,3 +30,5 @@ compiled/**/*.js
 compiled/**/*.js.map
 **/ts/**/*.js
 **/ts/**/*.js.map
+
+examples/forBrowser_test.html

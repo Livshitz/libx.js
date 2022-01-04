@@ -157,6 +157,10 @@ test('date.addMinutes-positive', () => {
     let output = dataset.date.addMinutes(6);
     expect(output.getMinutes()).toBe((dataset.date.getMinutes() + 6) % 60);
 });
+test('date.addDays-positive', () => {
+    let output = dataset.date.addDays(1);
+    expect(output.getDay()).toBe(dataset.date.getDay() + 1);
+});
 test('date.addMilliseconds-positive', () => {
     let output = dataset.date.addMilliseconds(6);
     expect(output.getMilliseconds()).toBe((dataset.date.getMilliseconds() + 6) % 1000);

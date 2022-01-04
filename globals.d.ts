@@ -88,6 +88,7 @@ declare namespace LibxJSExtensions {
         toJson(): string;
         addHours(h: number): Date;
         addMinutes(m: number): Date;
+        addDays(days: number): Date;
         addMilliseconds(ms: number): Date;
         toUTC(): Date;
         toISOStringUTC(isUTC?: Boolean): Date;

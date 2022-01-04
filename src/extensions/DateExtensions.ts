@@ -178,6 +178,12 @@ export class DateExtensions {
         return this.addMilliseconds(m * 60 * 1000);
     };
 
+    public static addDays = function (days: number) {
+        var date = new Date(this.valueOf());
+        date.setDate(date.getDate() + days);
+        return date;
+    };
+
     public static addMilliseconds = function (ms) {
         let ret = new Date(this);
         ret.setTime(ret.getTime() + ms);
