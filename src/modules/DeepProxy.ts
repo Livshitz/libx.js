@@ -1,4 +1,5 @@
 import { helpers } from '../helpers';
+import { Exception } from '../helpers/Exceptions';
 import { objectHelpers } from '../helpers/ObjectHelpers';
 import { Key } from '../types/interfaces';
 import { log } from './log';
@@ -7,12 +8,14 @@ export default class DeepProxy<T extends object = any> {
     public target: T;
     public input: T;
     public proxy: T = null;
+    public _skip = false;
     private preproxy = new WeakMap();
     private delimiter = '/';
 
     public constructor(target: T = <T>null, private handler: IHandler, private isDeep = true) {
         this.input = target;
         this.proxy = this.proxify(target, '', true);
+        if ((<any>this.input)?.isProxy) throw new Exception('DeepProxy:ctor: input cannot be proxy!');
         this.target = target;
     }
 
@@ -26,8 +29,6 @@ export default class DeepProxy<T extends object = any> {
         if (this.handler?.set) {
             this.handler.set(target, path, key, value);
         }
-
-        objectHelpers.getDeep(this.input, path)[key] = value;
 
         if (this.isDeep && !(<any>value)?.isProxy) {
             // && objectHelpers.isObject(value)) {
@@ -45,11 +46,21 @@ export default class DeepProxy<T extends object = any> {
         return true;
     }
 
+    public async skip(cb: Function, condition?: boolean) {
+        if (cb == null || typeof cb != 'function') return;
+        if (this._skip) return;
+        if (condition == null) condition = true;
+        if (condition) this._skip = true;
+        await cb();
+        if (condition) this._skip = false;
+    }
+
     private wrapHandler(path) {
         const wrapper = {
             get: (target: object, key: Key) => {
                 if (key == 'isProxy') return true;
                 if (key == 'toString') return () => helpers.stringifyOnce(target, null, 2);
+                if (key == 'toJSON') return () => helpers.stringifyOnce(target, null, 2);
                 // if (target[key] == null) return null;
 
                 let ret = null;
@@ -62,6 +73,11 @@ export default class DeepProxy<T extends object = any> {
             },
 
             set: (target: object, key: Key, value: T, receiver: any) => {
+                // set the input with value before proxifying it
+                this.skip(() => {
+                    objectHelpers.getDeep(this.input, path)[key] = value;
+                });
+
                 if (this.handler?.preSet) {
                     const preSetRet = this.handler.preSet(target, path, key, value);
                     if (preSetRet == false) return null;
