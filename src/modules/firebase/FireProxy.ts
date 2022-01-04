@@ -49,17 +49,18 @@ export class FireProxy<T extends Object = any> {
                     //     return this._value;
                     // },
                     set: async (target: T, path: string, key: Key, value: any) => {
-                        this.setterHandler(target, path, key, value);
+                        this.setterHandler(target, path, key, value, this._options.saveDeferMS);
                     },
                 },
             });
             this.proxy = this._proxyCache.proxy;
         } else {
+            console.log('---------');
             this._deepProxy = new DeepProxy(
                 this.target,
                 {
-                    set: (target, path, key, value) => {
-                        this.setterHandler(target, path, key, value);
+                    preSet: (target, path, key, value) => {
+                        this.setterHandler(target, path, key, value, this._options.saveDeferMS);
                     },
                 },
                 true
@@ -80,8 +81,10 @@ export class FireProxy<T extends Object = any> {
 
             // this._value = data;
             this.skip(() => {
-                objectHelpers.merge(this.proxy, data);
-                objectHelpers.merge(this.target, data);
+                this._deepProxy.skip(() => {
+                    objectHelpers.merge(this.target, data);
+                    objectHelpers.merge(this.proxy, data);
+                });
             });
             this._isSynced = true;
 
@@ -99,6 +102,7 @@ export class FireProxy<T extends Object = any> {
 
     public async skip(cb: Function, condition?: boolean) {
         if (cb == null || typeof cb != 'function') return;
+        if (this._skip) return;
         if (condition == null) condition = true;
         if (condition) this._skip = true;
         await cb();
@@ -137,7 +141,7 @@ export class FireProxy<T extends Object = any> {
         if (this._skip) return;
         if (path == null) path = '';
         log.d('FireProxy:set', { path, key, value });
-        const parentPath = `${this.objectPath}/` + StringExtensions.removeLastPart.call(path);
+        const parentPath = `${this.objectPath}/` + path; // StringExtensions.removeLastPart.call(path);
         const obj = key != null ? { [key]: value } : value;
         // console.log('FireProxy:set', parentPath, obj);
 
