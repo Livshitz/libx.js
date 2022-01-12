@@ -87,10 +87,17 @@ export default class DeepProxy<T extends object = any> {
             },
 
             deleteProperty: (target: object, key: string) => {
+                log.debug('deleteProperty: ', key);
                 if (Reflect.has(target, key)) {
+                    let deleted = null;
                     this.unproxy(target, key);
-                    Reflect.deleteProperty(this.input, key);
-                    let deleted = Reflect.deleteProperty(target, key);
+
+                    delete objectHelpers.getDeep(this.input, path)[key];
+
+                    deleted = Reflect.deleteProperty(target, key);
+                    if (deleted && this.handler?.preSet) {
+                        this.handler.preSet(target, path, key, null);
+                    }
                     if (deleted && this.handler?.set) {
                         this.handler.set(target, path, key, null);
                     }
