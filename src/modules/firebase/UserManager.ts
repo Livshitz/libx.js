@@ -62,6 +62,8 @@ export class UserManager {
         let p = helpers.newPromise();
         // Sign in Firebase using popup auth and Google as the identity provider.
         var provider = new this.firebaseModule.firebaseProvider.auth.GoogleAuthProvider();
+        provider.addScope('profile');
+        provider.addScope('email');
 
         if (this.auth.currentUser != null && this.auth.currentUser.isAnonymous)
             this.auth.currentUser
