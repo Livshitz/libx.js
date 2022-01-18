@@ -15,8 +15,8 @@ export class BrowserHelpers {
             return;
         }
 
+        /* This is causing infinite loop if navigated to `?1`, and not clear what it's value..
         const _self = this;
-
         (window.onpopstate = function () {
             var match,
                 pl = /\+/g, // Regex for replacing addition symbol with a space
@@ -29,6 +29,7 @@ export class BrowserHelpers {
             _self.urlParams = {};
             while ((match = search.exec(query))) _self.urlParams[decode(match[1])] = decode(match[2]);
         })();
+        */
 
         if (typeof jQuery != 'undefined') {
             jQuery(document).ready(function () {
