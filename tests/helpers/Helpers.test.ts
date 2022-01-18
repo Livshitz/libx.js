@@ -335,6 +335,13 @@ describe('helpers.parseUrl', () => {
         let output = helpers.parseUrl('my-service!@#');
         expect(output).toEqual(null);
     });
+
+    test('helpers.stringToColour-negative', () => {
+        let output = helpers.stringToColour('blabla!@#');
+        expect(output).toEqual('#2453c7');
+        output = helpers.stringToColour('blabla!@');
+        expect(output).toEqual('#dfc871');
+    });
 });
 
 // test('helpers.-positive', () => {

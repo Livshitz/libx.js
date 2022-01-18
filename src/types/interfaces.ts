@@ -165,6 +165,7 @@ export interface IModuleNetwork {
     helpers: {
         fixUrl(url: string, prefixUrl: string): string;
         parseUrl(url: string): string;
+        stringToColour(str: string): string;
         cleanUrl(url: string): string;
         // getFormData(object: Object): any;
         formDataToString(formDataObj: Object): string;
