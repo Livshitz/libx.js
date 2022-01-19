@@ -55,7 +55,6 @@ export class FireProxy<T extends Object = any> {
             });
             this.proxy = this._proxyCache.proxy;
         } else {
-            console.log('---------');
             this._deepProxy = new DeepProxy(
                 this.target,
                 {

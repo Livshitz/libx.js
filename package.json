@@ -1,6 +1,6 @@
 {
     "name": "libx.js",
-    "version": "2.20.2",
+    "version": "2.21.0",
     "description": "",
     "main": "./build/bundles/essentials",
     "types": "./globals.d.ts",
@@ -11,6 +11,7 @@
         "main": "node build/Main.js",
         "bundle": "ts-node tools/browserify.ts --filename='libx.min' --minify && du -sh dist/libx.min.js",
         "test": "jest",
+        "test:debug": "node --inspect ./node_modules/jest/bin/jest.js --runInBand --colors --verbose",
         "test:ci": "jest --ci --reporters=default --reporters=jest-junit --coverage --coverageReporters=cobertura --coverageReporters=html",
         "bump": "./bump.sh"
     },

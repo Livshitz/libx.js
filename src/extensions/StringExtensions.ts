@@ -1,4 +1,5 @@
 import capitalize from 'lodash/capitalize';
+import { helpers } from '../helpers';
 import { objectHelpers } from '../helpers/ObjectHelpers';
 
 export class StringExtensions {
@@ -76,12 +77,19 @@ export class StringExtensions {
 
         var obj = arguments[0];
         if (obj !== null && typeof obj === 'object') {
+            const keys = helpers.getMatch(ret, /\{\{(.*?)\}\}/g);
+            for (const key of keys) {
+                const val = objectHelpers.getDeep(obj, key, '.');
+                ret = ret.replace('{{' + key + '}}', val);
+            }
+            /*
             var arr = objectHelpers.getCustomProperties(obj);
             for (var i = 0; i < arr.length; i++) {
                 var x = arr[i];
                 ret = ret.replace('{{' + x + '}}', obj[x]);
                 // ret = ret.replace(new RegExp('\{' + x + '\}', 'g'), obj[x])
             }
+            */
         } else {
             for (var _i = 0; _i < arguments.length - 0; _i++) {
                 args[_i] = arguments[_i + 0];
