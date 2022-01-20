@@ -76,12 +76,16 @@ export class StringExtensions {
 
         var obj = arguments[0];
         if (obj !== null && typeof obj === 'object') {
+            var isRemoveMissing = arguments[1] ?? false;
             const matches = ret?.matchAll(/\{\{(.*?)\}\}/g);
             const keys = [...matches]?.map((m) => m[1]);
             // const keys = ret.match(/\{\{(.*?)\}\}/g);
             for (const key of keys) {
-                const val = objectHelpers.getDeep(obj, key, '.');
-                if (val == null) continue;
+                let val = objectHelpers.getDeep(obj, key, '.');
+                if (val == null) {
+                    if (!isRemoveMissing) continue;
+                    val = '';
+                }
                 ret = ret.replace('{{' + key + '}}', val);
             }
         } else {

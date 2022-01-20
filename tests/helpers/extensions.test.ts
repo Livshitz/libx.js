@@ -16,6 +16,30 @@ test('string.format-positive', () => {
     expect(output).toBe('abc 123');
 });
 
+test('string.format-with-object', () => {
+    let source = 'abc {{aa}}-{{bb}}';
+    let output = source.format({ aa: 1, bb: 2 });
+    expect(output).toBe('abc 1-2');
+});
+
+test('string.format-with-object-missing', () => {
+    let source = 'abc {{aa}}-{{bb}}';
+    let output = source.format({ aa: 1 });
+    expect(output).toBe('abc 1-{{bb}}');
+});
+
+test('string.format-with-object-missing-remove', () => {
+    let source = 'abc {{aa}}-{{bb}}';
+    let output = source.format({ aa: 1 }, true);
+    expect(output).toBe('abc 1-');
+});
+
+test('string.format-with-arr-missing-remove', () => {
+    let source = 'abc {{0}}-{{1}}';
+    let output = source.format(1);
+    expect(output).toBe('abc 1-{{1}}');
+});
+
 test('string.capitalize-positive', () => {
     let source = 'abc def';
     let output = source.capitalize();
