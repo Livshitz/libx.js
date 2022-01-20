@@ -138,7 +138,7 @@ export class Helpers {
 
     public formatify(objectWithFormat: {}, ...args): {} {
         var str = JSON.stringify(objectWithFormat);
-        str = StringExtensions.format.call(str, objectHelpers.merge(objectWithFormat, ...args));
+        str = StringExtensions.format.call(str, objectHelpers.merge(objectWithFormat, ...args), args?.[1]);
         return JSON.parse(str);
     }
 
