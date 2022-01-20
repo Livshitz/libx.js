@@ -138,7 +138,8 @@ export class Helpers {
 
     public formatify(objectWithFormat: {}, ...args): {} {
         var str = JSON.stringify(objectWithFormat);
-        str = StringExtensions.format.call(str, objectHelpers.merge(objectWithFormat, ...args), args?.[1]);
+        const trailingArg = args?.length > 1 ? args[args.length - 1] : null;
+        str = StringExtensions.format.call(str, objectHelpers.merge(objectWithFormat, ...args), trailingArg);
         return JSON.parse(str);
     }
 

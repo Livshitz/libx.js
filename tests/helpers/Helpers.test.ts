@@ -268,14 +268,14 @@ test('helpers.formatify - multi level vars', () => {
     expect(output).toEqual('aa 222 bb 111 - {notToBeReplaced}');
 });
 
-test.only('helpers.formatify - kee[] missing vars', () => {
+test('helpers.formatify - keep missing vars', () => {
     let output = helpers.formatify('aa {{x.toBeReplaced}} bb {{toBeReplaced}} - {notToBeReplaced}', {
         toBeReplaced: 111,
     });
     expect(output).toEqual('aa {{x.toBeReplaced}} bb 111 - {notToBeReplaced}');
 });
 
-test.only('helpers.formatify - remove missing vars', () => {
+test('helpers.formatify - remove missing vars', () => {
     let output = helpers.formatify(
         'aa {{x.toBeReplaced}} bb {{toBeReplaced}} - {notToBeReplaced}',
         {
