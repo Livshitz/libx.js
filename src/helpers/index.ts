@@ -15,6 +15,8 @@ import has from 'lodash/has';
 import { extensions } from '../extensions/index';
 import { ILog, log } from '../modules/log';
 import {
+    DynamicProperties,
+    DynamicProps,
     IAny,
     IBrowser,
     ICallbacks,
@@ -37,21 +39,39 @@ export { Deferred };
 // this.fp.sortBy = require("lodash/fp/sortBy");
 // this.fp.flow = require("lodash/fp/flow");
 
+const __ = {
+    forEach,
+    mixin,
+    transform,
+    reduce,
+    map,
+    mapKeys,
+    mapValues,
+    each,
+    toPairs,
+    repeat,
+    join,
+    has,
+};
+
+export interface _ILodash {
+    VERSION?: string;
+    forEach: typeof forEach;
+    mixin: typeof mixin;
+    transform: typeof transform;
+    reduce: typeof reduce;
+    map: typeof map;
+    mapKeys: typeof mapKeys;
+    mapValues: typeof mapValues;
+    each: typeof each;
+    toPairs: typeof toPairs;
+    repeat: typeof repeat;
+    join: typeof join;
+    has: typeof has;
+    [key: string]: any;
+}
 export class Helpers {
-    public _ = {
-        forEach,
-        mixin,
-        transform,
-        reduce,
-        map,
-        mapKeys,
-        mapValues,
-        each,
-        toPairs,
-        repeat,
-        join,
-        has,
-    };
+    public _: _ILodash = __;
 
     public concurrency: typeof concurrency;
     public Deferred: typeof concurrency.Deferred;
