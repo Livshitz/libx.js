@@ -98,6 +98,8 @@ export class Log implements ILog {
 
         const argsStr = JSON.stringify(args || '');
 
+        if (typeof msg == 'object' && (<any>msg)?.constructor == Object) msg = JSON.stringify(msg);
+
         if (this.isBrowser) {
             var _msg = `${prefix}${time} ${msg} %c${trace}`; //${color != null ? '%c' : ''}
             if (args.length == 0) console[func].call(console, _msg, 'font-size:8px;');
