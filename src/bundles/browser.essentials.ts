@@ -15,4 +15,5 @@ declare global {
     }
 }
 
-window.libx = libx;
+if (window.libx == null) window.libx = libx;
+else window.libx = <any>{ ...window.libx, ...libx };
