@@ -1,7 +1,7 @@
 export type ID = string;
 
 export class ObjectId {
-    public static new(timestamp = new Date().getTime(), randomize = false) {
+    public static new(timestamp = new Date().getTime(), randomize = true) {
         var timestampHex = ((timestamp / 1000) | 0).toString(16);
         return (
             timestampHex +
