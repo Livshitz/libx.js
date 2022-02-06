@@ -14,3 +14,12 @@ test('objectid-new-and-parse', () => {
     expect(output.getTime()).toEqual(timestamp);
     expect(output).toEqual(new Date('2021-12-06T22:33:12.000Z'));
 });
+test('objectid-with-trailing-zeros', () => {
+    const param = ObjectId.new(new Date('2022-02-05T22:00:00.000Z').getTime());
+    expect(param).toEqual('61fef3600000000000000000');
+});
+test('objectid-with-randomized-trail', () => {
+    const param = ObjectId.new(new Date('2022-02-05T22:00:00.000Z').getTime(), true);
+    expect(param.startsWith('61fef36')).toEqual(true);
+    expect(param).not.toEqual('61fef3600000000000000000');
+});

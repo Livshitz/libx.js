@@ -1,13 +1,13 @@
 export type ID = string;
 
 export class ObjectId {
-    public static new(timestamp = new Date().getTime()) {
+    public static new(timestamp = new Date().getTime(), randomize = false) {
         var timestampHex = ((timestamp / 1000) | 0).toString(16);
         return (
             timestampHex +
             'xxxxxxxxxxxxxxxx'
-                .replace(/[x]/g, function () {
-                    return ((Math.random() * 16) | 0).toString(16);
+                .replace(/[x]/g, () => {
+                    return randomize ? ((Math.random() * 16) | 0).toString(16) : '0';
                 })
                 .toLowerCase()
         );
