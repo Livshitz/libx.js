@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-export = (function () {
+const req = (function () {
     // var require = libx.browser.require;
 
     if (typeof window == 'undefined') return require;
@@ -321,3 +321,8 @@ export = (function () {
 
     return mod;
 })();
+
+if (window.libx == null) window.libx = {};
+window.libx.require = req;
+
+export = req;
