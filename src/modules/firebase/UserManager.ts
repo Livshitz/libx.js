@@ -58,12 +58,15 @@ export class UserManager {
     }
 
     //#region Signin methods
-    public async signInGoogle() {
+    public async signInGoogle(customScopes?: string) {
         let p = helpers.newPromise();
         // Sign in Firebase using popup auth and Google as the identity provider.
         var provider = new this.firebaseModule.firebaseProvider.auth.GoogleAuthProvider();
         provider.addScope('profile');
         provider.addScope('email');
+        if (customScopes != null) {
+            customScopes.split(',').map((x) => provider.addScope(x));
+        }
 
         if (this.auth.currentUser != null && this.auth.currentUser.isAnonymous)
             this.auth.currentUser
