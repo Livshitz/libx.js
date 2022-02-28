@@ -56,6 +56,8 @@ export class ObjectHelpers {
                 }
             });
 
+            if (this.isDate(object)) ret = object;
+
             if (skipEmpty && this.isEmpty(ret)) return null;
             else return ret;
         };
