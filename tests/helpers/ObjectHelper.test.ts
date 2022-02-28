@@ -27,6 +27,11 @@ test('diff-skipEmpty-negative', () => {
     let output = objectHelpers.diff(param, { a: 1, c: { cb: 22 } }, false);
     expect(output).toEqual({ b: 2, c: { ca: 11 }, empty: {} });
 });
+test('diff-dates-positive', () => {
+    let param = { a: new Date('2022-02-28T20:47:27.366Z') };
+    let output = objectHelpers.diff(param, { a: new Date() });
+    expect(output).toEqual(param);
+});
 
 test('isObject-positive', () => {
     let param = {};
