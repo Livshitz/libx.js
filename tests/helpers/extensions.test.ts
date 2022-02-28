@@ -129,6 +129,11 @@ test('string.getAbbreviation-positive', () => {
     let output = source.getAbbreviation();
     expect(output).toBe('IST');
 });
+test('string.getAbbreviation-negative', () => {
+    let source = 'Israel';
+    let output = source.getAbbreviation();
+    expect(output).toBe('I');
+});
 
 // [[[[[[[[[[  Date Extensions  ]]]]]]]]]]
 
