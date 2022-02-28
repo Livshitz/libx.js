@@ -107,6 +107,7 @@ export class StringExtensions {
     };
 
     public static getAbbreviation = function () {
-        return this.match(/\b([A-Z])/g).join('');
+        if (this == null || this === '') return null;
+        return this.match(/\b([A-Z])/g)?.join('') ?? this[0].toUpperCase();
     };
 }
