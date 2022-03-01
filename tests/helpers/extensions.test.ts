@@ -135,6 +135,23 @@ test('string.getAbbreviation-negative', () => {
     expect(output).toBe('I');
 });
 
+test('string.isDateString-positive-iso', () => {
+    let output = '2022-03-01T18:03:36.606Z'.isDateString();
+    expect(output).toBe(true);
+});
+test('string.isDateString-negative-iso', () => {
+    let output = '2022-03-01T'.isDateString();
+    expect(output).toBe(false);
+});
+test('string.isDateString-positive-short', () => {
+    let output = '01/01/2021'.isDateString();
+    expect(output).toBe(true);
+});
+test('string.isDateString-positive-shorter', () => {
+    let output = '01/01/21'.isDateString();
+    expect(output).toBe(true);
+});
+
 // [[[[[[[[[[  Date Extensions  ]]]]]]]]]]
 
 test('date.toUtc-positive', () => {
@@ -146,6 +163,14 @@ test('date.toUtc-positive', () => {
 test('date.isValid-positive', () => {
     let output = dataset.date.isValid();
     expect(output).toBe(true);
+});
+test('date.isValid-null-value-simple', () => {
+    let output = new Date('invalid').isValid();
+    expect(output).toBe(false);
+});
+test('date.isValid-null-value-tricky', () => {
+    let output = new Date('invalid...1').isValid();
+    expect(output).toBe(true); // The Date object itself is actually valid, the string itself should be validated
 });
 test('date.isValid-negative', () => {
     let source = new Date(1231231231312312313100);

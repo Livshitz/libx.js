@@ -2,7 +2,7 @@ export class DateExtensions {
     public static isValid = function () {
         // An invalid date object returns NaN for getTime() and NaN is the only
         // object not strictly equal to itself.
-        return this.getTime() === this.getTime();
+        return this.getTime() === this.getTime() && this.getTime() != new Date(null).getTime();
     };
 
     public static dateFormat = (function () {

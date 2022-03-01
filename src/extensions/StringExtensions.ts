@@ -110,4 +110,17 @@ export class StringExtensions {
         if (this == null || this === '') return null;
         return this.match(/\b([A-Z])/g)?.join('') ?? this[0].toUpperCase();
     };
+
+    public static isDateString = function (checkShortFormat = true) {
+        const isISO8601 = /(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))/.test(
+            this
+        );
+        if (isISO8601) return true;
+        if (checkShortFormat) {
+            const isShortFormat = /^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(\d{2,4})$/.test(this);
+            if (isShortFormat) return true;
+        }
+
+        return false;
+    };
 }
