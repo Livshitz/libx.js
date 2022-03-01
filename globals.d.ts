@@ -78,6 +78,7 @@ declare namespace LibxJSExtensions {
         isEmpty(input?: string): boolean;
         removeLastPart(delimiter = '/'): string;
         getAbbreviation(): string;
+        isDateString(checkShortFormat = true): string;
     }
 
     interface IExtensionsDate {
