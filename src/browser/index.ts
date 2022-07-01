@@ -7,7 +7,7 @@ const browserInfo = getBrowserInfo();
 
 export const browser = {
     helpers: browserHelpers,
-    require: <(url) => Promise<any>>req,
+    require: <(url, callbackOrIsModule?: Function | boolean) => Promise<any>>req,
     detect,
     getBrowserInfo,
     browserInfo,
