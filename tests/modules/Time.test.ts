@@ -5,7 +5,7 @@ const baseDate = new Date(1639379000000); // Mon Dec 13 2021 09:03:20 GMT+0200 (
 const timezone = 'Asia/Jerusalem';
 
 test('Time - basic', () => {
-    let output = new Time(`12:00`);
+    let output = new Time(`12:00`, null, baseDate);
     expect(output.toString(null, baseDate)).toEqual('12:00');
     expect(output.toString(timezone)).toEqual('14:00 IST');
     expect(output.toString(timezone, baseDate)).toEqual('14:00 IST');
@@ -152,7 +152,7 @@ describe('timezones', () => {
     });
 
     test('Time.parse', () => {
-        const output = new Time('14:43 IST', timezone, null);
+        const output = new Time('14:43 IST', timezone, baseDate);
         expect(output.toString()).toEqual('14:43 IST');
     });
 
