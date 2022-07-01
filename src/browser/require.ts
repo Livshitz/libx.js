@@ -187,7 +187,7 @@ const req = (function () {
                         }
                         if (!cache[cacheid]) {
                             var source = compiler ? compiler(request.responseText) : request.responseText;
-                            load(descriptor, cache, pwd, source);
+                            load(descriptor, cache, pwd, source, typeof callback == 'boolean');
                         }
 
                         !callback && onLoad();
@@ -277,7 +277,7 @@ const req = (function () {
         // NOTE If we would strict use mode here, the evaluated code would be forced to be
         //      in strict mode, too.
 
-        function (/*load*/ module /*, cache, pwd, source*/) {
+        function (/*load*/ module /*, cache, pwd, source, isNotModule*/) {
             var global = self;
             var exports = new Object();
             Object.defineProperty(module, 'exports', {
@@ -296,14 +296,20 @@ const req = (function () {
             });
 
             var content = arguments[3];
-            var extra = 'var __moduleUri = "' + module.uri + '";\n';
-            if (!module.uri.endsWith('.js')) {
-                content = 'module.exports = ' + content;
-            }
-            var script = 'function(){\n' + extra + content + '\n}';
-            let wrapper = '(' + script + ')();\n//# sourceURL=' + module.uri;
+            var isNotModule = arguments[4];
 
-            eval(wrapper);
+            if (isNotModule === true) {
+                eval(content);
+            } else {
+                var extra = 'var __moduleUri = "' + module.uri + '";\n';
+                if (!module.uri.endsWith('.js')) {
+                    content = 'module.exports = ' + content;
+                }
+                var script = 'function(){\n' + extra + content + '\n}';
+                let wrapper = '(' + script + ')();\n//# sourceURL=' + module.uri;
+
+                eval(wrapper);
+            }
 
             // var script = '(function(__moduleUri){\n ('+arguments[3]+')}(); \n'
             // arguments[3] = '(' + extra + script+')("' + module.uri + '");\nsourceURL="'+module.uri+'"';
