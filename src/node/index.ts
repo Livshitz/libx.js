@@ -106,6 +106,7 @@ export class Node {
 
     public readJson = (file) => {
         var content = fs.readFileSync(file).toString();
+        if (objectHelpers.isEmptyString(content)) return null;
         return JSON.parse(content);
     };
 
