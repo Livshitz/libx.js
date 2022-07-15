@@ -458,6 +458,23 @@ export class Helpers {
         return colour;
     }
 
+    public for(iteration: (i) => void, max: number, min = 0, step = 1) {
+        // for((i)=> console.log(i), 10, 5, 2)
+        for (let i = min; i < max; i += step) {
+            iteration(i);
+        }
+    }
+
+    public each<T>(arr: T[], iteration: (T, i?: number) => T) {
+        // each(myArr, (x, i)=> console.log(x))
+        let count = 0;
+        for (let item of arr) {
+            iteration(item, count);
+            count++;
+        }
+        return arr;
+    }
+
     private initConcurrency() {
         this.concurrency = concurrency;
         this.Deferred = concurrency.Deferred;
