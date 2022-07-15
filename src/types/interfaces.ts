@@ -170,6 +170,8 @@ export interface IModuleNetwork {
         // getFormData(object: Object): any;
         formDataToString(formDataObj: Object): string;
         params<T = any>(params: any, keys: Object, isArray?: Boolean): T;
+        for(iteration: (i) => void, max: number, min?: number, step?: number);
+        each<T>(arr: T[], iteration: (T, i?: number) => T);
     };
 }
 
