@@ -149,7 +149,7 @@ test('helpers.getMeasure-positive', async () => {
     helpers.startMeasure('test2');
     await helpers.delay(100);
     let output = helpers.startMeasure('test2');
-    expect(output).toBeLessThanOrEqual(120);
+    expect(output).toBeLessThanOrEqual(140);
 });
 
 test('helpers.bufferToArrayBuffer-positive', async () => {
@@ -370,6 +370,19 @@ describe('helpers.parseUrl', () => {
         expect(output).toEqual('#2453c7');
         output = helpers.stringToColour('blabla!@');
         expect(output).toEqual('#dfc871');
+    });
+
+    test('helpers.for-positive', () => {
+        let output = 0;
+        helpers.for((i) => output++, 10, 5, 2);
+        expect(output).toEqual(3);
+    });
+
+    test('helpers.each-positive', () => {
+        let arr = [1, 2, 3, 4, 5];
+        let output = 0;
+        helpers.each(arr, (x) => (output += x));
+        expect(output).toEqual(15);
     });
 });
 

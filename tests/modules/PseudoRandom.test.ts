@@ -108,7 +108,7 @@ test('all-length-positive', async () => {
         }
     });
     console.log('MiddleSquaresPseudoRandomness:', dur); //, arr);
-    expect(dur).toBeLessThanOrEqual(3000);
+    expect(dur).toBeLessThanOrEqual(3200);
 
     dur = await helpers.measure(() => {
         arr = [];
