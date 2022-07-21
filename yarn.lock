@@ -4799,10 +4799,10 @@ di.libx.js@^2.1.1:
     concurrency.libx.js "^0.2.23"
     typescript "^3.9.3"
 
-di.libx.js@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/di.libx.js/-/di.libx.js-2.3.0.tgz#cf37cd40b489c0eab7862fabfa8a3dfbbafec9e7"
-  integrity sha512-jxmxU9YheTiXqUWkIRjtI9WqhvcDcsDuzWZU5j73Xai8cJWYED/+y9ESRAkssJxYuaoN+76W2cvZH3neGTHs8Q==
+di.libx.js@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/di.libx.js/-/di.libx.js-2.3.1.tgz#545b8695189a984d05a47de3fbcb645cf7ca593c"
+  integrity sha512-boZzav5D3CO81hy0yQu32vhtQxEFG04b7m+RqXqAcmkflHYEtCyX9fvT0XKU27haZjzeue3SZLLkieFAucz4aQ==
   dependencies:
     concurrency.libx.js "^0.2.23"
     typescript "^4.7.4"
