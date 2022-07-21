@@ -479,7 +479,7 @@ export class Helpers {
         const lines = csvStr.split(lineDelimiter);
         const result = [];
 
-        var headers = lines[0].split(cellDelimiter);
+        var headers = lines[0].split(cellDelimiter).map((x) => x.trim()); //.replace(/\w[^\w\d]/g, ''));
 
         for (var i = 1; i < lines.length; i++) {
             var obj = {};
