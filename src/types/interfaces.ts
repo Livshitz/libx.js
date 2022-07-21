@@ -104,6 +104,10 @@ export interface IBrowserHelpers {
     urlParams();
     urlize(obj: Object): string;
     toUnicode(input: string): string;
+    stringToColour(str: string): string;
+    for(iteration: (i) => void, max: number, min?: number, step?: number);
+    each<T>(arr: T[], iteration: (T, i?: number) => T);
+    csvToJson(csvStr: string, cellDelimiter?, lineDelimiter?);
 }
 
 export interface IFirebase {
@@ -165,13 +169,10 @@ export interface IModuleNetwork {
     helpers: {
         fixUrl(url: string, prefixUrl: string): string;
         parseUrl(url: string): string;
-        stringToColour(str: string): string;
         cleanUrl(url: string): string;
         // getFormData(object: Object): any;
         formDataToString(formDataObj: Object): string;
         params<T = any>(params: any, keys: Object, isArray?: Boolean): T;
-        for(iteration: (i) => void, max: number, min?: number, step?: number);
-        each<T>(arr: T[], iteration: (T, i?: number) => T);
     };
 }
 

@@ -475,6 +475,26 @@ export class Helpers {
         return arr;
     }
 
+    public csvToJson(csvStr: string, cellDelimiter = ',', lineDelimiter = '\n') {
+        const lines = csvStr.split(lineDelimiter);
+        const result = [];
+
+        var headers = lines[0].split(cellDelimiter);
+
+        for (var i = 1; i < lines.length; i++) {
+            var obj = {};
+            var currentline = lines[i].split(cellDelimiter);
+
+            for (var j = 0; j < headers.length; j++) {
+                obj[headers[j]] = currentline[j].trim();
+            }
+
+            result.push(obj);
+        }
+
+        return result;
+    }
+
     private initConcurrency() {
         this.concurrency = concurrency;
         this.Deferred = concurrency.Deferred;
