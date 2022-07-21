@@ -385,7 +385,7 @@ describe('helpers.parseUrl', () => {
         expect(output).toEqual(15);
     });
 
-    test.only('helpers.csvToJson-positive', () => {
+    test('helpers.csvToJson-positive', () => {
         let input = `id,name,author
                     1,To Kill an Mockingbird,1
                     2,Lord of the Rings,2
@@ -395,6 +395,35 @@ describe('helpers.parseUrl', () => {
             { id: '1', name: 'To Kill an Mockingbird', author: '1' },
             { id: '2', name: 'Lord of the Rings', author: '2' },
             { id: '3', name: 'Hamlet', author: '3' },
+        ]);
+    });
+
+    test('helpers.csvToJson-positive', () => {
+        let input = `Survived,Pclass,Name,Sex,Age,Siblings/Spouses Aboard,Parents/Children Aboard,Fare
+        0,3,Mr. Owen Harris Braund,male,22,1,0,7.25
+        1,1,Mrs. John Bradley (Florence Briggs Thayer) Cumings,female,38,1,0,71.2833`;
+        const output = helpers.csvToJson(input);
+        expect(output).toMatchObject([
+            {
+                Survived: '0',
+                Pclass: '3',
+                Name: 'Mr. Owen Harris Braund',
+                Sex: 'male',
+                Age: '22',
+                'Siblings/Spouses Aboard': '1',
+                'Parents/Children Aboard': '0',
+                Fare: '7.25',
+            },
+            {
+                Survived: '1',
+                Pclass: '1',
+                Name: 'Mrs. John Bradley (Florence Briggs Thayer) Cumings',
+                Sex: 'female',
+                Age: '38',
+                'Siblings/Spouses Aboard': '1',
+                'Parents/Children Aboard': '0',
+                Fare: '71.2833',
+            },
         ]);
     });
 });

@@ -107,7 +107,7 @@ test('cache-isExpired-positive', async () => {
 test('cache-setExpiry-positive', async () => {
     cache = new Cache('prefix', 100, '/', localStorage);
     cache.set('a', 1);
-    cache.setExpiry('a', 300);
+    cache.setExpiry('a', 800);
     expect(cache.get('a')).toEqual(1);
     expect(cache.isExpired('a')).toEqual(false);
     await delay(100);
