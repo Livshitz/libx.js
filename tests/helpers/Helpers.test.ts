@@ -384,6 +384,19 @@ describe('helpers.parseUrl', () => {
         helpers.each(arr, (x) => (output += x));
         expect(output).toEqual(15);
     });
+
+    test.only('helpers.csvToJson-positive', () => {
+        let input = `id,name,author
+                    1,To Kill an Mockingbird,1
+                    2,Lord of the Rings,2
+                    3,Hamlet,3`;
+        const output = helpers.csvToJson(input);
+        expect(output).toMatchObject([
+            { id: '1', name: 'To Kill an Mockingbird', author: '1' },
+            { id: '2', name: 'Lord of the Rings', author: '2' },
+            { id: '3', name: 'Hamlet', author: '3' },
+        ]);
+    });
 });
 
 // test('helpers.-positive', () => {
