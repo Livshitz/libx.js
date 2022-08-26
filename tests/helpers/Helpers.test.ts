@@ -1,3 +1,4 @@
+import { NumberExtensions } from '../../src/extensions/NumberExtensions';
 import { helpers } from '../../src/helpers';
 
 var dataset: any = {};
@@ -522,6 +523,24 @@ describe('helpers.parseUrl', () => {
                 vaad: '',
             },
         ]);
+    });
+
+    test('helpers.median-positive', () => {
+        let input = [99, 20, 35, 40];
+        let output = 37.5;
+        expect(helpers.median(input)).toEqual(output);
+    });
+    test('helpers.average-positive', () => {
+        let input = [99, 20, 35, 40];
+        let output = 48.5;
+        expect(helpers.average(input)).toEqual(output);
+    });
+    test('helpers.std-positive', () => {
+        let input = [99, 20, 35, 40];
+        let output = 34.72;
+        let std = helpers.std(input);
+        std = NumberExtensions.toFixedNum.call(std, 2);
+        expect(std).toEqual(output);
     });
 });
 

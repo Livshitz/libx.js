@@ -1,6 +1,7 @@
 import { objectHelpers } from '../helpers/ObjectHelpers';
 import { ArrayExtensions } from './ArrayExtensions';
 import { DateExtensions } from './DateExtensions';
+import { NumberExtensions } from './NumberExtensions';
 import { ObjectExtensions } from './ObjectExtensions';
 import { StringExtensions } from './StringExtensions';
 
@@ -31,11 +32,16 @@ export class Extensions {
         ObjectExtensions.__extend.call(Array.prototype, ArrayExtensions);
     }
 
+    public applyNumberExtensions() {
+        ObjectExtensions.__extend.call(Number.prototype, NumberExtensions);
+    }
+
     public applyAllExtensions() {
         // this.applyObjectExtensions();
         this.applyStringExtensions();
         this.applyDateExtensions();
         this.applyArrayExtensions();
+        this.applyNumberExtensions();
     }
 }
 
