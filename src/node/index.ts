@@ -19,14 +19,18 @@ export class Node {
     public prompts = new Prompts();
     private onExitCallbacks = new Callbacks();
 
-    public getFiles = (query = '**/*', options?) => {
+    public async getFiles(query = '**/*', options?) {
         let p = helpers.newPromise<string[]>();
         glob(query, options, function (err, files) {
             if (err) return p.reject(err);
             p.resolve(files);
         });
         return p;
-    };
+    }
+
+    public getFilesSync(query = '**/*', options?) {
+        return glob.sync(query, options);
+    }
 
     public isCalledDirectly = () => {
         try {
