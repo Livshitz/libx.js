@@ -479,20 +479,64 @@ export class Helpers {
         const lines = csvStr.split(lineDelimiter);
         const result = [];
 
-        var headers = lines[0].split(cellDelimiter).map((x) => x.trim()); //.replace(/\w[^\w\d]/g, ''));
+        var headers = lines[0].split(cellDelimiter).map((x) => x.replace(/^\s*\"?\s*(.*?)\s*\"?$/g, '$1'));
 
         for (var i = 1; i < lines.length; i++) {
             var obj = {};
-            var currentline = lines[i].split(cellDelimiter);
+            // 'a,"b,x",c'.split(/\s*,\s*(?=(?:[^"]*"[^"]*")*[^"]*$)/)
+            var currentline = lines[i].match(new RegExp(`(".*?"|[^"${cellDelimiter}]+)(?=\\s*${cellDelimiter}|\s*$)`, 'g'));
 
             for (var j = 0; j < headers.length; j++) {
-                obj[headers[j]] = currentline[j].trim();
+                obj[headers[j]] = currentline[j].replace(/^\s*\"?\s*(.*?)\s*\"?$/g, '$1');
             }
 
             result.push(obj);
         }
 
         return result;
+    }
+
+    public median(values: number[]): number {
+        if (values.length === 0) throw new Error('No inputs');
+
+        values.sort(function (a, b) {
+            return a - b;
+        });
+
+        var half = Math.floor(values.length / 2);
+
+        if (values.length % 2) return values[half];
+
+        return (values[half - 1] + values[half]) / 2.0;
+    }
+
+    public average(values: number[]): number {
+        const sum = values.reduce((a, b) => a + b, 0);
+        const avg = sum / values.length || 0;
+        return avg;
+    }
+
+    public std(values: number[]): number {
+        const mean = values.reduce((s, n) => s + n) / values.length;
+        const variance = values.reduce((s, n) => s + (n - mean) ** 2, 0) / (values.length - 1);
+        return Math.sqrt(variance);
+
+        // // CALCULATE AVERAGE
+        // var total = 0;
+        // for (var key in values) total += values[key];
+        // var meanVal = total / values.length;
+        // // CALCULATE AVERAGE
+
+        // // CALCULATE STANDARD DEVIATION
+        // var SDprep = 0;
+        // for (var key in values) SDprep += Math.pow(values[key] - meanVal, 2);
+        // var SDresult = Math.sqrt(SDprep / (values.length - 1));
+        // // CALCULATE STANDARD DEVIATION
+        // return SDresult;
+
+        // const n = values.length;
+        // const mean = values.reduce((a, b) => a + b) / n;
+        // return Math.sqrt(values.map((x) => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n);
     }
 
     private initConcurrency() {
