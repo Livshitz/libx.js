@@ -52,5 +52,6 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "cSpell.words": [
         "proxify"
-    ]
+    ],
+    "jest.jestCommandLine": "yarn test"
 }

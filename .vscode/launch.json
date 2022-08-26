@@ -5,13 +5,19 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Attach to Chrome",
+            "port": 9222,
+            "request": "attach",
+            "type": "chrome",
+            "webRoot": "${workspaceFolder}"
+        },
+        {
             "name": "Node.JS (local)",
             "type": "node",
             "request": "launch",
             "program": "${workspaceRoot}/test.js",
             "stopOnEntry": false,
             "args": [],
-            // "args": ["--develop"],
             "cwd": "${workspaceRoot}",
             "runtimeArgs": [],
             "console": "internalConsole"
@@ -21,32 +27,54 @@
             "type": "node",
             "request": "attach",
             "port": 9229
-            // "port": 5003
         },
         {
             "type": "node",
             "request": "launch",
             "name": "Jest Current File",
             "program": "${workspaceFolder}/node_modules/.bin/jest",
+            "runtimeExecutable": "/Users/livshitz/.nvm/versions/node/v14.18.2/bin/node",
             "args": [
                 "${file}",
                 "--runInBand",
                 "--detectOpenHandles"
-                //   "--config",
-                //   "jest.config.js"
             ],
             "smartStep": true,
-            "skipFiles": ["${workspaceFolder}/node_modules/**/*.js", "${workspaceFolder}/lib/**/*.js", "<node_internals>/**/*.js"]
+            "skipFiles": [
+                "${workspaceFolder}/node_modules/**/*.js",
+                "${workspaceFolder}/lib/**/*.js",
+                "<node_internals>/**/*.js"
+            ]
         },
         {
             "type": "node",
             "request": "launch",
             "name": "Typescript",
             "program": "${workspaceFolder}/tests/mockServer.ts",
-            // "program": "${workspaceFolder}/src/main.ts",
             "preLaunchTask": "tsc: build - tsconfig.json",
-            "outFiles": ["${workspaceFolder}/.tmp/**/*.js"],
+            "outFiles": [
+                "${workspaceFolder}/.tmp/**/*.js"
+            ],
             "port": 9229
+        },
+        {
+            "type": "node",
+            "name": "vscode-jest-tests.v2",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "disableOptimisticBPs": true,
+            "cwd": "${workspaceFolder}",
+            "runtimeExecutable": "yarn",
+            "args": [
+                "test",
+                "--runInBand",
+                "--watchAll=false",
+                "--testNamePattern",
+                "${jest.testNamePattern}",
+                "--runTestsByPath",
+                "${jest.testFile}"
+            ]
         }
     ]
 }
