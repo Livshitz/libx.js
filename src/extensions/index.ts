@@ -10,6 +10,7 @@ export class Extensions {
     public string = StringExtensions;
     public date = DateExtensions;
     public array = ArrayExtensions;
+    public number = NumberExtensions;
 
     constructor() {}
 
