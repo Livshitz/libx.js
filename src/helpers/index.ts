@@ -497,17 +497,18 @@ export class Helpers {
     }
 
     public median(values: number[]): number {
-        if (values.length === 0) throw new Error('No inputs');
+        const copy = [...values];
+        if (copy.length === 0) throw new Error('No inputs');
 
-        values.sort(function (a, b) {
+        copy.sort(function (a, b) {
             return a - b;
         });
 
-        var half = Math.floor(values.length / 2);
+        var half = Math.floor(copy.length / 2);
 
-        if (values.length % 2) return values[half];
+        if (copy.length % 2) return copy[half];
 
-        return (values[half - 1] + values[half]) / 2.0;
+        return (copy[half - 1] + copy[half]) / 2.0;
     }
 
     public average(values: number[]): number {
@@ -520,23 +521,6 @@ export class Helpers {
         const mean = values.reduce((s, n) => s + n) / values.length;
         const variance = values.reduce((s, n) => s + (n - mean) ** 2, 0) / (values.length - 1);
         return Math.sqrt(variance);
-
-        // // CALCULATE AVERAGE
-        // var total = 0;
-        // for (var key in values) total += values[key];
-        // var meanVal = total / values.length;
-        // // CALCULATE AVERAGE
-
-        // // CALCULATE STANDARD DEVIATION
-        // var SDprep = 0;
-        // for (var key in values) SDprep += Math.pow(values[key] - meanVal, 2);
-        // var SDresult = Math.sqrt(SDprep / (values.length - 1));
-        // // CALCULATE STANDARD DEVIATION
-        // return SDresult;
-
-        // const n = values.length;
-        // const mean = values.reduce((a, b) => a + b) / n;
-        // return Math.sqrt(values.map((x) => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n);
     }
 
     private initConcurrency() {
