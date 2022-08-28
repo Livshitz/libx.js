@@ -529,6 +529,7 @@ describe('helpers.parseUrl', () => {
         let input = [99, 20, 35, 40];
         let output = 37.5;
         expect(helpers.median(input)).toEqual(output);
+        expect(input).toEqual([99, 20, 35, 40]);
     });
     test('helpers.average-positive', () => {
         let input = [99, 20, 35, 40];
