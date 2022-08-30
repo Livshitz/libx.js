@@ -1,6 +1,6 @@
 {
     "name": "libx.js",
-    "version": "2.26.1",
+    "version": "2.28.0",
     "description": "",
     "main": "./build/bundles/essentials",
     "types": "./globals.d.ts",
@@ -40,7 +40,6 @@
         "di.libx.js": "^2.3.1",
         "form-data": "^4.0.0",
         "glob": "^7.2.0",
-        "json-bump": "^1.0.2",
         "lodash": "^4.17.21",
         "prompt": "^1.1.0",
         "rxjs": "^6.6.3",

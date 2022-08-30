@@ -539,6 +539,30 @@ export class Helpers {
         return humanized;
     }
 
+    public bumpVersion(version: string, bumpType: SemverPart | 'replace' = SemverPart.Patch, replace?: string | number): string {
+        if (bumpType == 'replace') {
+            return replace.toString();
+        }
+        const parts = this.parseSemVer(version);
+        parts[bumpType] = replace ?? parseInt(parts[bumpType]) + 1;
+
+        let found = false;
+        forEach(Object.values(SemverPart), (key) => {
+            if (key != bumpType && !found) return;
+            if (key == bumpType) {
+                found = true;
+                return;
+            }
+            parts[key] = 0;
+        });
+
+        return Object.values(parts).join('.');
+    }
+
+    public parseSemVer(version: string) {
+        return this.getMatches(version, /^(?<major>\d+)\.(?<minor>\d+)\.(?<patch>\d+)$/, true)?.[0];
+    }
+
     private initConcurrency() {
         this.concurrency = concurrency;
         this.Deferred = concurrency.Deferred;
@@ -587,6 +611,12 @@ type parseUrlReturn = {
     segments: string[];
     params: Mapping<string>;
 };
+
+export enum SemverPart {
+    Major = 'major',
+    Minor = 'minor',
+    Patch = 'patch',
+}
 
 /*
 export interface IHelper {

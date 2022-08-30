@@ -1,11 +1,10 @@
 import fs from 'fs';
 import path from 'path';
 import { argv } from 'yargs';
-import bump from 'json-bump';
 import { exec } from 'child_process';
 import glob from 'glob';
 
-import { helpers } from '../helpers';
+import { helpers, SemverPart } from '../helpers';
 import { objectHelpers } from '../helpers/ObjectHelpers';
 import { di } from '../modules/dependencyInjector';
 import { log } from '../modules/log';
@@ -96,10 +95,24 @@ export class Node {
         return obj;
     };
 
-    public bumpJsonVersion = async (file: string, releaseType: SemverPart = SemverPart.Patch, replace?: string) => {
-        var obj = {};
-        obj[releaseType] = replace || 1;
-        return await bump(file, obj);
+    public bumpJsonVersion = async (file: string, releaseType: SemverPart | 'replace' = SemverPart.Patch, replace?: string) => {
+        const fileContent = fs.readFileSync(file).toString();
+        const json = JSON.parse(fileContent);
+        const semverVersionString = json.version;
+        const newVer = helpers.bumpVersion(semverVersionString, releaseType, replace);
+        const parts = helpers.parseSemVer(newVer);
+        json.version = newVer;
+        fs.writeFileSync(file, JSON.stringify(json));
+
+        return {
+            original: semverVersionString,
+            updated: newVer,
+            ...parts,
+        };
+
+        // var obj = {};
+        // obj[releaseType] = replace || 1;
+        // return await bump(file, obj);
     };
 
     public getFilenameWithoutExtension = (_path) => {
@@ -286,13 +299,6 @@ export class Node {
         const str = fs.readFileSync(path).toString();
         return <T>JSON.parse(str);
     }
-}
-
-export enum SemverPart {
-    Major = 'major',
-    Minor = 'minor',
-    Patch = 'patch',
-    Replace = 'replace',
 }
 
 export const node = new Node();

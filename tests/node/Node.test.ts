@@ -1,7 +1,8 @@
-import { Node, SemverPart } from '../../src/node';
+import { Node } from '../../src/node';
 import fs from 'fs';
 import { objectHelpers } from '../../src/helpers/ObjectHelpers';
 import { Crypto } from '../../src/modules/Crypto';
+import { SemverPart } from '../../src/helpers';
 
 const envKey = 'secretKey';
 const fakeProjectSettings = __dirname + '/../fakes/project-settings-open.json';
@@ -44,7 +45,7 @@ test('getLibxVersion-positive', () => {
 
 test('readPackageJson-positive', () => {
     let output = mod.readPackageJson(__dirname + '/../fakes/package.json');
-    expect(output).toEqual({ description: '', name: 'libx.js', version: '0.7.0' });
+    expect(output).toEqual({ description: '', name: 'libx.js', version: '0.7.10' });
 });
 
 test('exec-positive', async () => {
@@ -59,27 +60,49 @@ test('exec-array-positive', async () => {
     expect(typeof date.getDate).toEqual('function');
 });
 
-test('bumpJsonVersion-positive', async () => {
+describe('bumpJsonVersion', async () => {
     const source = __dirname + '/../fakes/package.json';
     const copy = __dirname + '/../../.tmp/package.json';
-    fs.copyFileSync(source, copy);
 
-    let output = null;
+    test('bumpJsonVersion-replace', async () => {
+        fs.copyFileSync(source, copy);
+        let output = null;
 
-    output = await mod.bumpJsonVersion(copy, SemverPart.Replace, '0.0.0');
-    expect(output).toEqual({ major: '0', minor: '7', original: '0.7.0', patch: '0', updated: '0.0.0' });
+        output = await mod.bumpJsonVersion(copy, 'replace', '0.0.0');
+        expect(output).toEqual({ major: '0', minor: '0', patch: '0', original: '0.7.10', updated: '0.0.0' });
+    });
 
-    output = await mod.bumpJsonVersion(copy);
-    expect(output).toEqual({ major: '0', minor: '0', original: '0.0.0', patch: 1, updated: '0.0.1' });
+    test('bumpJsonVersion-patch-implicit', async () => {
+        fs.copyFileSync(source, copy);
+        let output = null;
 
-    output = await mod.bumpJsonVersion(copy, SemverPart.Patch);
-    expect(output).toEqual({ major: '0', minor: '0', original: '0.0.1', patch: 2, updated: '0.0.2' });
+        output = await mod.bumpJsonVersion(copy);
+        expect(output).toEqual({ major: '0', minor: '7', patch: '11', original: '0.7.10', updated: '0.7.11' });
+    });
 
-    output = await mod.bumpJsonVersion(copy, SemverPart.Minor);
-    expect(output).toEqual({ major: '0', minor: 1, original: '0.0.2', patch: '0', updated: '0.1.0' });
+    test('bumpJsonVersion-patch', async () => {
+        fs.copyFileSync(source, copy);
+        let output = null;
 
-    output = await mod.bumpJsonVersion(copy, SemverPart.Major);
-    expect(output).toEqual({ major: 1, minor: '0', original: '0.1.0', patch: '0', updated: '1.0.0' });
+        output = await mod.bumpJsonVersion(copy, SemverPart.Patch);
+        expect(output).toEqual({ major: '0', minor: '7', patch: '11', original: '0.7.10', updated: '0.7.11' });
+    });
+
+    test('bumpJsonVersion-minor', async () => {
+        fs.copyFileSync(source, copy);
+        let output = null;
+
+        output = await mod.bumpJsonVersion(copy, SemverPart.Minor);
+        expect(output).toEqual({ major: '0', minor: '8', patch: '0', original: '0.7.10', updated: '0.8.0' });
+    });
+
+    test('bumpJsonVersion-major', async () => {
+        fs.copyFileSync(source, copy);
+        let output = null;
+
+        output = await mod.bumpJsonVersion(copy, SemverPart.Major);
+        expect(output).toEqual({ major: '1', minor: '0', patch: '0', original: '0.7.10', updated: '1.0.0' });
+    });
 });
 
 test('getFilenameWithoutExtension-positive', () => {
@@ -91,7 +114,7 @@ test('getFilenameWithoutExtension-positive', () => {
 test('readJson-positive', () => {
     const param = __dirname + '/../fakes/package.json';
     const output = mod.readJson(param);
-    expect(output).toEqual({ description: '', name: 'libx.js', version: '0.7.0' });
+    expect(output).toEqual({ description: '', name: 'libx.js', version: '0.7.10' });
 });
 
 test('readJsonStripComments-positive', () => {

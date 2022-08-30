@@ -1,5 +1,5 @@
 import { NumberExtensions } from '../../src/extensions/NumberExtensions';
-import { helpers } from '../../src/helpers';
+import { helpers, SemverPart } from '../../src/helpers';
 
 var dataset: any = {};
 
@@ -287,6 +287,216 @@ test('helpers.formatify - remove missing vars', () => {
     expect(output).toEqual('aa  bb 111 - {notToBeReplaced}');
 });
 
+test('helpers.stringToColour-negative', () => {
+    let output = helpers.stringToColour('blabla!@#');
+    expect(output).toEqual('#2453c7');
+    output = helpers.stringToColour('blabla!@');
+    expect(output).toEqual('#dfc871');
+});
+
+test('helpers.for-positive', () => {
+    let output = 0;
+    helpers.for((i) => output++, 10, 5, 2);
+    expect(output).toEqual(3);
+});
+
+test('helpers.each-positive', () => {
+    let arr = [1, 2, 3, 4, 5];
+    let output = 0;
+    helpers.each(arr, (x) => (output += x));
+    expect(output).toEqual(15);
+});
+
+test('helpers.csvToJson-positive', () => {
+    let input = `id,name,author
+                1,To Kill an Mockingbird,1
+                2,Lord of the Rings,2
+                3,Hamlet,3`;
+    const output = helpers.csvToJson(input);
+    expect(output).toMatchObject([
+        { id: '1', name: 'To Kill an Mockingbird', author: '1' },
+        { id: '2', name: 'Lord of the Rings', author: '2' },
+        { id: '3', name: 'Hamlet', author: '3' },
+    ]);
+});
+
+test('helpers.csvToJson-positive', () => {
+    let input = `"Survived",Pclass,Name,Sex,Age,Siblings/Spouses Aboard,Parents/Children Aboard,Fare
+    "0",3,Mr. Owen Harris Braund,male,22,1,0,7.25
+    "1",1,Mrs. John Bradley (Florence Briggs Thayer) Cumings,female,38,1,0,71.2833`;
+    const output = helpers.csvToJson(input);
+    expect(output).toMatchObject([
+        {
+            Survived: '0',
+            Pclass: '3',
+            Name: 'Mr. Owen Harris Braund',
+            Sex: 'male',
+            Age: '22',
+            'Siblings/Spouses Aboard': '1',
+            'Parents/Children Aboard': '0',
+            Fare: '7.25',
+        },
+        {
+            Survived: '1',
+            Pclass: '1',
+            Name: 'Mrs. John Bradley (Florence Briggs Thayer) Cumings',
+            Sex: 'female',
+            Age: '38',
+            'Siblings/Spouses Aboard': '1',
+            'Parents/Children Aboard': '0',
+            Fare: '71.2833',
+        },
+    ]);
+});
+
+test('helpers.csvToJson-complex', () => {
+    let input = `"price","houseType","area","city","neighborhood","address","rooms","size","floor","totalFloors","creationDate","columns","furnished","aircondition","parking","secure space","porch","accessibility","bars","elevator","storage","sun terrace","renovated","porches","arnona","vaad","gardenSize"
+    "₪500","חניה","תל אביב","תל אביב יפו","שיכון בבלי","חנה זמר 3","","10","0","0","04/02/2021","FALSE","FALSE","FALSE","FALSE","FALSE","FALSE","FALSE","FALSE","FALSE","FALSE","FALSE","FALSE","","","",""
+    "₪3,500","דירה","תל אביב","תל אביב יפו","התקווה","יחיעם 47","2","29","1","1","","","","","","","","","","","","","","1","100","",""
+    "₪2,500","מחסן","תל אביב","תל אביב יפו","נוה שאנן","צ'לנוב 52","","35","0","0","22/08/2021","FALSE","FALSE","FALSE","FALSE","FALSE","FALSE","FALSE","FALSE","FALSE","FALSE","FALSE","FALSE","","","",""`;
+    const output = helpers.csvToJson(input);
+    expect(output).toMatchObject([
+        {
+            accessibility: 'FALSE',
+            address: 'חנה זמר 3',
+            aircondition: 'FALSE',
+            area: 'תל אביב',
+            arnona: '',
+            bars: 'FALSE',
+            city: 'תל אביב יפו',
+            columns: 'FALSE',
+            creationDate: '04/02/2021',
+            elevator: 'FALSE',
+            floor: '0',
+            furnished: 'FALSE',
+            gardenSize: '',
+            houseType: 'חניה',
+            neighborhood: 'שיכון בבלי',
+            parking: 'FALSE',
+            porch: 'FALSE',
+            porches: '',
+            price: '₪500',
+            renovated: 'FALSE',
+            rooms: '',
+            'secure space': 'FALSE',
+            size: '10',
+            storage: 'FALSE',
+            'sun terrace': 'FALSE',
+            totalFloors: '0',
+            vaad: '',
+        },
+        {
+            accessibility: '',
+            address: 'יחיעם 47',
+            aircondition: '',
+            area: 'תל אביב',
+            arnona: '100',
+            bars: '',
+            city: 'תל אביב יפו',
+            columns: '',
+            creationDate: '',
+            elevator: '',
+            floor: '1',
+            furnished: '',
+            gardenSize: '',
+            houseType: 'דירה',
+            neighborhood: 'התקווה',
+            parking: '',
+            porch: '',
+            porches: '1',
+            price: '₪3,500',
+            renovated: '',
+            rooms: '2',
+            'secure space': '',
+            size: '29',
+            storage: '',
+            'sun terrace': '',
+            totalFloors: '1',
+            vaad: '',
+        },
+        {
+            accessibility: 'FALSE',
+            address: "צ'לנוב 52",
+            aircondition: 'FALSE',
+            area: 'תל אביב',
+            arnona: '',
+            bars: 'FALSE',
+            city: 'תל אביב יפו',
+            columns: 'FALSE',
+            creationDate: '22/08/2021',
+            elevator: 'FALSE',
+            floor: '0',
+            furnished: 'FALSE',
+            gardenSize: '',
+            houseType: 'מחסן',
+            neighborhood: 'נוה שאנן',
+            parking: 'FALSE',
+            porch: 'FALSE',
+            porches: '',
+            price: '₪2,500',
+            renovated: 'FALSE',
+            rooms: '',
+            'secure space': 'FALSE',
+            size: '35',
+            storage: 'FALSE',
+            'sun terrace': 'FALSE',
+            totalFloors: '0',
+            vaad: '',
+        },
+    ]);
+});
+
+test('helpers.median-positive', () => {
+    let input = [99, 20, 35, 40];
+    let output = 37.5;
+    expect(helpers.median(input)).toEqual(output);
+    expect(input).toEqual([99, 20, 35, 40]);
+});
+test('helpers.average-positive', () => {
+    let input = [99, 20, 35, 40];
+    let output = 48.5;
+    expect(helpers.average(input)).toEqual(output);
+});
+test('helpers.std-positive', () => {
+    let input = [99, 20, 35, 40];
+    let output = 34.72;
+    let std = helpers.std(input);
+    std = NumberExtensions.toFixedNum.call(std, 2);
+    expect(std).toEqual(output);
+});
+
+test('date.humanizeTime-positive', () => {
+    let output = helpers.humanizeTime(143295);
+    expect(output).toBe('00:02:23');
+});
+test('date.humanizeTime-greater-than-day-positive', () => {
+    let output = helpers.humanizeTime(86401000);
+    expect(output).toBe('24:00:01');
+});
+
+describe('helpers.bumpVersion', () => {
+    test('date.bumpVersion-simple-major-positive', () => {
+        let output = helpers.bumpVersion('1.2.3', SemverPart.Major);
+        expect(output).toBe('2.0.0');
+    });
+    test('date.bumpVersion-simple-minor-positive', () => {
+        let output = helpers.bumpVersion('1.2.3', SemverPart.Minor);
+        expect(output).toBe('1.3.0');
+    });
+    test('date.bumpVersion-simple-patch-positive', () => {
+        let output = helpers.bumpVersion('1.2.3', SemverPart.Patch);
+        expect(output).toBe('1.2.4');
+    });
+    test('date.bumpVersion-replace-minor-positive', () => {
+        let output = helpers.bumpVersion('1.2.3', SemverPart.Minor, 10);
+        expect(output).toBe('1.10.0');
+    });
+    test('date.bumpVersion-replace-positive', () => {
+        let output = helpers.bumpVersion('1.2.3', 'replace', '4.4.4');
+        expect(output).toBe('4.4.4');
+    });
+});
+
 describe('helpers.parseUrl', () => {
     test('helpers.parseUrl-simple-positive', () => {
         let output = helpers.parseUrl('http://domain.com/my-service/resource/id112233?queryParam1=1&queryParam2=aa');
@@ -364,193 +574,6 @@ describe('helpers.parseUrl', () => {
     test('helpers.parseUrl-negative', () => {
         let output = helpers.parseUrl('my-service!@#');
         expect(output).toEqual(null);
-    });
-
-    test('helpers.stringToColour-negative', () => {
-        let output = helpers.stringToColour('blabla!@#');
-        expect(output).toEqual('#2453c7');
-        output = helpers.stringToColour('blabla!@');
-        expect(output).toEqual('#dfc871');
-    });
-
-    test('helpers.for-positive', () => {
-        let output = 0;
-        helpers.for((i) => output++, 10, 5, 2);
-        expect(output).toEqual(3);
-    });
-
-    test('helpers.each-positive', () => {
-        let arr = [1, 2, 3, 4, 5];
-        let output = 0;
-        helpers.each(arr, (x) => (output += x));
-        expect(output).toEqual(15);
-    });
-
-    test('helpers.csvToJson-positive', () => {
-        let input = `id,name,author
-                    1,To Kill an Mockingbird,1
-                    2,Lord of the Rings,2
-                    3,Hamlet,3`;
-        const output = helpers.csvToJson(input);
-        expect(output).toMatchObject([
-            { id: '1', name: 'To Kill an Mockingbird', author: '1' },
-            { id: '2', name: 'Lord of the Rings', author: '2' },
-            { id: '3', name: 'Hamlet', author: '3' },
-        ]);
-    });
-
-    test('helpers.csvToJson-positive', () => {
-        let input = `"Survived",Pclass,Name,Sex,Age,Siblings/Spouses Aboard,Parents/Children Aboard,Fare
-        "0",3,Mr. Owen Harris Braund,male,22,1,0,7.25
-        "1",1,Mrs. John Bradley (Florence Briggs Thayer) Cumings,female,38,1,0,71.2833`;
-        const output = helpers.csvToJson(input);
-        expect(output).toMatchObject([
-            {
-                Survived: '0',
-                Pclass: '3',
-                Name: 'Mr. Owen Harris Braund',
-                Sex: 'male',
-                Age: '22',
-                'Siblings/Spouses Aboard': '1',
-                'Parents/Children Aboard': '0',
-                Fare: '7.25',
-            },
-            {
-                Survived: '1',
-                Pclass: '1',
-                Name: 'Mrs. John Bradley (Florence Briggs Thayer) Cumings',
-                Sex: 'female',
-                Age: '38',
-                'Siblings/Spouses Aboard': '1',
-                'Parents/Children Aboard': '0',
-                Fare: '71.2833',
-            },
-        ]);
-    });
-
-    test('helpers.csvToJson-complex', () => {
-        let input = `"price","houseType","area","city","neighborhood","address","rooms","size","floor","totalFloors","creationDate","columns","furnished","aircondition","parking","secure space","porch","accessibility","bars","elevator","storage","sun terrace","renovated","porches","arnona","vaad","gardenSize"
-        "₪500","חניה","תל אביב","תל אביב יפו","שיכון בבלי","חנה זמר 3","","10","0","0","04/02/2021","FALSE","FALSE","FALSE","FALSE","FALSE","FALSE","FALSE","FALSE","FALSE","FALSE","FALSE","FALSE","","","",""
-        "₪3,500","דירה","תל אביב","תל אביב יפו","התקווה","יחיעם 47","2","29","1","1","","","","","","","","","","","","","","1","100","",""
-        "₪2,500","מחסן","תל אביב","תל אביב יפו","נוה שאנן","צ'לנוב 52","","35","0","0","22/08/2021","FALSE","FALSE","FALSE","FALSE","FALSE","FALSE","FALSE","FALSE","FALSE","FALSE","FALSE","FALSE","","","",""`;
-        const output = helpers.csvToJson(input);
-        expect(output).toMatchObject([
-            {
-                accessibility: 'FALSE',
-                address: 'חנה זמר 3',
-                aircondition: 'FALSE',
-                area: 'תל אביב',
-                arnona: '',
-                bars: 'FALSE',
-                city: 'תל אביב יפו',
-                columns: 'FALSE',
-                creationDate: '04/02/2021',
-                elevator: 'FALSE',
-                floor: '0',
-                furnished: 'FALSE',
-                gardenSize: '',
-                houseType: 'חניה',
-                neighborhood: 'שיכון בבלי',
-                parking: 'FALSE',
-                porch: 'FALSE',
-                porches: '',
-                price: '₪500',
-                renovated: 'FALSE',
-                rooms: '',
-                'secure space': 'FALSE',
-                size: '10',
-                storage: 'FALSE',
-                'sun terrace': 'FALSE',
-                totalFloors: '0',
-                vaad: '',
-            },
-            {
-                accessibility: '',
-                address: 'יחיעם 47',
-                aircondition: '',
-                area: 'תל אביב',
-                arnona: '100',
-                bars: '',
-                city: 'תל אביב יפו',
-                columns: '',
-                creationDate: '',
-                elevator: '',
-                floor: '1',
-                furnished: '',
-                gardenSize: '',
-                houseType: 'דירה',
-                neighborhood: 'התקווה',
-                parking: '',
-                porch: '',
-                porches: '1',
-                price: '₪3,500',
-                renovated: '',
-                rooms: '2',
-                'secure space': '',
-                size: '29',
-                storage: '',
-                'sun terrace': '',
-                totalFloors: '1',
-                vaad: '',
-            },
-            {
-                accessibility: 'FALSE',
-                address: "צ'לנוב 52",
-                aircondition: 'FALSE',
-                area: 'תל אביב',
-                arnona: '',
-                bars: 'FALSE',
-                city: 'תל אביב יפו',
-                columns: 'FALSE',
-                creationDate: '22/08/2021',
-                elevator: 'FALSE',
-                floor: '0',
-                furnished: 'FALSE',
-                gardenSize: '',
-                houseType: 'מחסן',
-                neighborhood: 'נוה שאנן',
-                parking: 'FALSE',
-                porch: 'FALSE',
-                porches: '',
-                price: '₪2,500',
-                renovated: 'FALSE',
-                rooms: '',
-                'secure space': 'FALSE',
-                size: '35',
-                storage: 'FALSE',
-                'sun terrace': 'FALSE',
-                totalFloors: '0',
-                vaad: '',
-            },
-        ]);
-    });
-
-    test('helpers.median-positive', () => {
-        let input = [99, 20, 35, 40];
-        let output = 37.5;
-        expect(helpers.median(input)).toEqual(output);
-        expect(input).toEqual([99, 20, 35, 40]);
-    });
-    test('helpers.average-positive', () => {
-        let input = [99, 20, 35, 40];
-        let output = 48.5;
-        expect(helpers.average(input)).toEqual(output);
-    });
-    test('helpers.std-positive', () => {
-        let input = [99, 20, 35, 40];
-        let output = 34.72;
-        let std = helpers.std(input);
-        std = NumberExtensions.toFixedNum.call(std, 2);
-        expect(std).toEqual(output);
-    });
-
-    test('date.humanizeTime-positive', () => {
-        let output = helpers.humanizeTime(143295);
-        expect(output).toBe('00:02:23');
-    });
-    test('date.humanizeTime-greater-than-day-positive', () => {
-        let output = helpers.humanizeTime(86401000);
-        expect(output).toBe('24:00:01');
     });
 });
 
