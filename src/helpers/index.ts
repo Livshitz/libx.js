@@ -30,6 +30,7 @@ import {
 } from '../types/interfaces';
 import { ObjectHelpers, objectHelpers } from './ObjectHelpers';
 import { StringExtensions } from '../extensions/StringExtensions';
+import { DateExtensions } from '../extensions/DateExtensions';
 
 export { Deferred };
 
@@ -521,6 +522,21 @@ export class Helpers {
         const mean = values.reduce((s, n) => s + n) / values.length;
         const variance = values.reduce((s, n) => s + (n - mean) ** 2, 0) / (values.length - 1);
         return Math.sqrt(variance);
+    }
+
+    public humanizeTime(ms: number) {
+        const seconds = Math.floor((ms / 1000) % 60);
+        const minutes = Math.floor((ms / 1000 / 60) % 60);
+        // const hours = Math.floor((ms  / 1000 / 3600 ) % 24)
+        const hours = parseInt(<any>(ms / (1000 * 60 * 60)));
+
+        const humanized = [
+            DateExtensions.pad(hours.toString(), 2),
+            DateExtensions.pad(minutes.toString(), 2),
+            DateExtensions.pad(seconds.toString(), 2),
+        ].join(':');
+
+        return humanized;
     }
 
     private initConcurrency() {

@@ -543,6 +543,15 @@ describe('helpers.parseUrl', () => {
         std = NumberExtensions.toFixedNum.call(std, 2);
         expect(std).toEqual(output);
     });
+
+    test('date.humanizeTime-positive', () => {
+        let output = helpers.humanizeTime(143295);
+        expect(output).toBe('00:02:23');
+    });
+    test('date.humanizeTime-greater-than-day-positive', () => {
+        let output = helpers.humanizeTime(86401000);
+        expect(output).toBe('24:00:01');
+    });
 });
 
 // test('helpers.-positive', () => {
