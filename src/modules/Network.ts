@@ -17,8 +17,12 @@ export class Network {
 
     constructor() {}
 
-    public httpGetJson = async (url: string, _options = {}) => {
-        _options = objectHelpers.merge({}, _options, { headers: { 'Content-Type': 'application/json; charset=UTF-8' }, enc: 'utf-8' });
+    public httpGetJson = async (url: string, _options: any = {}) => {
+        let headers = { 'content-type': 'application/json; charset=UTF-8' };
+        if (_options.cors) {
+            headers = null;
+        }
+        _options = objectHelpers.merge({}, _options, { headers: headers, enc: 'utf-8' });
         let ret = await this.httpGet(url, _options);
         return JSON.parse(ret);
     };
@@ -72,6 +76,7 @@ export class Network {
             // host: dest.hostname,
             // path: dest.path,
             // port: dest.port,
+            cors: false,
             enc: null,
             method: method || 'GET',
             withCredentials: false,
@@ -84,7 +89,7 @@ export class Network {
 
         // Fill in missing content type based on dataType:
         if (options.dataType != null && options.headers['content-type'] == null) {
-            if (options.dataType == 'json') options.headers['content-type'] = 'application/json; charset=UTF-8';
+            if (options.dataType == 'json' && !options.cors) options.headers['content-type'] = 'application/json; charset=UTF-8';
             else if (options.dataType == 'formData') options.headers['content-type'] = 'multipart/form-data'; //'application/x-www-form-urlencoded; charset=UTF-8';
         }
 
@@ -137,7 +142,7 @@ export class Network {
         let p = helpers.newPromise();
         let _options = {
             method: method,
-            mode: 'no-cors',
+            // mode: 'no-cors',
         };
         url = this.helper.fixUrl(url);
         options = objectHelpers.merge(options, _options, { url: url });
