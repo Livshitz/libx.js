@@ -18,7 +18,7 @@ export class Node {
     public prompts = new Prompts();
     private onExitCallbacks = new Callbacks();
 
-    public async getFiles(query = '**/*', options?) {
+    public async getFiles(query = '**/*', options?): Promise<string[]> {
         let p = helpers.newPromise<string[]>();
         glob(query, options, function (err, files) {
             if (err) return p.reject(err);
@@ -27,7 +27,7 @@ export class Node {
         return p;
     }
 
-    public getFilesSync(query = '**/*', options?) {
+    public getFilesSync(query = '**/*', options?): string[] {
         return glob.sync(query, options);
     }
 
