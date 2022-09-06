@@ -563,6 +563,29 @@ export class Helpers {
         return this.getMatches(version, /^(?<major>\d+)\.(?<minor>\d+)\.(?<patch>\d+)$/, true)?.[0];
     }
 
+    public dictToArray(dict: {}) {
+        var pairs = helpers._.toPairs(dict);
+        var ret = [];
+        helpers._.each(<any>pairs, (pair) => {
+            const key = pair[0];
+            let val = pair[1];
+            if (objectHelpers.isObject(val)) {
+                if (val.id == null) val.id = key;
+                else val._id = key;
+            } else {
+                val = { id: key, val };
+            }
+
+            ret.push(val);
+        });
+
+        return ret;
+    }
+
+    public arrayToDic(arr: []) {
+        return this._.transform(arr, (agg, key: string) => (agg[key] = true), {});
+    }
+
     private initConcurrency() {
         this.concurrency = concurrency;
         this.Deferred = concurrency.Deferred;
