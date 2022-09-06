@@ -497,6 +497,26 @@ describe('helpers.bumpVersion', () => {
     });
 });
 
+describe('helpers dictionary helpers', () => {
+    test('helpers.dictToArray-positive', () => {
+        let param = { a: 1 };
+        let output = helpers.dictToArray(param);
+        expect(output).toEqual([{ id: 'a', val: 1 }]);
+    });
+
+    test('helpers.dictToArray-realistic-positive', () => {
+        let param = { myKey: { someValue: 'val' } };
+        let output = helpers.dictToArray(param);
+        expect(output).toEqual([{ id: 'myKey', someValue: 'val' }]);
+    });
+
+    test('helpers.arrayToDic-positive', () => {
+        let param = [1, 2, 'hello'];
+        let output = helpers.arrayToDic(param as []);
+        expect(output).toEqual({ 1: true, 2: true, hello: true });
+    });
+});
+
 describe('helpers.parseUrl', () => {
     test('helpers.parseUrl-simple-positive', () => {
         let output = helpers.parseUrl('http://domain.com/my-service/resource/id112233?queryParam1=1&queryParam2=aa');
