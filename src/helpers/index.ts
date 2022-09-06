@@ -461,9 +461,11 @@ export class Helpers {
 
     public for(iteration: (i) => void, max: number, min = 0, step = 1) {
         // for((i)=> console.log(i), 10, 5, 2)
+        const ret = [];
         for (let i = min; i < max; i += step) {
-            iteration(i);
+            ret.push(iteration(i));
         }
+        return ret;
     }
 
     public each<T>(arr: T[], iteration: (T, i?: number) => T) {

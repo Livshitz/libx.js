@@ -299,6 +299,11 @@ test('helpers.for-positive', () => {
     helpers.for((i) => output++, 10, 5, 2);
     expect(output).toEqual(3);
 });
+test('helpers.for-returnValue', () => {
+    let v = 0;
+    const output = helpers.for((i) => v++, 10, 5, 2);
+    expect(output).toEqual([0, 1, 2]);
+});
 
 test('helpers.each-positive', () => {
     let arr = [1, 2, 3, 4, 5];
