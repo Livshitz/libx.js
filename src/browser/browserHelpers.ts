@@ -232,8 +232,9 @@ export class BrowserHelpers {
         return url.substr(0, url.indexOf('://') + 3) + hostname + '/';
     };
 
-    public getParameters = function () {
-        var search = location.search;
+    public getParameters = function (search?: string) {
+        if (search == null) search = location.search;
+        if (!search.startsWith('?')) search = '?' + search;
         search = search.replace(/(?![?&])([^=&?]+)(\=)?([^&]+)?/g, '$1=$3'); // fix missing values, e.g: ?hint -> ?hint=
         search = search.substring(1);
         if (search == null || search == '') return {};
