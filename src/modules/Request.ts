@@ -12,12 +12,12 @@ export default class RequestModule {
         this.options.defaultHeaders = { x: 1 };
     }
 
-    public async getJson<T = any>(urlPart: string) {
-        return (await this.get(urlPart))?.data;
+    public async getJson<T = any>(urlPart: string, extraHeaders?: {}) {
+        return (await this.get(urlPart, null, { ...extraHeaders, ...{ 'Content-Type': 'application/json' } }))?.data;
     }
 
-    public async postJson<T = any>(urlPart: string, data: {}) {
-        return (await this.post(urlPart, data))?.data;
+    public async postJson<T = any>(urlPart: string, data: {}, extraHeaders?: {}) {
+        return (await this.post(urlPart, data, { ...extraHeaders, ...{ 'Content-Type': 'application/json' } }))?.data;
     }
 
     public async get<T = any>(urlPart: string, queryParams?: {}, extraHeaders?: {}) {
