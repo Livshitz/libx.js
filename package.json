@@ -1,6 +1,6 @@
 {
     "name": "libx.js",
-    "version": "2.29.2",
+    "version": "2.30.0",
     "description": "",
     "main": "./build/bundles/essentials",
     "types": "./globals.d.ts",
@@ -33,7 +33,7 @@
     "license": "ISC",
     "dependencies": {
         "axios": "^0.21.3",
-        "concurrency.libx.js": "^1.0.1",
+        "concurrency.libx.js": "^1.1.1",
         "cors": "^2.8.5",
         "crypto-js": "^4.0.0",
         "detect.js": "^2.2.3",
