@@ -11,6 +11,10 @@ export interface IDeferredJS {
     (): IDeferred<any>;
 }
 
+export interface Dictionary<T> {
+    [Key: string]: T;
+}
+
 export type Key = string | number | symbol;
 
 export type ObjectLiteral<T = any> = { [key: string]: T };
