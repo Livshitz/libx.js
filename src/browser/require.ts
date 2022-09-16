@@ -182,6 +182,7 @@ const req = (function () {
                         if (request.status == 200) lock[cacheid]--;
                         if (lock[cacheid]) {
                             console.warn('module locked: ' + descriptor.id);
+                            if (lock[cacheid] <= 5) return;
                             callback && setTimeout(onLoad, 0);
                             return;
                         }
