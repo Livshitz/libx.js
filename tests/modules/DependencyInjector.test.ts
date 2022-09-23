@@ -1,13 +1,10 @@
 describe('dependencyInjector tests', () => {
     let dataset: any = {};
 
-    beforeAll(async (done) => {
-        done();
-    });
+    beforeAll(async () => {});
 
-    test('dependencyInjector--positive', async (done) => {
+    test('dependencyInjector--positive', async () => {
         expect(true).toBe(true);
-        done();
     });
 
     afterAll((done) => {

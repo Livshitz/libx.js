@@ -18,74 +18,61 @@ describe('libx:modules:network tests', () => {
     let networkModule: IModuleNetwork = null;
     let server = new mockServer();
 
-    beforeAll(async (done) => {
+    beforeAll(async () => {
         networkModule = await di.require<IModuleNetwork>('network');
 
         url = await server.run();
-
-        done();
-        return null;
     });
 
-    test('module-network-httpRequest-positive', async (done) => {
+    test('module-network-httpRequest-positive', async () => {
         let res: Buffer = await networkModule.httpRequest(url, null, 'GET');
         expect(res.toString()).toBe('OK');
-        done();
     });
 
-    test('module-network-httpGet-positive', async (done) => {
+    test('module-network-httpGet-positive', async () => {
         let res: Buffer = await networkModule.httpGet(url);
         expect(res.toString()).toBe('OK');
-        done();
     });
 
-    test('module-network-httpGetString-positive', async (done) => {
+    test('module-network-httpGetString-positive', async () => {
         let res = await networkModule.httpGetString(url);
         expect(res).toBe('OK');
-        done();
     });
 
-    test('module-network-echoParams-httpGet-positive', async (done) => {
+    test('module-network-echoParams-httpGet-positive', async () => {
         let res: Buffer = await networkModule.httpGet(url + '/echoParams/' + '?a=1&b=2');
         expect(Buffer.compare(res, Buffer.from('{"a":"1","b":"2"}'))).toBe(0);
-        done();
     });
 
-    test('module-network-echoParams-get-positive', async (done) => {
+    test('module-network-echoParams-get-positive', async () => {
         log.v('- echoParams-get-positive');
         let res: Buffer = await networkModule.get(url + '/echoParams/' + '?a=1&b=2');
         expect(Buffer.compare(res, Buffer.from('{"a":"1","b":"2"}'))).toBe(0);
-        done();
     });
 
-    test('module-network-echoParams-httpGetString-positive', async (done) => {
+    test('module-network-echoParams-httpGetString-positive', async () => {
         let res: String = await networkModule.httpGetString(url + '/echoParams/' + '?a=1&b=2');
         expect(res).toEqual('{"a":"1","b":"2"}');
-        done();
     });
-    test('module-network-echoParams-httpGetJson-positive', async (done) => {
+    test('module-network-echoParams-httpGetJson-positive', async () => {
         let res: Object = await networkModule.httpGetJson(url + '/echoParams/' + '?a=1&b=2');
         expect(res).toEqual({ a: '1', b: '2' });
-        done();
     });
-    test('module-network-echoParams-httpPost-positive', async (done) => {
+    test('module-network-echoParams-httpPost-positive', async () => {
         let res = await networkModule.httpPost(url + '/echoParams/' + '?a=1&b=2', null);
         expect(Buffer.compare(res, Buffer.from('{"a":"1","b":"2"}'))).toBe(0);
-        done();
     });
-    test('module-network-echoParams-httpPostJson-positive', async (done) => {
+    test('module-network-echoParams-httpPostJson-positive', async () => {
         let res = await networkModule.httpPostJson(url + '/echoParams/' + '?a=1&b=2', null);
         expect(res).toEqual({ a: '1', b: '2' });
-        done();
     });
 
-    test('module-network-echoBody-httpPostJson-positive', async (done) => {
+    test('module-network-echoBody-httpPostJson-positive', async () => {
         let res = await networkModule.httpPostJson(url + '/echoBody/', { a: 1, b: 2 });
         expect(res).toEqual({ a: 1, b: 2 });
-        done();
     });
 
-    test('module-network-echoFormData-post-positive', async (done) => {
+    test('module-network-echoFormData-post-positive', async () => {
         let formData = {
             a: '1',
             b: '2',
@@ -93,14 +80,12 @@ describe('libx:modules:network tests', () => {
 
         let res = await networkModule.post(url + 'echoFormdata', formData);
         expect(JSON.parse(res.toString())).toEqual({ a: '1', b: '2' });
-        done();
     });
-    test('module-network-echoFormData-get-positive', async (done) => {
+    test('module-network-echoFormData-get-positive', async () => {
         let res = await networkModule.get(url + 'echoParams', { a: 1, b: 2 });
         expect(JSON.parse(res)).toEqual({ a: '1', b: '2' });
-        done();
     });
-    test('module-network-echoFormData-upload-positive', async (done) => {
+    test('module-network-echoFormData-upload-positive', async () => {
         let fs = require('fs');
         let filePath = __dirname + '/../../LICENSE';
         let fileStats = fs.statSync(filePath);
@@ -125,7 +110,6 @@ describe('libx:modules:network tests', () => {
             size: fileStats.size,
             content: content,
         });
-        done();
     });
 
     // test('module-network-getFormData-positive', () => {
@@ -134,7 +118,7 @@ describe('libx:modules:network tests', () => {
     // 	expect(output).toEqual(true);
     // });
 
-    afterAll((done) => {
+    afterAll(() => {
         console.log('mockServer:cli: shutting down server...');
         server.stop();
     });

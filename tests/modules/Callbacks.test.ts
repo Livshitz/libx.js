@@ -112,7 +112,7 @@ test('clearAll-positive', (done) => {
     }, 20);
 });
 
-test('subscribe-trigger-all-promise', async (done) => {
+test('subscribe-trigger-all-promise', async () => {
     const c = new Callbacks();
     let counter = { a: 0, b: 0 };
     c.subscribe(async (arg) => {
@@ -126,7 +126,6 @@ test('subscribe-trigger-all-promise', async (done) => {
     await c.trigger();
 
     expect(counter).toEqual({ a: 1, b: 1 });
-    done();
 });
 
 // test('-positive', () => {

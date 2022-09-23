@@ -9,9 +9,8 @@ const fakeProjectSettings = __dirname + '/../fakes/project-settings-open.json';
 const encryptedProjectSettings = __dirname + '/../../.tmp/encrypted.json';
 const mod = new Node();
 
-beforeAll(async (done) => {
+beforeAll(async () => {
     mod.mkdirRecursiveSync(__dirname + '/../../.tmp');
-    done();
 });
 beforeEach(() => {});
 
@@ -60,7 +59,7 @@ test('exec-array-positive', async () => {
     expect(typeof date.getDate).toEqual('function');
 });
 
-describe('bumpJsonVersion', async () => {
+describe('bumpJsonVersion', () => {
     const source = __dirname + '/../fakes/package.json';
     const copy = __dirname + '/../../.tmp/package.json';
 
