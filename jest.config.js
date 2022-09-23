@@ -31,5 +31,9 @@ module.exports = {
 	// 		}
 	// }
 	reporters: ["default", "jest-junit"],
-	coverageDirectory: ".tmp/coverage"
+	coverageDirectory: ".tmp/coverage",
+	coverageReporters: [
+		"cobertura",
+		"html"
+	]
 }

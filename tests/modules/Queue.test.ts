@@ -40,11 +40,11 @@ test('queue index', () => {
     expect(obj.get(1)).toBe('b');
 });
 
-test('queue trigger', async (done) => {
+test('queue trigger', async () => {
     const obj = new Queue<string>(['a', 'b', 'c', 'd']);
     obj.onEnqueue.subscribe((newItem) => {
         expect(newItem).toBe('e');
-        done();
+        return;
     });
     obj.enqueue('e');
 });

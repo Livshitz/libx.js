@@ -6,14 +6,14 @@ interface IMyPayload {
 
 beforeEach(() => {});
 
-test('subscribe-state-positive', async (done) => {
+test('subscribe-state-positive', async () => {
     const mod = new EventsStream<IMyPayload>();
     let counter = 0;
     const handler = mod.subscribe(
         (event) => {
             expect(event.payload.test).toEqual(1);
             expect(counter).toEqual(2);
-            done();
+            return;
         },
         (event) => {
             counter++;
@@ -23,14 +23,14 @@ test('subscribe-state-positive', async (done) => {
     mod.emit({ test: 1 });
 });
 
-test('subscribe-state-emitCurrent-noTrigger-positive', async (done) => {
+test('subscribe-state-emitCurrent-noTrigger-positive', async () => {
     const mod = new EventsStream<IMyPayload>([{ payload: { test: 1 } }, { payload: { test: 2 } }]);
     let counter = 0;
     const handler = mod.subscribe(
         (event) => {
             expect(event.payload.test == 1 || event.payload.test == 2).toEqual(true);
             expect(counter).toEqual(1);
-            done();
+            return;
         },
         (event) => {
             counter++;
@@ -39,13 +39,13 @@ test('subscribe-state-emitCurrent-noTrigger-positive', async (done) => {
     );
 });
 
-test('subscribe-history-emitAll-noTrigger-positive', async (done) => {
+test('subscribe-history-emitAll-noTrigger-positive', async () => {
     const mod = new EventsStream<IMyPayload>([{ payload: { test: 1 } }, { payload: { test: 2 } }, { payload: { test: 3 } }]);
     let counter = 0;
     const handler = mod.subscribe(
         (event) => {
             expect(counter).toEqual(3);
-            done();
+            return;
         },
         (event) => {
             expect(event.payload.test == 1 || event.payload.test == 2 || event.payload.test == 3).toEqual(true);
@@ -56,7 +56,7 @@ test('subscribe-history-emitAll-noTrigger-positive', async (done) => {
     );
 });
 
-test('subscribe-future-noEmit-noTrigger-positive', async (done) => {
+test('subscribe-future-noEmit-noTrigger-positive', async () => {
     const mod = new EventsStream<IMyPayload>([{ payload: { test: 1 } }, { payload: { test: 2 } }, { payload: { test: 3 } }]);
     let counter = 0;
     const handler = mod.subscribe(
@@ -69,17 +69,17 @@ test('subscribe-future-noEmit-noTrigger-positive', async (done) => {
         mod.channels.future
     );
     setTimeout(() => {
-        done();
+        return;
     }, 10);
 });
 
-test('subscribe-future-noEmit-withTrigger-positive', async (done) => {
+test('subscribe-future-noEmit-withTrigger-positive', async () => {
     const mod = new EventsStream<IMyPayload>([{ payload: { test: 1 } }, { payload: { test: 2 } }, { payload: { test: 3 } }]);
     let counter = 0;
     const handler = mod.subscribe(
         (event) => {
             expect(counter).toEqual(1);
-            done();
+            return;
         },
         (event) => {
             counter++;
@@ -90,7 +90,7 @@ test('subscribe-future-noEmit-withTrigger-positive', async (done) => {
     mod.emit({ test: 1 });
 });
 
-test('subscribe-withTypePredicate-positive', async (done) => {
+test('subscribe-withTypePredicate-positive', async () => {
     const mod = new EventsStream<IMyPayload>();
 
     const onDbStateChange: Action<IMyPayload> = (event) => {
@@ -102,7 +102,7 @@ test('subscribe-withTypePredicate-positive', async (done) => {
         expect(event.type).toEqual('network');
     };
     const onCatchAll: Action<IMyPayload> = (event) => {
-        if (event.payload.test === 0) return done();
+        if (event.payload.test === 0) return;
         expect(event.payload.test == 111 || event.payload.test == 222).toEqual(true);
         expect(event.type == 'network' || event.type == 'database' || event.type == null).toEqual(true);
     };
@@ -116,14 +116,13 @@ test('subscribe-withTypePredicate-positive', async (done) => {
     mod.emit({ test: 0 });
 });
 
-test('subscribeOnce-defaultFuture-positive', async (done) => {
+test('subscribeOnce-defaultFuture-positive', async () => {
     const mod = new EventsStream<IMyPayload>([{ payload: { test: 1 } }, { payload: { test: 2 } }, { payload: { test: 3 } }]);
     let counter = 0;
     mod.subscribeOnce(
         (event) => {
             expect(event.payload.test).toEqual(999);
             expect(counter).toEqual(1);
-            done();
         },
         (event) => {
             counter++;
@@ -134,14 +133,14 @@ test('subscribeOnce-defaultFuture-positive', async (done) => {
     mod.emit({ test: 0 });
 });
 
-test('subscribeOnce-state-positive', async (done) => {
+test('subscribeOnce-state-positive', async () => {
     const mod = new EventsStream<IMyPayload>([{ payload: { test: 1 } }, { payload: { test: 2 } }, { payload: { test: 3 } }]);
     let counter = 0;
     mod.subscribeOnce(
         (event) => {
             expect(event.payload.test == 3 || event.payload.test == 999).toEqual(true);
             expect(counter == 1 || counter == 2).toEqual(true);
-            done();
+            return;
         },
         (event) => {
             counter++;
@@ -153,14 +152,14 @@ test('subscribeOnce-state-positive', async (done) => {
     mod.emit({ test: 0 });
 });
 
-test('unsubscribe-viaHandler-positive', async (done) => {
+test('unsubscribe-viaHandler-positive', async () => {
     const mod = new EventsStream<IMyPayload>([{ payload: { test: 1 } }, { payload: { test: 2 } }, { payload: { test: 3 } }]);
     let counter = 0;
     const handler = mod.subscribe(
         (event) => {
             expect(event.payload.test == 3 || event.payload.test == 10 || event.payload.test == 20).toEqual(true);
             expect(counter == 1 || counter == 2 || counter == 3).toEqual(true);
-            done();
+            return;
         },
         (event) => {
             counter++;
@@ -171,17 +170,16 @@ test('unsubscribe-viaHandler-positive', async (done) => {
     mod.emit({ test: 20 });
     handler.unsubscribe();
     mod.emit({ test: 3 });
-    setTimeout(done, 10);
 });
 
-test('unsubscribe-viaModule-positive', async (done) => {
+test('unsubscribe-viaModule-positive', async () => {
     const mod = new EventsStream<IMyPayload>([{ payload: { test: 1 } }, { payload: { test: 2 } }, { payload: { test: 3 } }]);
     let counter = 0;
     const handler = mod.subscribe(
         (event) => {
             expect(event.payload.test == 3 || event.payload.test == 10 || event.payload.test == 20).toEqual(true);
             expect(counter == 1 || counter == 2 || counter == 3).toEqual(true);
-            done();
+            return;
         },
         (event) => {
             counter++;
@@ -192,7 +190,6 @@ test('unsubscribe-viaModule-positive', async (done) => {
     mod.emit({ test: 20 });
     mod.unsubscribe(handler);
     mod.emit({ test: 3 });
-    setTimeout(done, 10);
 });
 
 test('getAll-positive', async () => {
