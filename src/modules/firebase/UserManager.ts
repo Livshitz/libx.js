@@ -235,6 +235,10 @@ export class UserManager {
             isCachedProxy: this._options.isCacheProfile,
         });
         this.data = this.dataProxy.proxy;
+        this.dataProxy.init();
+        this.dataProxy.onChange.subscribe((data) => {
+            this.onDataChanged?.trigger(data);
+        });
 
         this.dataProxy.skip(() => {
             if (!user.isAnonymous) {
