@@ -124,7 +124,7 @@ export default class RequestModule {
             return ret;
         },
         escape: (obj) => {
-            if (obj == null || obj == {}) return '';
+            if (obj == null || Object.keys(obj).length == 0) return '';
             return encodeURIComponent(JSON.stringify(obj));
         },
     };
