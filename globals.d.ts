@@ -92,7 +92,7 @@ declare namespace LibxJSExtensions {
         addDays(days: number): Date;
         addMilliseconds(ms: number): Date;
         toUTC(): Date;
-        toISOStringUTC(isUTC?: Boolean): Date;
+        toISOStringUTC(isUTC?: Boolean): string;
         toTimezone(timezone: string): Date;
     }
 
