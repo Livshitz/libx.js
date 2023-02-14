@@ -241,8 +241,8 @@ test('helpers.enumToArray-positive', () => {
     expect(output).toEqual(['A', 'B']);
 });
 
-test('helpers.getEnumFromValue-positive', () => {
-    let output = helpers.getEnumFromValue(myEnum, 2);
+test('helpers.getEnumKeyFromValue-positive', () => {
+    let output = helpers.getEnumKeyFromValue(myEnum, 2);
     expect(output).toEqual('B');
 });
 
