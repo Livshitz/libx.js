@@ -232,13 +232,18 @@ test('helpers.values-positive', () => {
 });
 
 enum myEnum {
-    A,
-    B,
+    A = 1,
+    B = 2,
 }
 
 test('helpers.enumToArray-positive', () => {
     let output = helpers.enumToArray(myEnum);
     expect(output).toEqual(['A', 'B']);
+});
+
+test('helpers.getEnumFromValue-positive', () => {
+    let output = helpers.getEnumFromValue(myEnum, 2);
+    expect(output).toEqual('B');
 });
 
 test('helpers.formatify', () => {
