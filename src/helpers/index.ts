@@ -395,8 +395,8 @@ export class Helpers {
             .filter((value) => typeof value === 'string');
     };
 
-    public getEnumFromValue<T>(_enum: T, value: number): T | undefined {
-        return <T>(<unknown>Object.keys(_enum).find((key) => _enum[key] === value));
+    public getEnumKeyFromValue<T>(_enum: T, value: number): keyof T {
+        return Object.keys(_enum).find((key) => _enum[key] === value) as keyof T;
     }
 
     public querialize(obj: Object, avoidPrefix: Boolean): string {
