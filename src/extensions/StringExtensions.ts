@@ -65,7 +65,7 @@ export class StringExtensions {
     };
 
     public static isEmpty = function (input = null) {
-        var v = input || this;
+        var v = input ?? this;
         return v ? v.trim().length == 0 : true;
     };
 
