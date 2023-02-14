@@ -8,8 +8,6 @@ export default class RequestModule {
     public constructor(base: string, options?: Partial<ModuleOptions>) {
         this.options = { ...this.options, ...options };
         this.options.baseUrl = base;
-        this.options.defaultHeaders.x = 1;
-        this.options.defaultHeaders = { x: 1 };
     }
 
     public async getJson<T = any>(urlPart: string, extraHeaders?: {}) {
@@ -24,7 +22,7 @@ export default class RequestModule {
         const p = RequestModule.get(urlPart, queryParams, {
             token: this.options.token,
             baseUrl: this.options.baseUrl,
-            extraHeaders: extraHeaders || this.options.defaultHeaders,
+            extraHeaders: { ...extraHeaders, ...this.options.defaultHeaders },
         });
         p.catch((err) => {
             if (this.options?.errorHandler != null) this.options.errorHandler(err);
@@ -36,7 +34,7 @@ export default class RequestModule {
         const p = RequestModule.post(urlPart, data, {
             token: this.options.token,
             baseUrl: this.options.baseUrl,
-            extraHeaders: extraHeaders || this.options.defaultHeaders,
+            extraHeaders: { ...extraHeaders, ...this.options.defaultHeaders },
         });
         p.catch((err) => {
             if (this.options?.errorHandler != null) this.options.errorHandler(err);
@@ -48,7 +46,7 @@ export default class RequestModule {
         const p = RequestModule.post(urlPart, subset, {
             token: this.options.token,
             baseUrl: this.options.baseUrl,
-            extraHeaders: extraHeaders || this.options.defaultHeaders,
+            extraHeaders: { ...extraHeaders, ...this.options.defaultHeaders },
         });
         p.catch((err) => {
             if (this.options?.errorHandler != null) this.options.errorHandler(err);
@@ -60,7 +58,7 @@ export default class RequestModule {
         const p = RequestModule.delete(urlPart, {
             token: this.options.token,
             baseUrl: this.options.baseUrl,
-            extraHeaders: extraHeaders || this.options.defaultHeaders,
+            extraHeaders: { ...extraHeaders, ...this.options.defaultHeaders },
         });
         p.catch((err) => {
             if (this.options?.errorHandler != null) this.options.errorHandler(err);
