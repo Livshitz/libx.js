@@ -121,11 +121,11 @@ export class Node {
         return _path.split('.').slice(0, -1).join('.');
     };
 
-    public readJson = (file) => {
+    public readJson<T = any>(file) {
         var content = fs.readFileSync(file).toString();
         if (objectHelpers.isEmptyString(content)) return null;
-        return JSON.parse(content);
-    };
+        return JSON.parse(content) as T;
+    }
 
     public readJsonStripComments = (filePath: string) => {
         var content = fs.readFileSync(filePath);
