@@ -115,7 +115,11 @@ export class Node {
         // return await bump(file, obj);
     };
 
-    public getFilenameWithoutExtension = (_path) => {
+    public getFilename(filePath: string) {
+        return filePath.split('/').pop();
+    }
+
+    public getFilenameWithoutExtension = (_path: string) => {
         _path = path.basename(_path);
         if (_path == null || _path.length <= 1) return null;
         return _path.split('.').slice(0, -1).join('.');
