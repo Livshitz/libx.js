@@ -592,6 +592,18 @@ export class Helpers {
         return this._.transform(arr, (agg, key: string) => (agg[key] = true), {});
     }
 
+    public normalizeJson(jsonString: string, replaceChar = '“') {
+        return jsonString
+            .replace(/\"\s*,\s*\}/g, '"}')
+            .replace(/\{\s*\"/g, '{\\"')
+            .replace(/\"\s*:/g, '\\":')
+            .replace(/:\s*\"/g, ':\\"')
+            .replace(/\"\s*\}/g, '\\"}')
+            .replace(/\"\s*\,\s*\"/g, '\\", \\"')
+            .replace(/(?<!\\)\"(.*?)(?<!\\)\"/g, `${replaceChar}$1${replaceChar}`)
+            .replace(/\\\"/g, '"');
+    }
+
     private initConcurrency() {
         this.concurrency = concurrency;
         this.Deferred = concurrency.Deferred;
