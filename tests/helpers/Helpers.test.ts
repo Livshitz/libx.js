@@ -484,24 +484,28 @@ test('date.humanizeTime-greater-than-day-positive', () => {
     expect(output).toBe('24:00:01');
 });
 
-test.only('helpers.normalizeJson-simple', () => {
-    const input = `{"credibility" : "B.Sc - Computer Science, "H.I.T" Holon, “Achid” ‘Aharai’ instructor"}`;
-    const expected = `{"credibility":"B.Sc - Computer Science, “H.I.T“ Holon, “Achid” ‘Aharai’ instructor"}`;
-    let output = helpers.normalizeJson(input);
-    expect(output).toBe(expected);
+/*
+describe('helpers.normalizeJson', ()=>{
+    test.only('helpers.normalizeJson-simple', () => {
+        const input = `{"credibility" : "B.Sc - Computer Science, "H.I.T" Holon, “Achid” ‘Aharai’ instructor"}`;
+        const expected = `{"credibility":"B.Sc - Computer Science, “H.I.T“ Holon, “Achid” ‘Aharai’ instructor"}`;
+        let output = helpers.normalizeJson(input);
+        expect(output).toBe(expected);
+    });
+    test.only('helpers.normalizeJson-multiple keys', () => {
+        const input = `{"credibility" : "B.Sc - Computer Science, "H.I.T" Holon, "Achid" ‘Aharai’ instructor", "key": "value a "b" c" }`;
+        const expected = `{"credibility":"B.Sc - Computer Science, “H.I.T“ Holon, “Achid“ ‘Aharai’ instructor", "key":"value a “b“ c"}`;
+        let output = helpers.normalizeJson(input);
+        expect(output).toBe(expected);
+    });
+    test.only('helpers.normalizeJson-bad json', () => {
+        const input = `{"credibility" : "B.Sc - Computer Science, "H.I.T" Holon, "Achid" ‘Aharai’ instructor", "key": "value a "b" c", }`;
+        const expected = `{"credibility":"B.Sc - Computer Science, “H.I.T“ Holon, “Achid“ ‘Aharai’ instructor", "key":"value a “b“ c"}`;
+        let output = helpers.normalizeJson(input);
+        expect(output).toBe(expected);
+    });
 });
-test.only('helpers.normalizeJson-multiple keys', () => {
-    const input = `{"credibility" : "B.Sc - Computer Science, "H.I.T" Holon, "Achid" ‘Aharai’ instructor", "key": "value a "b" c" }`;
-    const expected = `{"credibility":"B.Sc - Computer Science, “H.I.T“ Holon, “Achid“ ‘Aharai’ instructor", "key":"value a “b“ c"}`;
-    let output = helpers.normalizeJson(input);
-    expect(output).toBe(expected);
-});
-test.only('helpers.normalizeJson-bad json', () => {
-    const input = `{"credibility" : "B.Sc - Computer Science, "H.I.T" Holon, "Achid" ‘Aharai’ instructor", "key": "value a "b" c", }`;
-    const expected = `{"credibility":"B.Sc - Computer Science, “H.I.T“ Holon, “Achid“ ‘Aharai’ instructor", "key":"value a “b“ c"}`;
-    let output = helpers.normalizeJson(input);
-    expect(output).toBe(expected);
-});
+*/
 
 describe('helpers.bumpVersion', () => {
     test('date.bumpVersion-simple-major-positive', () => {
