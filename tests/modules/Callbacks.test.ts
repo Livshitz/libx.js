@@ -89,7 +89,12 @@ test('clear-positive', (done) => {
     const handle = c.subscribe((arg) => {
         throw "Shouldn't get here";
     });
+    expect(c.getSubscribersCount()).toEqual(1);
+
     c.clear(handle);
+
+    expect(c.getSubscribersCount()).toEqual(0);
+
     setTimeout(() => {
         c.trigger(1);
     }, 10);
