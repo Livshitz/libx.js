@@ -64,11 +64,13 @@ export class Callbacks<T = any> {
 
     public clear(id: number) {
         delete this.list[id];
+        this.counter--;
     }
 
     public clearAll() {
         delete this.list;
         this.list = {};
+        this.counter = 0;
     }
 
     public getSubscribersCount() {
