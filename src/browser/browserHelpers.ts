@@ -70,7 +70,7 @@ export class BrowserHelpers {
         return (!avoidPrefix ? '?' : '') + str.join('&');
     };
 
-    public injectScript = function (src, onReady, doc = document) {
+    public injectScript = function (src, onReady, doc = document, attributes = {}) {
         /*
 		return new Promise((resolve, reject) => {
 				let script = document.createElement('script');
@@ -84,6 +84,9 @@ export class BrowserHelpers {
 		*/
         var head = doc.getElementsByTagName('head')[0];
         var script = doc.createElement('script');
+        for (let attrKey of Object.keys(attributes)) {
+            script.setAttribute(attrKey, attributes[attrKey]);
+        }
         script.type = 'text/javascript';
         (<any>script).onreadystatechange = function () {
             if (this.readyState == 'complete') onReady(src);
