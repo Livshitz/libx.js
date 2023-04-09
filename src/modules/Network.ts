@@ -13,7 +13,7 @@ import { objectHelpers } from '../helpers/ObjectHelpers';
 
 export class Network {
     private url = urlapi;
-    private helper = new Helper();
+    public helper = new Helper();
 
     constructor() {}
 
@@ -234,10 +234,10 @@ class Helper {
         if (pos > -1) {
             var startOfUrl = url.slice(0, pos);
             var restOfUrl = url.slice(pos + 3);
-            restOfUrl = restOfUrl.replace(/\/+/g, '/');
+            restOfUrl = restOfUrl.replace(/([^:]\/)\/+/g, '$1');
             url = startOfUrl + sep + restOfUrl;
         } else {
-            url = url.replace(/\/+/g, '/');
+            url = url.replace(/([^:]\/)\/+/g, '$1');
         }
 
         prefixUrl = prefixUrl || '';

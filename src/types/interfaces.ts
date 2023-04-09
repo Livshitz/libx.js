@@ -170,8 +170,8 @@ export interface IModuleNetwork {
     get<T = any>(url, params?, options?): Promise<T>;
     post<T = any>(url, data?, options?): Promise<T>;
     upload<T = any>(url, fileReadStream?, options?): Promise<T>;
-    helpers: {
-        fixUrl(url: string, prefixUrl: string): string;
+    helper: {
+        fixUrl(url: string, prefixUrl?: string): string;
         parseUrl(url: string): string;
         cleanUrl(url: string): string;
         // getFormData(object: Object): any;
