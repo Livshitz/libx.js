@@ -24,6 +24,11 @@ describe('libx:modules:network tests', () => {
         url = await server.run();
     });
 
+    test('module-network-fixUrl-helper', async () => {
+        const fixedUrl = networkModule.helper.fixUrl('https://test.com//a?x=1/https://second.com/b?y=2');
+        expect(fixedUrl).toBe('https://test.com/a?x=1/https://second.com/b?y=2');
+    });
+
     test('module-network-httpRequest-positive', async () => {
         let res: Buffer = await networkModule.httpRequest(url, null, 'GET');
         expect(res.toString()).toBe('OK');
