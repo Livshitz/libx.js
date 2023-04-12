@@ -10,6 +10,9 @@ beforeEach(() => {
     localStorage = new LocalStorageMock();
     localStorage['test/a'] = 10;
     localStorage['test/x'] = 111;
+    localStorage['test/y/0'] = 0;
+    localStorage['test/y/1'] = 1;
+    localStorage['test/y/2'] = 2;
     proxyCache = new ProxyCache('test', existingObj, { store: localStorage });
 });
 
@@ -49,6 +52,15 @@ test('localStorage-add&get-positive', () => {
 test('localStorage-delete-positive', () => {
     delete proxyCache.proxy.a;
     expect(proxyCache.proxy.a).toEqual(undefined);
+});
+
+test('localStorage-delete-object', () => {
+    delete proxyCache.proxy.y;
+    expect(proxyCache.proxy?.y?.[1]).toEqual(undefined);
+});
+test('localStorage-set-object', () => {
+    proxyCache.proxy.y = [];
+    expect(proxyCache.proxy?.y?.[1]).toEqual(undefined);
 });
 
 test('localStorage-array-positive', () => {
