@@ -45,13 +45,21 @@ export class Cache implements IDataProvider {
     }
 
     public set<T = any>(path: string, data: T) {
+        if (data == null || this.isEmpty(data)) {
+            this.delete(path);
+        }
         this.store[this.prefix + this.delimiter + path] = helpers.jsonify(data, true);
         if (this._expiryPeriodMS != 0 && this._expiryPeriodMS != null) this.setExpiry(path);
         this.onChange.trigger(path, data);
     }
 
     public delete<T = any>(path: string) {
-        delete this.store[this.prefix + this.delimiter + path];
+        const key = this.prefix + this.delimiter + path;
+        for (const k in this.store) {
+            if (k.startsWith(key)) {
+                delete this.store[k];
+            }
+        }
         this.onChange.trigger(path, null);
     }
 
@@ -111,6 +119,15 @@ export class Cache implements IDataProvider {
             ret = objectHelpers.spawnHierarchy(key, ret, value, '/');
         }
         return ret;
+    }
+
+    private isEmpty(value: any) {
+        if (Array.isArray(value)) {
+            return value.length === 0;
+        } else if (typeof value === 'object' && value !== null) {
+            return Object.keys(value).length === 0;
+        }
+        return false;
     }
 
     private fixPath(path: string): string {
