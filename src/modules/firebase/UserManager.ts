@@ -64,6 +64,8 @@ export class UserManager {
         var provider = new this.firebaseModule.firebaseProvider.auth.GoogleAuthProvider();
         provider.addScope('profile');
         provider.addScope('email');
+        provider.setCustomParameters({ prompt: 'select_account' });
+
         if (customScopes != null) {
             customScopes.split(',').map((x) => provider.addScope(x));
         }
