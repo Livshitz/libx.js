@@ -359,6 +359,65 @@ test('helpers.csvToJson-positive', () => {
     ]);
 });
 
+test('helpers.csvToJson-double quote', () => {
+    let input = `"Survived",Pclass,Name,Sex,Age,Siblings/Spouses Aboard,Parents/Children Aboard,Fare
+    "0",3,""Mr. Owen Harris Braund"",male,22,1,0,7.25
+    "1",1,Mrs. John Bradley (Florence Briggs Thayer) Cumings,female,38,1,0,71.2833`;
+    const output = helpers.csvToJson(input);
+    expect(output).toMatchObject([
+        {
+            Survived: '0',
+            Pclass: '3',
+            Name: '"Mr. Owen Harris Braund"',
+            Sex: 'male',
+            Age: '22',
+            'Siblings/Spouses Aboard': '1',
+            'Parents/Children Aboard': '0',
+            Fare: '7.25',
+        },
+        {
+            Survived: '1',
+            Pclass: '1',
+            Name: 'Mrs. John Bradley (Florence Briggs Thayer) Cumings',
+            Sex: 'female',
+            Age: '38',
+            'Siblings/Spouses Aboard': '1',
+            'Parents/Children Aboard': '0',
+            Fare: '71.2833',
+        },
+    ]);
+});
+
+test('helpers.csvToJson-newline', () => {
+    let input = `"Survived",Pclass,Name,Sex,Age,Siblings/Spouses Aboard,Parents/Children Aboard,Fare
+    "0",3,""Mr. Owen Harris\n Braund"",male,22,1,0,7.25
+    "1",1,Mrs. John Bradley (Florence Briggs Thayer) Cumings,female,38,1,0,71.2833`;
+    const output = helpers.csvToJson(input);
+    expect(output).toMatchObject([
+        {
+            Survived: '0',
+            Pclass: '3',
+            Name: 'Mr. Owen Harris\n Braund',
+            Sex: 'male',
+            Age: '22',
+            'Siblings/Spouses Aboard': '1',
+            'Parents/Children Aboard': '0',
+            Fare: '7.25',
+        },
+        {
+            Survived: '1',
+            Pclass: '1',
+            Name: 'Mrs. John Bradley (Florence Briggs Thayer) Cumings',
+            Sex: 'female',
+            Age: '38',
+            'Siblings/Spouses Aboard': '1',
+            'Parents/Children Aboard': '0',
+            Fare: '71.2833',
+        },
+    ]);
+});
+
+
 test('helpers.csvToJson-complex', () => {
     let input = `"price","houseType","area","city","neighborhood","address","rooms","size","floor","totalFloors","creationDate","columns","furnished","aircondition","parking","secure space","porch","accessibility","bars","elevator","storage","sun terrace","renovated","porches","arnona","vaad","gardenSize"
     "₪500","חניה","תל אביב","תל אביב יפו","שיכון בבלי","חנה זמר 3","","10","0","0","04/02/2021","FALSE","FALSE","FALSE","FALSE","FALSE","FALSE","FALSE","FALSE","FALSE","FALSE","FALSE","FALSE","","","",""

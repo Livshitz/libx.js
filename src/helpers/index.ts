@@ -483,21 +483,40 @@ export class Helpers {
     }
 
     public csvToJson(csvStr: string, cellDelimiter = ',', lineDelimiter = '\n') {
-        const lines = csvStr.split(lineDelimiter);
+        const lines = csvStr.split(new RegExp(`\r?\n|\r^`, 'gi'));
         const result = [];
 
-        var headers = lines[0].split(cellDelimiter).map((x) => x.replace(/^\s*\"?\s*(.*?)\s*\"?$/g, '$1'));
+        const headers = lines[0].split(cellDelimiter).map((x) => x.replace(/^\s*\"?\s*(.*?)\s*\"?$/g, '$1'));
 
-        for (var i = 1; i < lines.length; i++) {
-            var obj = {};
+        let lastPos = 0;
+        let isMultiline = false;
+        let obj = {};
+        for (let i = 1; i < lines.length; i++) {
             // 'a,"b,x",c'.split(/\s*,\s*(?=(?:[^"]*"[^"]*")*[^"]*$)/)
-            var currentline = lines[i].match(new RegExp(`(".*?"|[^"${cellDelimiter}]+)(?=\\s*${cellDelimiter}|\s*$)`, 'g'));
+            const exp = lastPos == 0 ? `(".*?"|[^"${cellDelimiter}]+)(?=\\s*${cellDelimiter}|\s*$)` : `("?.*?"|[^"${cellDelimiter}]+)(?=\\s*${cellDelimiter}|\s*$)`;
+            const currentline = lines[i].match(new RegExp(exp, 'gi'));
+            if (lastPos + currentline.length < headers.length) isMultiline = true;
 
             for (var j = 0; j < headers.length; j++) {
-                obj[headers[j]] = currentline[j].replace(/^\s*\"?\s*(.*?)\s*\"?$/g, '$1');
+                const val = lastPos == 0 ? currentline[j]?.replace(/^\s*\"?\s*(.*?)\s*\"?$/g, '$1') : currentline[j]?.replace(/^\"?(.*?)\s*\"*?$/g, '$1');
+                const h = headers[lastPos + j];
+                obj[h] = (obj[h] ?? '') + val;
+                if (isMultiline && j == currentline.length - 1) {
+                    lastPos = j; 
+                    obj[h] += '\n';
+                    break;
+                }
+            }
+
+            if (isMultiline) {
+                isMultiline = false;
+                continue;
             }
 
             result.push(obj);
+            obj = {};
+            lastPos = 0;
+            isMultiline = false;
         }
 
         return result;
