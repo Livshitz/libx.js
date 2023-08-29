@@ -1,9 +1,10 @@
 import { NumberExtensions } from '../../src/extensions/NumberExtensions';
 import { helpers, SemverPart } from '../../src/helpers';
+import fs from 'fs';
 
 var dataset: any = {};
 
-beforeAll(() => {});
+beforeAll(() => { });
 
 // [[[[[[[[[[  Helper Extensions  ]]]]]]]]]]
 // TODO: isWindow, arrayBufferToBuffer, bufferToArrayBuffer, getProjectConfig, DependencyInjector, jsonRecurse, jsonResolveReferences
@@ -96,27 +97,27 @@ test('helpers.base64ToUint8Array-positive', () => {
 });
 
 test('helpers.getParamNames-positive-arrow', () => {
-    let param = (a) => {};
+    let param = (a) => { };
     let output = helpers.getParamNames(param);
     expect(output).toEqual(['a']);
 });
 test('helpers.getParamNames-positive-function', () => {
-    let param = function (a) {};
+    let param = function (a) { };
     let output = helpers.getParamNames(param);
     expect(output).toEqual(['a']);
 });
 test('helpers.getParamNames-positive-async', () => {
-    let param = async (a) => {};
+    let param = async (a) => { };
     let output = helpers.getParamNames(param);
     expect(output).toEqual(['a']);
 });
 test('helpers.getParamNames-positive-asyncWithSpace', () => {
-    let param = async (a) => {};
+    let param = async (a) => { };
     let output = helpers.getParamNames(param);
     expect(output).toEqual(['a']);
 });
 test('helpers.getParamNames-positive-asyncWithSpace', () => {
-    let namedFunc = async (a) => {};
+    let namedFunc = async (a) => { };
     let param = namedFunc;
     let output = helpers.getParamNames(param);
     expect(output).toEqual(['a']);
@@ -388,7 +389,27 @@ test('helpers.csvToJson-double quote', () => {
     ]);
 });
 
-test('helpers.csvToJson-newline', () => {
+test('helpers.csvToJson-sheet', () => {
+    let input = `"""Survived""",Pclass,Name
+"""0""",3,"""Mr. Owen Harris
+ Braund"""
+1,1,Mrs. John Bradley (Florence Briggs Thayer) Cumings`;
+    const output = helpers.csvToJson(input);
+    expect(output).toMatchObject([
+        {
+            Survived: '"0"',
+            Pclass: '3',
+            Name: '"Mr. Owen Harris\n Braund"',
+        },
+        {
+            Survived: '1',
+            Pclass: '1',
+            Name: 'Mrs. John Bradley (Florence Briggs Thayer) Cumings',
+        },
+    ]);
+});
+
+test('helpers.csvToJson-multilineline', () => {
     let input = `"Survived",Pclass,Name,Sex,Age,Siblings/Spouses Aboard,Parents/Children Aboard,Fare
     "0",3,""Mr. Owen Harris\n Braund"",male,22,1,0,7.25
     "1",1,Mrs. John Bradley (Florence Briggs Thayer) Cumings,female,38,1,0,71.2833`;
@@ -397,7 +418,7 @@ test('helpers.csvToJson-newline', () => {
         {
             Survived: '0',
             Pclass: '3',
-            Name: 'Mr. Owen Harris\n Braund',
+            Name: '"Mr. Owen Harris\n Braund"',
             Sex: 'male',
             Age: '22',
             'Siblings/Spouses Aboard': '1',
@@ -417,6 +438,89 @@ test('helpers.csvToJson-newline', () => {
     ]);
 });
 
+test('helpers.csvToJson-file-1', () => {
+    const input = fs.readFileSync(__dirname + '/../fakes/test-1.csv').toString();
+    const output = helpers.csvToJson(input);
+    expect(output).toMatchObject([
+        {
+            'Test Case:': '1',
+            'Inputs:': '{\n"input": "VP R&Ds in US-based companies with 20-100 employees"\n}',
+            'Expectation:':
+                'Expecting this exact YAML result:\ncountry: United States\nrole:\n  - VP R&D\nemployee_count:\n  min: 20\n  max: 100',
+        },
+        {
+            'Test Case:': '2',
+            'Inputs:': '{\n  "input": "VP R&Ds in US-based companies"\n}',
+            'Expectation:': 'Expecting this exact YAML result:\ncountry: United States\nrole:\n  - VP R&D',
+        },
+        {
+            'Test Case:': '3',
+            'Inputs:': '{\n  "input": "Lawyer in US"\n}',
+            'Expectation:': 'Expecting this exact YAML result:\ncountry: United States\nrole:\n  - Lawyer',
+        },
+        {
+            'Test Case:': '4',
+            'Inputs:': '{\n  "input": "VP R&Ds and team leads in US-based companies"\n}',
+            'Expectation:': 'Expecting this exact YAML result:\ncountry: United States\nrole:\n  - VP R&D\n  - Team Lead',
+        },
+    ]);
+});
+
+test('helpers.csvToJson-multiline-2', () => {
+    let input = `"testCase","variables","expectation"
+"full case","input: ""VP R&Ds in US-based companies with 100+ employees""","Expecting this exact YAML result:
+country: United States
+role:
+    - VP R&D
+employee_count:
+    min: 100"`;
+    const output = helpers.csvToJson(input);
+    expect(output).toMatchObject([
+        {
+            testCase: 'full case',
+            variables: 'input: "VP R&Ds in US-based companies with 100+ employees"',
+            expectation: 'Expecting this exact YAML result:\ncountry: United States\nrole:\n    - VP R&D\nemployee_count:\n    min: 100',
+        },
+    ]);
+});
+
+test('helpers.csvToJson-simple', () => {
+    let input = `"price","houseType","arnona"
+    "₪500","",""`;
+    const output = helpers.csvToJson(input);
+    expect(output).toMatchObject([
+        {
+            houseType: '',
+            price: '₪500',
+            arnona: '',
+        }
+    ]);
+});
+
+test('helpers.csvToJson-simple-complex', () => {
+    let input = `"price","houseType","area"
+    "₪500","חניה","תל אביב"
+    "₪3,500","דירה","תל אביב"
+    "₪2,500","מחסן","תל אביב"`;
+    const output = helpers.csvToJson(input);
+    expect(output).toMatchObject([
+        {
+            area: 'תל אביב',
+            houseType: 'חניה',
+            price: '₪500',
+        },
+        {
+            area: 'תל אביב',
+            houseType: 'דירה',
+            price: '₪3,500',
+        },
+        {
+            area: 'תל אביב',
+            houseType: 'מחסן',
+            price: '₪2,500',
+        },
+    ]);
+});
 
 test('helpers.csvToJson-complex', () => {
     let input = `"price","houseType","area","city","neighborhood","address","rooms","size","floor","totalFloors","creationDate","columns","furnished","aircondition","parking","secure space","porch","accessibility","bars","elevator","storage","sun terrace","renovated","porches","arnona","vaad","gardenSize"
