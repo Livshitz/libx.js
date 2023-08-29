@@ -1,0 +1,29 @@
+Test Case:,Inputs:,Expectation:
+1,"{
+""input"": ""VP R&Ds in US-based companies with 20-100 employees""
+}","Expecting this exact YAML result:
+country: United States
+role:
+  - VP R&D
+employee_count:
+  min: 20
+  max: 100"
+2,"{
+  ""input"": ""VP R&Ds in US-based companies""
+}","Expecting this exact YAML result:
+country: United States
+role:
+  - VP R&D"
+3,"{
+  ""input"": ""Lawyer in US""
+}","Expecting this exact YAML result:
+country: United States
+role:
+  - Lawyer"
+4,"{
+  ""input"": ""VP R&Ds and team leads in US-based companies""
+}","Expecting this exact YAML result:
+country: United States
+role:
+  - VP R&D
+  - Team Lead"

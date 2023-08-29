@@ -482,44 +482,74 @@ export class Helpers {
         return arr;
     }
 
-    public csvToJson(csvStr: string, cellDelimiter = ',', lineDelimiter = '\n') {
-        const lines = csvStr.split(new RegExp(`\r?\n|\r^`, 'gi'));
-        const result = [];
+    public csvToJson(csvStr: string, cellDelimiter = ',', clean = true) {
+        let curPos = 0;
+        let curChar: string = null;
+        let nextChar: string = null;
+        let curLine = 0;
+        let isWithinContainer = false;
+        let isOpen = false;
+        let field = '';
+        let fields = [];
+        let values = {};
+        let headers = [];
+        let ret = [];
 
-        const headers = lines[0].split(cellDelimiter).map((x) => x.replace(/^\s*\"?\s*(.*?)\s*\"?$/g, '$1'));
+        const newLineChars = /[\n\r]/gi;
+        const containerChars = /[\"]/gi
+        const separator = new RegExp(`[${cellDelimiter}]`, 'gi')
 
-        let lastPos = 0;
-        let isMultiline = false;
-        let obj = {};
-        for (let i = 1; i < lines.length; i++) {
-            // 'a,"b,x",c'.split(/\s*,\s*(?=(?:[^"]*"[^"]*")*[^"]*$)/)
-            const exp = lastPos == 0 ? `(".*?"|[^"${cellDelimiter}]+)(?=\\s*${cellDelimiter}|\s*$)` : `("?.*?"|[^"${cellDelimiter}]+)(?=\\s*${cellDelimiter}|\s*$)`;
-            const currentline = lines[i].match(new RegExp(exp, 'gi'));
-            if (lastPos + currentline.length < headers.length) isMultiline = true;
+        while (curPos < csvStr.length) {
+            curChar = csvStr[curPos];
+            nextChar = curPos < csvStr.length ? csvStr[curPos + 1] : null;
+            try {
+                const isEndOfToken = (nextChar?.match(separator) || nextChar?.match(newLineChars) || curPos == csvStr.length - 1);
 
-            for (var j = 0; j < headers.length; j++) {
-                const val = lastPos == 0 ? currentline[j]?.replace(/^\s*\"?\s*(.*?)\s*\"?$/g, '$1') : currentline[j]?.replace(/^\"?(.*?)\s*\"*?$/g, '$1');
-                const h = headers[lastPos + j];
-                obj[h] = (obj[h] ?? '') + val;
-                if (isMultiline && j == currentline.length - 1) {
-                    lastPos = j; 
-                    obj[h] += '\n';
-                    break;
+                if (curChar.match(newLineChars)) {
+                    if (curLine == 0) {
+                        headers = fields.map(x => x.replace(/[\'\"]/g, ''));
+                        field = '';
+                    }
+                    if (curLine != 0 && (fields.length != headers.length || isWithinContainer) && field.length != 0) {
+                        field += '\n';
+                    } else {
+                        fields = [];
+                    }
+                    curLine++;
+                    continue;
                 }
-            }
+                else if (curChar.match(containerChars)) {
+                    if (!isWithinContainer && curPos == csvStr.length - 1) field += curChar;
+                    if (!isWithinContainer && csvStr?.[curPos - 1] == ' ') field = field.trim();
+                    if (!isWithinContainer && (field.length == 0)) isWithinContainer = true;
+                    isOpen = !isOpen;
+                    if (isWithinContainer && isEndOfToken && !isOpen) isWithinContainer = false;
+                }
 
-            if (isMultiline) {
-                isMultiline = false;
-                continue;
-            }
+                if (!isWithinContainer && (curChar.match(separator) || curPos == csvStr.length - 1 || nextChar.match(newLineChars))) {
+                    if (!curChar.match(separator) && !curChar.match(containerChars)) field += curChar;
+                    else if (curChar.match(containerChars) && isEndOfToken) field += curChar;
+                    if (clean) field = field.replace(/^\s*[\'\"]\s*([\s\S]+?)?\s*[\'\"]\s*?$/gi, '$1').trim();
+                    if (curLine > 0) {
+                        values[headers[fields.length]] = field.replace(/\"\"/gi, '\"');
+                    }
+                    fields.push(field);
+                    field = '';
+                    if (fields.length == headers.length) {
+                        ret.push(values);
+                        values = {};
+                    }
+                    continue;
+                }
 
-            result.push(obj);
-            obj = {};
-            lastPos = 0;
-            isMultiline = false;
+                // if (curChar.match(containerChars) && (curPos == csvStr.length-1 || (nextChar?.match(separator) && !isWithinContainer))) continue;
+                field += curChar;
+            } finally {
+                curPos++;
+            }
         }
 
-        return result;
+        return ret;
     }
 
     public median(values: number[]): number {
@@ -764,23 +794,23 @@ export interface IHelper {
 /*
 this._projectConfig = null;
 this.getProjectConfig = (containingFolder, secret)=>{
-	var ret = null;
-	try {
-		if (this._projectConfig == null) {
-			if (global.libx == null) global.libx = {};
-			if (global.libx._projconfig != null) {
-				return ret = this._projectConfig = global.libx._projconfig;
-			}
-			
-			if (global.projconfig != null) return ret = global.projconfig;
-			if (global.libx._projconfig == null) throw "libx:helpers:getProjectConfig: Detected browser, but `window.libx._projconfig` was not provided";
-		
-		}
-		if (this._projectConfig == null) throw "libx:helpers:getProjectConfig: Could not find/load project.json in '{0}'".format(containingFolder);
-		return ret = this._projectConfig;
-	} finally {
-		if (ret != null && ret.private == null) ret.private = {};
-		return ret;
-	}
+    var ret = null;
+    try {
+        if (this._projectConfig == null) {
+            if (global.libx == null) global.libx = {};
+            if (global.libx._projconfig != null) {
+                return ret = this._projectConfig = global.libx._projconfig;
+            }
+        	
+            if (global.projconfig != null) return ret = global.projconfig;
+            if (global.libx._projconfig == null) throw "libx:helpers:getProjectConfig: Detected browser, but `window.libx._projconfig` was not provided";
+    	
+        }
+        if (this._projectConfig == null) throw "libx:helpers:getProjectConfig: Could not find/load project.json in '{0}'".format(containingFolder);
+        return ret = this._projectConfig;
+    } finally {
+        if (ret != null && ret.private == null) ret.private = {};
+        return ret;
+    }
 }
 */
