@@ -53,7 +53,7 @@ export class Streams {
         return readable;
     }
 
-    public static async getStream(url: string, onDelta: (data) => void, options: Partial<IStreamOptions> = defaultStreamOptions) {
+    public static async getStream(url: string, onDelta?: (data) => void, options: Partial<IStreamOptions> = defaultStreamOptions) {
         const p = helpers.newPromise();
         try {
             if (options.payload != null) {
@@ -90,7 +90,7 @@ export class Streams {
 
                 const decodedString = textDecoder.decode(value);
 
-                onDelta(decodedString);
+                onDelta?.(decodedString);
 
                 buffer += decodedString;
                 options.onProgress?.(buffer);
@@ -104,4 +104,4 @@ export class Streams {
     }
 }
 
-export class ModuleOptions {}
+export class ModuleOptions { }
