@@ -1,6 +1,6 @@
 {
     "name": "libx.js",
-    "version": "2.36.1",
+    "version": "2.36.2",
     "description": "",
     "main": "./build/bundles/essentials",
     "types": "./globals.d.ts",
@@ -44,8 +44,8 @@
         "prompt": "^1.1.0",
         "rxjs": "^6.6.3",
         "rxjs-compat": "^6.6.7",
-        "xregexp": "^5.0.2",
         "web-streams-polyfill": "^3.2.1",
+        "xregexp": "^5.0.2",
         "yargs": "^17.2.1"
     },
     "devDependencies": {
