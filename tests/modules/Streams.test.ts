@@ -16,9 +16,9 @@ test('asyncIterableToStream-positive', async () => {
     }
 
     const arr = range(4, 8);
-    for await (let i of arr) {
-        console.log(i);
-    }
+    // for await (let i of arr) {
+    //     console.log(i);
+    // }
 
     let readable = await Streams.asyncIterableToStream(getRange(), null);
     const reader = readable.getReader();
