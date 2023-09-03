@@ -8,6 +8,7 @@ import { di } from './dependencyInjector';
 import { Buffer } from 'buffer';
 import { log } from './log';
 import { objectHelpers } from '../helpers/ObjectHelpers';
+import { Streams } from './Streams';
 
 // var querialize = require('../browser/helpers').querialize;
 
@@ -15,7 +16,7 @@ export class Network {
     private url = urlapi;
     public helper = new Helper();
 
-    constructor() {}
+    constructor() { }
 
     public httpGetJson = async (url: string, _options: any = {}) => {
         let headers = { 'content-type': 'application/json; charset=UTF-8' };
@@ -64,11 +65,11 @@ export class Network {
                 //'Content-Type':'application/x-www-form-urlencoded'
                 // 'client': process.env.MOVIEGLU_CLIENT,
                 /*
-				'x-api-key': process.env.MOVIEGLUE_API_KEY,
-				'api-version': process.env.MOVIEGLU_API_VERSION,
-				'Authorization': process.env.MOVIEGLUE_AUTHORISATION,
-				'geolocation': user.loc[0] + ';' + user.loc[1],
-				*/
+                'x-api-key': process.env.MOVIEGLUE_API_KEY,
+                'api-version': process.env.MOVIEGLU_API_VERSION,
+                'Authorization': process.env.MOVIEGLUE_AUTHORISATION,
+                'geolocation': user.loc[0] + ';' + user.loc[1],
+                */
                 // 'Content-Type': 'application/json; charset=UTF-8',
                 // 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
                 // 'Content-Length': Buffer.byteLength(data)
@@ -221,6 +222,8 @@ export class Network {
 
         return p;
     };
+
+    public getStream = Streams.getStream;
 }
 
 class Helper {
@@ -263,16 +266,16 @@ class Helper {
     }
 
     /*
-	public getFormData = object => {
-		const formData = new FormData();
-		Object.keys(object).forEach(key => {
-			if (helpers.isObject(object[key])) 
-				formData.append(key, this.getFormData(object[key]));
-			else 
-				formData.append(key, object[key])
-		});
-		return formData;
-	}
+    public getFormData = object => {
+        const formData = new FormData();
+        Object.keys(object).forEach(key => {
+            if (helpers.isObject(object[key])) 
+                formData.append(key, this.getFormData(object[key]));
+            else 
+                formData.append(key, object[key])
+        });
+        return formData;
+    }
 
     public formDataToString = (formDataObj) =>
         [...formDataObj.entries()] // expand the elements from the .entries() iterator into an actual array
@@ -310,8 +313,8 @@ class Helper {
 
         keys.pop();
         return p;
-	}
-	*/
+    }
+    */
 }
 
 export const network = new Network();

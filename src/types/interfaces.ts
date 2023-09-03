@@ -51,6 +51,10 @@ export interface IDeferred<T = any, Treason = any> extends Promise<T> {
     notify();
 }
 
+export interface IDeferredWithProgress<T = any, TProgress = any> extends IDeferred<T> {
+    progress: TProgress;
+}
+
 export interface IPromise<T> {
     done();
     fail();
