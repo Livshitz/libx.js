@@ -1,6 +1,6 @@
 {
     "name": "libx.js",
-    "version": "2.35.7",
+    "version": "2.36.0",
     "description": "",
     "main": "./build/bundles/essentials",
     "types": "./globals.d.ts",
@@ -55,6 +55,7 @@
         "@types/lodash": "^4.14.171",
         "@types/node": "^16.3.3",
         "@types/xregexp": "^4.3.0",
+        "web-streams-polyfill": "^3.2.1",
         "express": "^4.17.1",
         "express-formidable": "^1.2.0",
         "firebase": "^9.6.7",
