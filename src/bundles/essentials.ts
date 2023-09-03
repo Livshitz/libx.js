@@ -12,7 +12,11 @@ import { Time } from '../modules/Time';
 // import { Deferred } from 'concurrency.libx.js';
 // export * as LibxJS from '../types/interfaces';
 
-if (!(<any>global)._libx_avoidExtensions) extensions.applyAllExtensions();
+try {
+    if (!(<any>global)._libx_avoidExtensions) extensions.applyAllExtensions();
+} catch (ex) {
+    console.warn('libx: failed to apply extensions', ex);
+}
 
 const libxBase = {
     $: {},
