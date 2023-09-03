@@ -45,6 +45,7 @@
         "rxjs": "^6.6.3",
         "rxjs-compat": "^6.6.7",
         "xregexp": "^5.0.2",
+        "web-streams-polyfill": "^3.2.1",
         "yargs": "^17.2.1"
     },
     "devDependencies": {
@@ -66,7 +67,6 @@
         "ts-jest": "^29.0.1",
         "ts-node": "^10.1.0",
         "typescript": "^4.5.4",
-        "web-streams-polyfill": "^3.2.1"
     },
     "not-in-use-dependencies": {
         "bignumber.js": "^8.0.1",
