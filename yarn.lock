@@ -4516,6 +4516,11 @@ concurrency.libx.js@^1.1.1:
   resolved "https://registry.yarnpkg.com/concurrency.libx.js/-/concurrency.libx.js-1.1.1.tgz#7a4d4513c1107c2842d2449679b0264f7599426e"
   integrity sha512-8+Ohem4/xqmY+lUlmnJuE0B9imrShb/AGiK0eFPj0FxhnOuYgxeTsNj3Xx9fA5fq1FUs7VGmPqwjH7fmu/mU2A==
 
+concurrency.libx.js@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/concurrency.libx.js/-/concurrency.libx.js-1.2.1.tgz#c6fa5fd5d5b448fba0f1a8c8bf2086d14d9e83ea"
+  integrity sha512-32HDa/i1aHT1qc3teop4kPDU6jklQ+eZ/VxmZ6ZmMEYykACax8a+b7+FGU6u6DYgRHu6xZcCn/vunAD5cDzHJQ==
+
 connect-livereload@^0.6.0:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/connect-livereload/-/connect-livereload-0.6.1.tgz#1ac0c8bb9d9cfd5b28b629987a56a9239db9baaa"

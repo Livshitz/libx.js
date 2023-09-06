@@ -90,6 +90,7 @@ export class Helpers {
     public peekMeasure: typeof concurrency.measurements.peekMeasure;
     public getMeasureAndReset: typeof concurrency.measurements.getMeasureAndReset;
     public chainTasks: (tasks: any, eachCb?: any) => Promise<void>;
+    public concurrent: typeof concurrency.concurrent;
     public sleep: (millis: any) => Promise<unknown>;
     public ObjectHelpers = objectHelpers;
 
@@ -671,6 +672,7 @@ export class Helpers {
         this.peekMeasure = this.measurements.peekMeasure;
         this.getMeasureAndReset = this.measurements.getMeasureAndReset;
         this.chainTasks = concurrency.chain.chainTasks;
+        this.concurrent = concurrency.concurrent;
         this.sleep = concurrency.sleep;
     }
 
