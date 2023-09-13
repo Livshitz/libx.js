@@ -162,6 +162,7 @@ export class Helpers {
         var str = JSON.stringify(objectWithFormat);
         const trailingArg = args?.length > 1 ? args[args.length - 1] : null;
         str = StringExtensions.format.call(str, objectHelpers.merge(objectWithFormat, ...args), trailingArg);
+        str = str.replace(/\n/gi, '\\n') // fix multiline strings
         return JSON.parse(str);
     }
 
