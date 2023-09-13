@@ -293,6 +293,19 @@ test('helpers.formatify - remove missing vars', () => {
     expect(output).toEqual('aa  bb 111 - {notToBeReplaced}');
 });
 
+test('helpers.formatify - multiline in string', () => {
+    let output = helpers.formatify(
+        'aa {{input}}',
+        {
+            input: `- name: How They Bypassed Multi-Factor Authentication in Seconds
+            text: |-
+              Alright, so Mike's `,
+        },
+        true
+    );
+    expect(output).toEqual(`aa - name: How They Bypassed Multi-Factor Authentication in Seconds\n            text: |-\n              Alright, so Mike's `);
+});
+
 test('helpers.stringToColour-negative', () => {
     let output = helpers.stringToColour('blabla!@#');
     expect(output).toEqual('#2453c7');
