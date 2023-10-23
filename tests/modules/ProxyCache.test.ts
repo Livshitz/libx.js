@@ -1,6 +1,6 @@
 import {} from 'module';
 import { ProxyCache } from '../../src/modules/ProxyCache';
-import { LocalStorageMock } from '../helpers/LocalStorageMock';
+import { LocalStorageMock } from '../../src/modules/LocalStorageMock';
 
 let localStorage: LocalStorageMock = null;
 let proxyCache: ProxyCache;

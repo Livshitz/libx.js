@@ -8,6 +8,14 @@ import { objectHelpers } from '../../helpers/ObjectHelpers';
 import { EventsStream } from '../EventsStream';
 import { FireProxy } from './FireProxy';
 import { Firebase, IFirebaseInstance } from './FirebaseModule';
+import { LocalStorageMock } from '../LocalStorageMock';
+
+let localStorage;
+if (typeof window.localStorage !== 'undefined') {
+    localStorage = window.localStorage;
+} else {
+    localStorage = <any>new LocalStorageMock();
+}
 
 export class UserManager {
     public firebaseModule: Firebase;
