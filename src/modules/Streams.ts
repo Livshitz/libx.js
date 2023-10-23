@@ -24,7 +24,54 @@ export class Streams {
         this.options = { ...new ModuleOptions(), ...options };
     }
 
-    public static async asyncIterableToStream<T>(asyncList: Promise<AsyncIterable<T>>, callback?: (data: T) => string) {
+    public static async pipeReaderToWriter(reader, writer) {
+        const encoder = new TextEncoder();
+        for (; ;) {
+            const { value, done } = await reader.read();
+            const encoded = encoder.encode(value);
+            await writer.write(encoded);
+            if (done) {
+                break;
+            }
+        }
+        writer.close();
+
+        // for (const stream of reader) {
+        //     await stream.pipeTo(writer, {
+        //       preventClose: true
+        //     })
+        // }
+        // writer.close()
+    }
+
+    public static async readStreamToString(stream: ReadableStream<Uint8Array>): Promise<string> {
+        const reader = stream.getReader();
+        const chunks: Uint8Array[] = [];
+
+        while (true) {
+            const { done, value } = await reader.read();
+
+            if (done) {
+                break;
+            }
+
+            chunks.push(value);
+        }
+
+        // Concatenate the chunks and decode them into a string using TextDecoder
+        const concatenatedChunks = new Uint8Array(chunks.reduce((acc, chunk) => acc + chunk.length, 0));
+        let offset = 0;
+
+        for (const chunk of chunks) {
+            concatenatedChunks.set(chunk, offset);
+            offset += chunk.length;
+        }
+
+        const text = new TextDecoder().decode(concatenatedChunks);
+        return text;
+    }
+
+    public static async asyncIterableToStream<T = any>(asyncList: Promise<AsyncIterable<T>>, callback?: (data: T) => string, onDone?: (data: T) => void) {
         if (typeof TransformStream == 'undefined') {
             global.TransformStream = require('web-streams-polyfill').TransformStream;
         }
@@ -32,11 +79,13 @@ export class Streams {
 
         let writer = writable.getWriter();
         const textEncoder = new TextEncoder();
+        let buffer = '';
         asyncList
             .then(async (itr) => {
                 try {
                     for await (const part of itr) {
                         let msg = callback ? callback(part) || '' : part.toString();
+                        buffer += msg;
                         writer.write(textEncoder.encode(msg));
                     }
                 } catch (err) {
@@ -46,8 +95,11 @@ export class Streams {
             .catch((err) => {
                 writer.write(textEncoder.encode('Error in completion: ' + err));
             })
-            .finally(() => {
+            .finally(async () => {
                 writer.close();
+                // const x = await readable.getReader().read();
+                // console.log('------ done', x)
+                if (onDone) onDone(buffer as unknown as T);
             });
 
         return readable;

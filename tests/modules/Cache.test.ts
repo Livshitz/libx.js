@@ -1,7 +1,7 @@
 import { Deferred, delay, sleep } from 'concurrency.libx.js';
 import {} from 'module';
 import { Cache } from '../../src/modules/Cache';
-import { LocalStorageMock } from '../helpers/LocalStorageMock';
+import { LocalStorageMock } from '../../src/modules/LocalStorageMock';
 
 let localStorage: LocalStorageMock;
 let cache: Cache;
