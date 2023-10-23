@@ -24,6 +24,19 @@ export class LocalStorageMock extends DynamicProps implements IStoreProvider {
     removeItem(key) {
         delete this.store[key];
     }
+
+    public static safeGetLocalStorage() {
+        let localStorage = null;
+        try {
+            localStorage = window.localStorage;
+        }
+        catch (e) { }
+        if (localStorage == null) {
+            localStorage = <any>new LocalStorageMock();
+        }
+
+        return localStorage;
+    }
 }
 
 declare global {
