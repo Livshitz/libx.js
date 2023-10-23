@@ -6,6 +6,9 @@ import { Callbacks } from './Callbacks';
 import { IDataProvider } from './IDataProvider';
 import { log } from './log';
 import { DynamicProperties, Mapping } from '../types/interfaces';
+import { LocalStorageMock } from './LocalStorageMock';
+
+let localStorage = LocalStorageMock.safeGetLocalStorage();
 
 export class Cache implements IDataProvider {
     public delimiter = '/';

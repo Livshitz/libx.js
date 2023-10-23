@@ -25,6 +25,7 @@ export class LocalStorageMock extends DynamicProps implements IStoreProvider {
         delete this.store[key];
     }
 
+    // when accessing localStorage under frame when in incognito, localStorage throws access denied error.
     public static safeGetLocalStorage() {
         let localStorage = null;
         try {
