@@ -806,6 +806,12 @@ describe('helpers.parseUrl', () => {
     });
 });
 
+test('escapeRegExp-positive', () => {
+    let output = helpers.escapeRegExp("[abc|123]*");
+    expect(output).toBe('\\[abc\\|123\\]\\*');
+});
+
+
 // test('helpers.-positive', () => {
 // 	let param = { a: 1 };
 // 	let output = helpers.(param);
