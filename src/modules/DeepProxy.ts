@@ -68,7 +68,7 @@ export default class DeepProxy<T extends object = any> {
                     ret = this.handler.get(target, path, key);
                 }
 
-                if (ret == null) ret = target[<string>key] || objectHelpers.getDeep(this.input, path)[key];
+                if (ret == null) ret = target[<string>key] || objectHelpers.getDeep(this.input, path)?.[key];
                 return ret;
             },
 
