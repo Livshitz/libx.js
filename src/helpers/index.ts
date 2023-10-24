@@ -643,6 +643,10 @@ export class Helpers {
         return this._.transform(arr, (agg, key: string) => (agg[key] = true), {});
     }
 
+    public escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+    }
+
     /*
     public normalizeJson(jsonString: string, replaceChar = '“') {
         return jsonString
