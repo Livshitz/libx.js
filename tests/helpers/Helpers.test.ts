@@ -660,6 +660,23 @@ test('date.humanizeTime-greater-than-day-positive', () => {
     expect(output).toBe('24:00:01');
 });
 
+test('fixYaml-positive', () => {
+    let output = helpers.fixYaml(
+        `
+a: "123"
+b: "321"
+c: "Hello "World"! "
+`
+    );
+    expect(output).toBe(
+        `
+a: "123"
+b: "321"
+c: "Hello 'World'! "
+`
+    );
+});
+
 /*
 describe('helpers.normalizeJson', ()=>{
     test.only('helpers.normalizeJson-simple', () => {

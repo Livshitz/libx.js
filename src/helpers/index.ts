@@ -647,6 +647,29 @@ export class Helpers {
         return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
     }
 
+    public fixYaml(yamlString) {
+        const matches = this.getMatches(yamlString, /(?<valueOnly>(?<spacer>\s*-\s*)"(?<value2>.*)")|(?<key>\w+):\s*"(?<value>.*)"/)
+
+        for (let match of matches) {
+            let newStr = '';
+            if (match.groups.key && match.groups.value) {
+                const fixedValue = match.groups.value.replace(/\\\\/gi, '\\').replace(/\\(\W)/g, '$1').replace(/\\(\w)/g, '').replace(/"/g, '\'');
+                newStr = `${match.groups.key}: "${fixedValue}"`;
+            } else if (match.groups.valueOnly) {
+                const fixedValue = match.groups.value2.replace(/"/g, '\'')
+                newStr = `${match.groups.spacer}"${fixedValue}"`;
+            } else {
+                continue;
+            }
+
+            if (newStr == match[0]) continue;
+
+            yamlString = yamlString.replace(match[0], newStr);
+        }
+
+        return yamlString;
+    }
+
     /*
     public normalizeJson(jsonString: string, replaceChar = '“') {
         return jsonString
