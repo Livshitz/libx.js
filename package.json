@@ -32,7 +32,7 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "axios": "^0.21.3",
+        "axios": "^1.6.0",
         "concurrency.libx.js": "^1.2.1",
         "cors": "^2.8.5",
         "crypto-js": "^4.0.0",
