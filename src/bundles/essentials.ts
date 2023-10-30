@@ -13,7 +13,7 @@ import { Time } from '../modules/Time';
 // export * as LibxJS from '../types/interfaces';
 
 try {
-    if (!(<any>global)._libx_avoidExtensions) extensions.applyAllExtensions();
+    if (typeof global !== "undefined" && !(<any>global)._libx_avoidExtensions) extensions.applyAllExtensions();
 } catch (ex) {
     console.warn('libx: failed to apply extensions', ex);
 }
