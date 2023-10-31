@@ -208,7 +208,9 @@ export class ObjectHelpers {
         return obj == undefined || obj == null;
     }
     public isEmptyObject(obj) {
+        if (obj == null) return true;
         const props = this.getCustomProperties(obj);
+        if (props.length == 0) return true;
         for (var name in props) {
             return false;
         }

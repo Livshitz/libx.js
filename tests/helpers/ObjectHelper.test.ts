@@ -196,6 +196,11 @@ test('isEmptyObject-positive', () => {
     let output = objectHelpers.isEmptyObject(param);
     expect(output).toEqual(true);
 });
+test('isEmptyObject-null', () => {
+    let param = null;
+    let output = objectHelpers.isEmptyObject(param);
+    expect(output).toEqual(true);
+});
 test('isEmptyObject-negative', () => {
     let param = { a: 1 };
     let output = objectHelpers.isEmptyObject(param);
