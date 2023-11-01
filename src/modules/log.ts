@@ -19,37 +19,37 @@ export class Log implements ILog {
     }
 
     public debug(msg, ...args) {
-        this.write(this.severities.Debug, msg, args);
+        return this.write(this.severities.Debug, msg, args);
     }
     public d(msg, ...args) {
-        this.write(this.severities.Debug, msg, args);
+        return this.write(this.severities.Debug, msg, args);
     }
     public verbose(msg, ...args) {
-        this.write(this.severities.Verbose, msg, args);
+        return this.write(this.severities.Verbose, msg, args);
     }
     public v(msg, ...args) {
-        this.write(this.severities.Verbose, msg, args);
+        return this.write(this.severities.Verbose, msg, args);
     }
     public info(msg, ...args) {
-        this.write(this.severities.Info, msg, args);
+        return this.write(this.severities.Info, msg, args);
     }
     public i(msg, ...args) {
-        this.write(this.severities.Info, msg, args);
+        return this.write(this.severities.Info, msg, args);
     }
     public warning(msg, ...args) {
-        this.write(this.severities.Warning, msg, args);
+        return this.write(this.severities.Warning, msg, args);
     }
     public w(msg, ...args) {
-        this.write(this.severities.Warning, msg, args);
+        return this.write(this.severities.Warning, msg, args);
     }
     public error(msg, ...args) {
-        this.write(this.severities.Error, msg, args);
+        return this.write(this.severities.Error, msg, args);
     }
     public e(msg, ...args) {
-        this.write(this.severities.Error, msg, args);
+        return this.write(this.severities.Error, msg, args);
     }
     public fatal(msg, ...args) {
-        this.write(this.severities.Fatal, msg, args);
+        return this.write(this.severities.Fatal, msg, args);
     }
 
     public write(severity: LogLevel, msg: string, args = []) {
@@ -100,16 +100,16 @@ export class Log implements ILog {
 
         if (typeof msg == 'object' && (<any>msg)?.constructor == Object) msg = JSON.stringify(msg);
 
+        var _msg = `${prefix}${time} ${msg} ${trace}`; //${color != null ? '%c' : ''}
         if (this.isBrowser) {
             var _msg = `${prefix}${time} ${msg} %c${trace}`; //${color != null ? '%c' : ''}
             if (args.length == 0) console[func].call(console, _msg, 'font-size:8px;');
             else console[func].call(console, _msg, 'font-size:8px;', argsStr);
         } else {
-            var _msg = `${prefix}${time} ${msg} ${trace}`; //${color != null ? '%c' : ''}
             console[func].call(console, _msg, args.length == 0 ? '' : this.color(argsStr, this.colors.fgYellow));
         }
 
-        return msg;
+        return msg + ' ' + argsStr;
     }
 
     public color(str: string, color: ConsoleColors) {
