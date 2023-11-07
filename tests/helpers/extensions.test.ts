@@ -280,3 +280,9 @@ test('array.contains-positive', () => {
     let output = source.contains(3);
     expect(output).toEqual(true);
 });
+
+test('array.removeDuplicates-positive', () => {
+    let source = [1, 2, 3, 4, 3, 2];
+    let output = source.removeDuplicates();
+    expect(output).toEqual([1, 2, 3, 4]);
+});

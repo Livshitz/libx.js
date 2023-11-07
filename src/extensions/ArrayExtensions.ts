@@ -53,4 +53,11 @@ export class ArrayExtensions {
         if (this == null || this.length == 0) return null;
         return this[this.length - 1];
     };
+
+
+    public static removeDuplicates = function () {
+        if (this == null || this.length == 0) return null;
+        const arr: any[] = this;
+        return [...new Set(arr)];
+    }
 }
