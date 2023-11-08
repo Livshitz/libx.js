@@ -311,11 +311,11 @@ export class ObjectHelpers {
         return ret;
     }
 
-    public flatterObjectToDotNotation(objectNotation: Object, prefix?: string) {
+    public flatterObjectToDotNotation(objectNotation: Object, prefix?: string, delimiter = '.') {
         let set = {};
 
         for (var key of Object.keys(objectNotation)) {
-            let pre = prefix === undefined ? '' : prefix + '.';
+            let pre = prefix === undefined ? '' : prefix + delimiter;
             let obj = objectNotation[key];
             if (
                 obj &&
