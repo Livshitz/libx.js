@@ -424,6 +424,20 @@ describe('other', () => {
             'b.bb': ['1', '2', '3'],
         });
     });
+
+    test('flatterObjectToDotNotation custom delimiter', async () => {
+        let q = {
+            a: 1,
+            b: {
+                bb: ['1', '2', '3'],
+            },
+        };
+        let res = objectHelpers.flatterObjectToDotNotation(q, '', ':');
+        expect(res).toEqual({
+            a: 1,
+            'b:bb': ['1', '2', '3'],
+        });
+    });
 });
 
 // test('-positive', () => {

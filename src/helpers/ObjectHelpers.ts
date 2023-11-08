@@ -315,7 +315,7 @@ export class ObjectHelpers {
         let set = {};
 
         for (var key of Object.keys(objectNotation)) {
-            let pre = prefix === undefined ? '' : prefix + delimiter;
+            let pre = (prefix == null || prefix == '') ? '' : prefix + delimiter;
             let obj = objectNotation[key];
             if (
                 obj &&
@@ -326,7 +326,7 @@ export class ObjectHelpers {
             ) {
                 set = {
                     ...set,
-                    ...this.flatterObjectToDotNotation(objectNotation[key], pre + key),
+                    ...this.flatterObjectToDotNotation(objectNotation[key], pre + key, delimiter),
                 };
             } else {
                 set[pre + key] = objectNotation[key];
