@@ -1,4 +1,10 @@
 {
+    "workbench.colorCustomizations": {
+        // "activityBar.background": "#2980B9",
+        // "activityBar.inactiveForeground": "#070d1e",
+        "titleBar.activeBackground": "#2980B9",
+        "titleBar.inactiveBackground": "#2980B9"
+    },
     "dotnet-test-explorer.testProjectPath": "./tests",
     "files.exclude": {
         "base/js/build": true,
