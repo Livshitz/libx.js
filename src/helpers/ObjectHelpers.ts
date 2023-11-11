@@ -41,7 +41,7 @@ export class ObjectHelpers {
      * @param  {Object} base   Object to compare with
      * @return {Object}        Return a new object who represent the diff
      */
-    public diff(object: Object, base: Object, skipEmpty = false) {
+    public diff<T = object>(object: Object, base: Object, skipEmpty = false) {
         const changes = (object, base, skipEmpty = false) => {
             let ret = transform(object, (result, value, key) => {
                 if (!isEqual(value, base[key])) {
@@ -59,9 +59,9 @@ export class ObjectHelpers {
             if (this.isDate(object)) ret = object;
 
             if (skipEmpty && this.isEmpty(ret)) return null;
-            else return ret;
+            else return <T>ret;
         };
-        return changes(object, base, skipEmpty);
+        return <T>changes(object, base, skipEmpty);
     }
 
     public isObject(object) {
