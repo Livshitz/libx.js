@@ -12,6 +12,21 @@ extensions.applyAllExtensions();
 
 import mockServer from './mockServer';
 
+describe.skip('libx:modules:network independent tests', () => {
+    let networkModule: IModuleNetwork = null;
+    beforeAll(async () => {
+        networkModule = await di.require<IModuleNetwork>('network');
+    });
+
+    test('module-network-support redirects', async () => {
+        // let res = await networkModule.httpGetString('https://www.hugeinc.com/about');
+        let res = await networkModule.get('https://www.hugeinc.com/about');
+        // expect(JSON.parse(res)).toEqual({ a: '1', b: '2' });
+        console.log('res: ', res.toString());
+        expect(res).not.toEqual('');
+    });
+});
+
 describe('libx:modules:network tests', () => {
     let dataset: any = {};
     let url = null;
