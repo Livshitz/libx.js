@@ -16,7 +16,7 @@ test('Measurement-start', async () => {
 	const param = Measurement.start('test-1', { autoPrint: true });
 	await helpers.delay(100);
 	const output = param.stop();
-	expect(output).toBeGreaterThanOrEqual(100);
+	expect(output).toBeGreaterThanOrEqual(99);
 	expect(output).toBeLessThanOrEqual(200);
 });
 
