@@ -5,7 +5,7 @@ import { helpers } from '../helpers';
 
 export interface IStreamOptions {
     headers?: any;
-    payload?: any;
+    body?: any;
     onProgress?: (wholeData) => void;
     method: 'POST' | 'GET' | 'Update';
     encoding?: string;
@@ -16,7 +16,7 @@ const defaultStreamOptions: IStreamOptions = {
     onProgress: null,
     method: 'GET',
     encoding: 'utf-8',
-    payload: null,
+    body: null,
 };
 
 export class Streams {
@@ -108,7 +108,7 @@ export class Streams {
     public static async getStream(url: string, onDelta?: (data) => void, options: Partial<IStreamOptions> = defaultStreamOptions) {
         const p = helpers.newPromise();
         try {
-            if (options.payload != null) {
+            if (options.body != null) {
                 if (options.method == null || options.method == 'GET') options.method = 'POST';
                 if (options.headers?.['Content-Type'] == null) {
                     options.headers = {
@@ -120,7 +120,7 @@ export class Streams {
 
             const response = await fetch(url, {
                 headers: options.headers,
-                body: JSON.stringify(options.payload),
+                body: JSON.stringify(options.body),
                 method: options.method,
             });
 
