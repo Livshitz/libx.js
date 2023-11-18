@@ -138,19 +138,19 @@ test('helpers.shuffle-positive', () => {
 });
 
 test('helpers.measure-positive', async () => {
-    helpers.startMeasure('test');
+    const dur = helpers.Measurement.start();
     await helpers.delay(100);
-    let output = helpers.startMeasure('test');
+    let output = dur.peek()
     await helpers.delay(100);
     expect(output).toBeLessThanOrEqual(200);
-    output = helpers.startMeasure('test');
+    output = dur.stop();
     expect(output).toBeLessThanOrEqual(400);
 });
 
 test('helpers.getMeasure-positive', async () => {
-    helpers.startMeasure('test2');
+    const dur = helpers.Measurement.start();
     await helpers.delay(100);
-    let output = helpers.startMeasure('test2');
+    let output = dur.stop();
     expect(output).toBeLessThanOrEqual(140);
 });
 
