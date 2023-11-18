@@ -31,6 +31,7 @@ import {
 import { ObjectHelpers, objectHelpers } from './ObjectHelpers';
 import { StringExtensions } from '../extensions/StringExtensions';
 import { DateExtensions } from '../extensions/DateExtensions';
+import { Measurement } from '../modules/Measurement';
 
 export { Deferred };
 
@@ -84,11 +85,13 @@ export class Helpers {
     public makeAsync: any;
     public forceAsync: <T>(func: Function) => (...args: any[]) => Promise<T>;
     public waitUntil: (conditionFn: any, callback?: any, interval?: number, timeout?: number) => Promise<any>;
-    public measurements: typeof concurrency.measurements;
-    public measure: typeof concurrency.measurements.measure;
-    public startMeasure: typeof concurrency.measurements.startMeasure;
-    public peekMeasure: typeof concurrency.measurements.peekMeasure;
-    public getMeasureAndReset: typeof concurrency.measurements.getMeasureAndReset;
+    public measure = Measurement.measure;
+    public Measurement = Measurement;
+    // public measurements: typeof concurrency.measurements;
+    // public measure: typeof concurrency.measurements.measure;
+    // public startMeasure: typeof concurrency.measurements.startMeasure;
+    // public peekMeasure: typeof concurrency.measurements.peekMeasure;
+    // public getMeasureAndReset: typeof concurrency.measurements.getMeasureAndReset;
     public chainTasks: (tasks: any, eachCb?: any) => Promise<void>;
     public concurrent: typeof concurrency.concurrent;
     public sleep: (millis: any) => Promise<unknown>;
@@ -694,11 +697,11 @@ export class Helpers {
         this.isAsync = concurrency.isAsync;
         this.forceAsync = concurrency.async;
         this.waitUntil = concurrency.waitUntil;
-        this.measurements = concurrency.measurements;
-        this.measure = this.measurements.measure;
-        this.startMeasure = this.measurements.startMeasure;
-        this.peekMeasure = this.measurements.peekMeasure;
-        this.getMeasureAndReset = this.measurements.getMeasureAndReset;
+        // this.measurements = concurrency.measurements;
+        // this.measure = this.measurements.measure;
+        // this.startMeasure = this.measurements.startMeasure;
+        // this.peekMeasure = this.measurements.peekMeasure;
+        // this.getMeasureAndReset = this.measurements.getMeasureAndReset;
         this.chainTasks = concurrency.chain.chainTasks;
         this.concurrent = concurrency.concurrent;
         this.sleep = concurrency.sleep;
