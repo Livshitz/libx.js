@@ -105,5 +105,6 @@ declare namespace LibxJSExtensions {
         removeAt(index: number, replace = null): T[];
         contains(item: T): boolean;
         removeDuplicates(): T[];
+        removeEmpty(): T[];
     }
 }

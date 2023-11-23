@@ -286,3 +286,9 @@ test('array.removeDuplicates-positive', () => {
     let output = source.removeDuplicates();
     expect(output).toEqual([1, 2, 3, 4]);
 });
+
+test('array.removeEmpty-positive', () => {
+    let source = [1, 2, null, 4, null, 2];
+    let output = source.removeEmpty();
+    expect(output).toEqual([1, 2, 4, 2]);
+});
