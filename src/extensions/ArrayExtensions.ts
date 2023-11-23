@@ -55,10 +55,13 @@ export class ArrayExtensions {
         return this[this.length + pos];
     };
 
-
     public static removeDuplicates = function () {
         if (this == null || this.length == 0) return null;
         const arr: any[] = this;
         return [...new Set(arr)];
+    }
+
+    public static removeEmpty = function () {
+        return ArrayExtensions.myFilter.call(this, x => x != null);
     }
 }
