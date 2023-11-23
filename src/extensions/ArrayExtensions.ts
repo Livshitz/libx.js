@@ -49,9 +49,10 @@ export class ArrayExtensions {
         return this;
     };
 
-    public static last = function () {
+    public static last = function (pos = -1) {
         if (this == null || this.length == 0) return null;
-        return this[this.length - 1];
+        if (pos == 0) pos = -1;
+        return this[this.length + pos];
     };
 
 
