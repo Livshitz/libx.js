@@ -27,6 +27,7 @@ import {
     IModuleNode,
     IPromise,
     Mapping,
+    ObjectLiteral,
 } from '../types/interfaces';
 import { ObjectHelpers, objectHelpers } from './ObjectHelpers';
 import { StringExtensions } from '../extensions/StringExtensions';
@@ -485,6 +486,20 @@ export class Helpers {
             count++;
         }
         return arr;
+    }
+
+    public eachPair<T>(obj: ObjectLiteral<T>, iteration: (T: T, key?: string, i?: number) => void) {
+        for (let [value, key, count] of this.setToArr<T>(obj)) {
+            iteration(value, key, count);
+        }
+    }
+
+    public setToArr<T>(obj: ObjectLiteral<T>): [T, string, number][] {
+        let c = -1;
+        return Object.entries<T>(obj).map(([k, v]) => {
+            c++;
+            return [v, k, c];
+        });
     }
 
     public csvToJson(csvStr: string, cellDelimiter = ',', clean = true) {

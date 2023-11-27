@@ -331,6 +331,31 @@ test('helpers.each-positive', () => {
     expect(output).toEqual(15);
 });
 
+test('helpers.setToArr-positive', () => {
+    let obj = {
+        a1: { b: 1 },
+        a2: { b: 2 },
+        a3: { b: 3 },
+    }
+    let output = helpers.setToArr(obj);
+    expect(output).toEqual([
+        [{ b: 1 }, 'a1', 0],
+        [{ b: 2 }, 'a2', 1],
+        [{ b: 3 }, 'a3', 2],
+    ]);
+});
+
+test('helpers.eachPair-positive', () => {
+    let obj = {
+        a1: { b: 1 },
+        a2: { b: 2 },
+        a3: { b: 3 },
+    }
+    let output = 0;
+    helpers.eachPair(obj, (x, k) => (output += x.b));
+    expect(output).toEqual(6);
+});
+
 test('helpers.csvToJson-positive', () => {
     let input = `id,name,author
                 1,To Kill an Mockingbird,1
