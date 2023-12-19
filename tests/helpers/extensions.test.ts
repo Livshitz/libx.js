@@ -1,9 +1,25 @@
 import { extensions } from '../../src/extensions';
-import { Isolator, cleanRun } from '../../src/extensions/isolator';
+import { Isolator, cleanRun } from '../../src/extensions/Isolator';
 
 var dataset = {
     date: new Date('2019-07-25T21:00:14.000Z'),
 };
+
+describe('extensions isolation test', () => {
+    test('isolator', async () => {
+        const before = 36;
+        const after = 46;
+
+        expect(Isolator.getProps(Array.prototype).length).toEqual(before);
+        extensions.applyAllExtensions();
+        expect(Isolator.getProps(Array.prototype).length).toEqual(after);
+
+        await cleanRun(async () => {
+            expect(Isolator.getProps(Array.prototype).length).toEqual(before);
+        })
+        expect(Isolator.getProps(Array.prototype).length).toEqual(after);
+    });
+});
 
 describe('extensions test', () => {
     beforeAll(() => {
@@ -293,21 +309,5 @@ describe('extensions test', () => {
         let source = [1, 2, null, 4, null, 2];
         let output = source.removeEmpty();
         expect(output).toEqual([1, 2, 4, 2]);
-    });
-});
-
-describe('extensions isolation test', () => {
-    test.only('isolator', async () => {
-        const before = 36;
-        const after = 46;
-
-        expect(Isolator.getProps(Array.prototype).length).toEqual(before);
-        extensions.applyAllExtensions();
-        expect(Isolator.getProps(Array.prototype).length).toEqual(after);
-
-        await cleanRun(async () => {
-            expect(Isolator.getProps(Array.prototype).length).toEqual(before);
-        })
-        expect(Isolator.getProps(Array.prototype).length).toEqual(after);
     });
 });
