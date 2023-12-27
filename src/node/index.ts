@@ -191,9 +191,17 @@ export class Node {
         process
             .on('unhandledRejection', (reason: any, p) => {
                 var err = {
-                    message: reason.response != null ? Buffer.from(reason.response).toString() : reason?.message || reason,
-                    stack: reason.stack != null ? Buffer.from(reason.stack).toString() : reason.stack,
+                    message: reason?.message || reason,
+                    stack: reason.stack,
                 };
+                try {
+                    err = {
+                        message: reason.response != null ? Buffer.from(reason.response).toString() : reason?.message || reason,
+                        stack: reason.stack != null ? Buffer.from(reason.stack).toString() : reason.stack,
+                    };
+                } catch (err) {
+                    console.warn('catchErrors: couldn\'t serialize reason', err);
+                }
                 if (handler) handler(err, reason.statusCode || reason);
                 else {
                     console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
