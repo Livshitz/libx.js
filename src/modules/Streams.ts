@@ -9,6 +9,7 @@ export interface IStreamOptions {
     onProgress?: (wholeData) => void;
     method: 'POST' | 'GET' | 'Update';
     encoding?: string;
+    useEventBuffering?: boolean;
 }
 
 const defaultStreamOptions: IStreamOptions = {
@@ -17,6 +18,7 @@ const defaultStreamOptions: IStreamOptions = {
     method: 'GET',
     encoding: 'utf-8',
     body: null,
+    useEventBuffering: false,
 };
 
 export class Streams {
@@ -130,22 +132,31 @@ export class Streams {
 
             let buffer = '';
             const textDecoder = new TextDecoder(options.encoding ?? defaultStreamOptions.encoding);
-            const reader = response.body.getReader();
 
+            const reader = response.body.getReader();
+            let eventsBuffer = '';
             while (true) {
                 const { done, value } = await reader.read();
 
                 if (done) {
+                    if (options.useEventBuffering) {
+                        onDelta?.(eventsBuffer);
+                    }
                     p.resolve(buffer);
                     break;
                 }
 
                 const decodedString = textDecoder.decode(value);
+                if (options.useEventBuffering && !(decodedString.startsWith('event: ') && eventsBuffer.length > 0)) {
+                    eventsBuffer += decodedString;
+                    continue;
+                }
 
-                onDelta?.(decodedString);
+                onDelta?.(eventsBuffer);
 
                 buffer += decodedString;
                 options.onProgress?.(buffer);
+                eventsBuffer = decodedString;
             }
         } catch (error) {
             p.reject(error);

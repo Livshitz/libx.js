@@ -1,6 +1,6 @@
 {
     "name": "libx.js",
-    "version": "3.4.1",
+    "version": "3.5.0",
     "description": "",
     "main": "./build/bundles/essentials",
     "types": "./globals.d.ts",
@@ -12,6 +12,7 @@
         "bundle": "yarn bundle:require && yarn bundle:libx && du -sh dist/*",
         "bundle:require": "ts-node tools/browserify.ts --filename='require.libx.min' --input=\"./build/browser/require.js\" --minify",
         "bundle:libx": "ts-node tools/browserify.ts --filename='libx.min' --minify",
+        "serve": "nodemon --watch 'tests/modules/mockServer.ts' --exec tsx --inspect tests/modules/mockServer.ts",
         "test": "jest",
         "test:debug": "node --inspect ./node_modules/jest/bin/jest.js --runInBand --colors --verbose",
         "test:ci": "jest --ci --reporters=default --reporters=jest-junit --coverage --coverageReporters=cobertura --coverageReporters=html",
@@ -63,6 +64,7 @@
         "jest-environment-jsdom": "^29.0.3",
         "jest-junit": "^14.0.1",
         "jest-junit-reporter": "^1.1.0",
+        "nodemon": "^3.0.2",
         "pax.libx.js": "^0.6.17",
         "ts-jest": "^29.0.1",
         "ts-node": "^10.1.0",
