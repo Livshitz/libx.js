@@ -1,7 +1,51 @@
-// helpers.getMeasure-positive
-// import iMyModule from '../interfaces/IMyModule';
 import { TransformStream } from 'web-streams-polyfill';
 import { Streams } from '../../src/modules/Streams';
+import mockServer from './mockServer';
+/**
+ * @jest-environment node
+ */
+
+const expected = `event: message
+data: "hello"
+
+event: message
+data: "world,"
+
+event: message
+data: "you"
+
+event: message
+data: "rock!"
+
+`;
+
+describe.only('streams', () => {
+    let url: string;
+    let server = new mockServer();
+
+    beforeAll(async () => {
+        url = await server.run();
+    })
+
+    test('getStream-positive', (done) => {
+        let buffer = '';
+        Streams.getStream(url + 'stream/100', delta => {
+            console.log('delta: ', delta);
+            buffer += delta;
+        }, {
+            method: 'GET',
+        }).then(() => {
+            console.log('done!')
+            expect(buffer).toMatch(expected);
+            done();
+        });
+    });
+
+    afterAll(() => {
+        console.log('shutting down server...');
+        server.stop();
+    });
+});
 
 test('asyncIterableToStream-positive', async () => {
     async function* range(start, stop) {

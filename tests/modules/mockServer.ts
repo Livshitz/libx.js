@@ -1,21 +1,22 @@
 // Run: ts-node tests/mockServer.ts
-
 import fs from 'fs';
 import express from 'express';
 import formidable from 'express-formidable';
-
 import { node } from '../../src/node';
 import { network } from '../../src/modules/Network';
 import { helpers } from '../../src/helpers';
 import { log, LogLevel } from '../../src/modules/log';
 import { objectHelpers } from '../../src/helpers/ObjectHelpers';
+import { Server } from 'http';
+import { Socket } from 'net';
 
 log.filterLevel = LogLevel.Info;
 node.catchErrors();
 
 class mod {
     private app: any;
-    private server: any;
+    private server: Server;
+    private openSockets = new Set<Socket>();
     public options = {
         port: 5678,
         endpoint: null,
@@ -65,6 +66,44 @@ class mod {
             res.status(200).send(JSON.stringify(data));
             log.v('----------');
         });
+        app.all('/stream/:interval?', async (req, res) => {
+            let interval = parseInt(req.params.interval ?? '1000');
+            let data = req.body || req.fields || req.files;
+            log.v('request: "/stream": req.fields: ', data);
+
+            res.writeHead(200, {
+                // "Connection": "keep-alive",
+                // "Cache-Control": "no-cache",
+                "Content-Type": "text/event-stream; charset=utf-8",
+            });
+            res.on("close", () => {
+                res.end();
+            });
+
+            const messages = [
+                'hello',
+                'world,',
+                'you',
+                'rock!',
+                interval,
+            ];
+            const pAll = [];
+            helpers.each(messages, (x, i) => {
+                const p = helpers.newPromise();
+                setTimeout(() => {
+                    const event = 'message';
+                    // res.write(x.toString());
+                    res.write("event: " + String(event) + "\n" + "data: " + JSON.stringify(x) + "\n\n");
+                    p.resolve();
+                }, i * interval);
+                pAll.push(p);
+            });
+            Promise.all(pAll).then(() => {
+                res.end();
+            });
+
+            log.v('----------');
+        });
         app.post('/echoUpload', (req, res) => {
             let data = req.body || req.fields || req.files;
             const files = req.files as { [fieldname: string]: any };
@@ -83,17 +122,31 @@ class mod {
             log.v(`Local express server listening on ${this.options.endpoint}`);
             p.resolve(this.options.endpoint);
         });
+        this.server.on("connection", socket => {
+            this.openSockets.add(socket);
+            socket.on("close", () => {
+                this.openSockets.delete(socket);
+            });
+        });
+
         await network.httpGet(this.options.endpoint); // wait for express to be ready
 
         return p;
     };
 
     stop = () => {
+        log.v('mockServer: stopping...');
+        for (const socket of this.openSockets.values()) {
+            log.v('mockServer: killing socket...');
+            socket.destroy();
+        }
         this.server.close();
+        log.i('mockServer: stopped!');
     };
 }
 
 if (node.isCalledDirectly()) {
+    log.i('mockServer:cli: starting server...');
     let server = new mod();
     server.options.verbose = true;
 
@@ -103,8 +156,8 @@ if (node.isCalledDirectly()) {
     });
 
     (async () => {
-        await server.run();
-        log.i('ready!');
+        const url = await server.run();
+        log.i('ready on ', url);
     })();
 }
 
