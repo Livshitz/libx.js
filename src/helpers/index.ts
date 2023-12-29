@@ -478,7 +478,7 @@ export class Helpers {
         return ret;
     }
 
-    public each<T>(arr: T[], iteration: (T, i?: number) => T) {
+    public each<T>(arr: T[], iteration: (T, i?: number) => T | void) {
         // each(myArr, (x, i)=> console.log(x))
         let count = 0;
         for (let item of arr) {
