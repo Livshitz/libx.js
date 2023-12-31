@@ -152,7 +152,11 @@ export class Streams {
                     continue;
                 }
 
-                onDelta?.(eventsBuffer);
+                if (options.useEventBuffering) {
+                    onDelta?.(eventsBuffer);
+                } else {
+                    onDelta?.(decodedString);
+                }
 
                 buffer += decodedString;
                 options.onProgress?.(buffer);
