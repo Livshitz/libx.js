@@ -1,11 +1,31 @@
 import { TransformStream } from 'web-streams-polyfill';
-import 'isomorphic-fetch';
 import { Streams } from '../../src/modules/Streams';
 import mockServer from './mockServer';
 import { log } from '../../src/modules/log';
+
 /**
  * @jest-environment node
  */
+
+import fetch, {
+    Blob,
+    // blobFrom,
+    // blobFromSync,
+    // File,
+    // fileFrom,
+    // fileFromSync,
+    // FormData,
+    Headers,
+    Request,
+    Response,
+} from 'node-fetch'
+if (!globalThis.fetch) {
+    (<any>globalThis).fetch = fetch;
+    (<any>globalThis).Headers = Headers;
+    (<any>globalThis).Request = Request;
+    (<any>globalThis).Response = Response;
+    global.TransformStream = TransformStream;
+}
 
 const expected = `event: message
 data: "hello"
