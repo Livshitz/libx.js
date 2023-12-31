@@ -64,7 +64,7 @@
         "jest-environment-jsdom": "^29.0.3",
         "jest-junit": "^14.0.1",
         "jest-junit-reporter": "^1.1.0",
-        "node-fetch": "^3.3.2",
+        "node-fetch": "2",
         "nodemon": "^3.0.2",
         "pax.libx.js": "^0.6.17",
         "ts-jest": "^29.0.1",
