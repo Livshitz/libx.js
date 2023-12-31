@@ -1,10 +1,14 @@
-import fetch from 'node-fetch'
-globalThis.fetch = fetch
-global.TransformStream = require('web-streams-polyfill').TransformStream;
-import { WritableStream } from 'web-streams-polyfill/ponyfill';
+console.log('---------- SETUP!')
+// import fetch from 'node-fetch'
+import * as streams from 'web-streams-polyfill';
+// globalThis.fetch = fetch
 
-if (!global.WritableStream) {
-	global.WritableStream = <any>WritableStream;
-}
+global.TransformStream = streams.TransformStream;
+global.ReadableStream = streams.ReadableStream;
+global.WritableStream = <any>streams.WritableStream;
+// globalThis.ReadableStream = <any>streams.ReadableStream;
+// globalThis.WritableStream = <any>streams.WritableStream;
+// globalThis.TransformStream = <any>streams.TransformStream;
+
 
 // Run specific test: `yarn jest -t 'string.capitalize' tests/libx.extensions.test.ts`
