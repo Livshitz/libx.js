@@ -66,16 +66,28 @@ class mod {
             res.status(200).send(JSON.stringify(data));
             log.v('----------');
         });
-        app.all('/stream/:interval?', async (req, res) => {
+        app.all('/stream/:interval?/:chop?', async (req, res) => {
             let interval = parseInt(req.params.interval ?? '1000');
+            const chop = req.params.chop;
             let data = req.body || req.fields || req.files;
             log.v('request: "/stream": req.fields: ', data);
 
-            res.writeHead(200, {
-                // "Connection": "keep-alive",
-                // "Cache-Control": "no-cache",
-                "Content-Type": "text/event-stream; charset=utf-8",
-            });
+            if (!chop) {
+                res.writeHead(200, {
+                    // "Connection": "keep-alive",
+                    // "Cache-Control": "no-cache",
+                    "Content-Type": "text/event-stream; charset=utf-8",
+                });
+            } else {
+                res.writeHead(200, {
+                    // "Connection": "keep-alive",
+                    // "Cache-Control": "no-cache",
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Headers': 'Content-Type',
+                    "Content-Type": "text/plain; charset=utf-8", // use plain to be able to chop the messages, otherwise it is wrapping each message with event format...
+                });
+            }
+
             res.on("close", () => {
                 res.end();
             });
@@ -88,18 +100,32 @@ class mod {
                 interval,
             ];
             const pAll = [];
+            const formatMessage = (data, event = 'message') => `event: ${String(event)}\ndata: ${JSON.stringify(data)}\n\n`;
+
             helpers.each(messages, (x, i) => {
                 const p = helpers.newPromise();
-                setTimeout(() => {
-                    const event = 'message';
+                setTimeout(async () => {
                     // res.write(x.toString());
-                    res.write("event: " + String(event) + "\n" + "data: " + JSON.stringify(x) + "\n\n");
+                    // res.write(formatMessage(x));
+                    if (chop == null) {
+                        log.i('writing: ', x)
+                        res.write(formatMessage(x));
+                    }
+                    else {
+                        const msg = formatMessage(x);
+                        const index = helpers.randomNumber(msg.length);
+                        const parts = [msg.toString().slice(0, index), msg.toString().slice(index)];
+                        res.write(parts[0]);
+                        await helpers.concurrency.delay(5);
+                        res.write(parts[1]);
+                    }
                     p.resolve();
                 }, i * interval);
                 pAll.push(p);
             });
-            Promise.all(pAll).then(() => {
-                res.end();
+            Promise.all(pAll).then(async () => {
+                log.v('sending END')
+                res.end('');
             });
 
             log.v('----------');

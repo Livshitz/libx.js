@@ -1,6 +1,7 @@
 import { TransformStream } from 'web-streams-polyfill';
 import { Streams } from '../../src/modules/Streams';
 import mockServer from './mockServer';
+import { log } from '../../src/modules/log';
 /**
  * @jest-environment node
  */
@@ -17,9 +18,12 @@ data: "you"
 event: message
 data: "rock!"
 
+event: message
+data: 100
+
 `;
 
-describe.only('streams', () => {
+describe('streams', () => {
     let url: string;
     let server = new mockServer();
 
@@ -30,19 +34,34 @@ describe.only('streams', () => {
     test('getStream-positive', (done) => {
         let buffer = '';
         Streams.getStream(url + 'stream/100', delta => {
-            console.log('delta: ', delta);
+            log.v('delta: ', delta);
             buffer += delta;
         }, {
             method: 'GET',
         }).then(() => {
-            console.log('done!')
-            expect(buffer).toMatch(expected);
+            log.v('done!')
+            expect(buffer).toEqual(expected);
+            done();
+        });
+    });
+
+    test('getStream-chop', (done) => {
+        let buffer = <string[]>[];
+        Streams.getStream(url + 'stream/100/chop', delta => {
+            log.v('delta: ', delta);
+            buffer += delta;
+        }, {
+            method: 'GET',
+            useEventBuffering: true,
+        }).then(() => {
+            log.v('done!')
+            expect(buffer).toEqual(expected);
             done();
         });
     });
 
     afterAll(() => {
-        console.log('shutting down server...');
+        log.i('shutting down server...');
         server.stop();
     });
 });
@@ -61,7 +80,7 @@ test('asyncIterableToStream-positive', async () => {
 
     const arr = range(4, 8);
     // for await (let i of arr) {
-    //     console.log(i);
+    //     log.v(i);
     // }
 
     let readable = await Streams.asyncIterableToStream(getRange(), null);
