@@ -55,7 +55,7 @@
         "@types/express-formidable": "^1.2.0",
         "@types/jest": "^26.0.24",
         "@types/lodash": "^4.14.171",
-        "@types/node": "^16.3.3",
+        "@types/node": "18",
         "@types/xregexp": "^4.3.0",
         "express": "^4.17.1",
         "express-formidable": "^1.2.0",
