@@ -1,7 +1,6 @@
 /**
  * @jest-environment node
  */
-import { TransformStream } from 'web-streams-polyfill';
 import { Streams } from '../../src/modules/Streams';
 import mockServer from './mockServer';
 import { log } from '../../src/modules/log';

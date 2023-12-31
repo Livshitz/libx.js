@@ -1,4 +1,5 @@
 console.log('---------- SETUP!')
+import 'isomorphic-fetch';
 // import fetch from 'node-fetch'
 import * as streams from 'web-streams-polyfill';
 // globalThis.fetch = fetch
