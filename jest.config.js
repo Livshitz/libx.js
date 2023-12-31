@@ -30,6 +30,9 @@ module.exports = {
 	// 			tsConfig: "tsconfig.test.json"
 	// 		}
 	// }
+	globals: {
+		fetch: global.fetch,
+	},
 	reporters: ["default", "jest-junit"],
 	coverageDirectory: ".tmp/coverage",
 	coverageReporters: [
