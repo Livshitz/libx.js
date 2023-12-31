@@ -30,6 +30,7 @@ module.exports = {
 	// 			tsConfig: "tsconfig.test.json"
 	// 		}
 	// }
+	injectGlobals: true,
 	globals: {
 		fetch: global.fetch,
 	},
