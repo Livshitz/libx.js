@@ -33,6 +33,7 @@ import { ObjectHelpers, objectHelpers } from './ObjectHelpers';
 import { StringExtensions } from '../extensions/StringExtensions';
 import { DateExtensions } from '../extensions/DateExtensions';
 import { Measurement } from '../modules/Measurement';
+import { Hash } from '../modules/Hash';
 
 export { Deferred };
 
@@ -97,6 +98,7 @@ export class Helpers {
     public concurrent: typeof concurrency.concurrent;
     public sleep: (millis: any) => Promise<unknown>;
     public ObjectHelpers = objectHelpers;
+    public hash = Hash;
 
     public isBrowser: boolean;
     public extensions = extensions;

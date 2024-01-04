@@ -109,63 +109,65 @@ export class Streams {
 
     public static async getStream(url: string, onDelta?: (data) => void, options: Partial<IStreamOptions> = defaultStreamOptions) {
         const p = helpers.newPromise();
-        try {
-            if (options.body != null) {
-                if (options.method == null || options.method == 'GET') options.method = 'POST';
-                if (options.headers?.['Content-Type'] == null) {
-                    options.headers = {
-                        'Content-Type': 'application/json; charset=UTF-8',
-                        ...options.headers,
-                    };
+        (async () => {
+            try {
+                if (options.body != null) {
+                    if (options.method == null || options.method == 'GET') options.method = 'POST';
+                    if (options.headers?.['Content-Type'] == null) {
+                        options.headers = {
+                            'Content-Type': 'application/json; charset=UTF-8',
+                            ...options.headers,
+                        };
+                    }
                 }
-            }
 
-            const response = await fetch(url, {
-                headers: options.headers,
-                body: JSON.stringify(options.body),
-                method: options.method,
-            });
+                const response = await fetch(url, {
+                    headers: options.headers,
+                    body: JSON.stringify(options.body),
+                    method: options.method,
+                });
 
-            if (!response.ok) {
-                throw new Error(`consumeStreamEndpoint: HTTP error! Status: ${response.status}`);
-            }
+                if (!response.ok) {
+                    return p.reject(new Exception(`getStream: HTTP error! Status: ${response.status}`, await response.text()));
+                }
 
-            let buffer = '';
-            const textDecoder = new TextDecoder(options.encoding ?? defaultStreamOptions.encoding);
+                let buffer = '';
+                const textDecoder = new TextDecoder(options.encoding ?? defaultStreamOptions.encoding);
 
-            const reader = response.body.getReader();
-            let eventsBuffer = '';
-            while (true) {
-                const { done, value } = await reader.read();
+                const reader = response.body.getReader();
+                let eventsBuffer = '';
+                while (true) {
+                    const { done, value } = await reader.read();
 
-                if (done) {
+                    if (done) {
+                        if (options.useEventBuffering) {
+                            onDelta?.(eventsBuffer);
+                        }
+                        p.resolve(buffer);
+                        break;
+                    }
+
+                    const decodedString = textDecoder.decode(value);
+                    if (options.useEventBuffering && !(decodedString.startsWith('event: ') && eventsBuffer.length > 0)) {
+                        eventsBuffer += decodedString;
+                        continue;
+                    }
+
                     if (options.useEventBuffering) {
                         onDelta?.(eventsBuffer);
+                    } else {
+                        onDelta?.(decodedString);
                     }
-                    p.resolve(buffer);
-                    break;
-                }
 
-                const decodedString = textDecoder.decode(value);
-                if (options.useEventBuffering && !(decodedString.startsWith('event: ') && eventsBuffer.length > 0)) {
-                    eventsBuffer += decodedString;
-                    continue;
+                    buffer += decodedString;
+                    options.onProgress?.(buffer);
+                    eventsBuffer = decodedString;
                 }
-
-                if (options.useEventBuffering) {
-                    onDelta?.(eventsBuffer);
-                } else {
-                    onDelta?.(decodedString);
-                }
-
-                buffer += decodedString;
-                options.onProgress?.(buffer);
-                eventsBuffer = decodedString;
+            } catch (error) {
+                p.reject(Exception.fromError(error));
+                // throw Exception.fromError(error);
             }
-        } catch (error) {
-            p.reject(error);
-            throw Exception.fromError(error);
-        }
+        })();
 
         return p;
     }
