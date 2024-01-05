@@ -684,6 +684,10 @@ test('date.humanizeTime-greater-than-day-positive', () => {
     let output = helpers.humanizeTime(86401000);
     expect(output).toBe('24:00:01');
 });
+test('date.humanizeTime-less-than-10-ms', () => {
+    let output = helpers.humanizeTime(1);
+    expect(output).toBe('00:00:00');
+});
 
 test('fixYaml-positive', () => {
     let output = helpers.fixYaml(
