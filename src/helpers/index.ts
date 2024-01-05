@@ -602,6 +602,7 @@ export class Helpers {
     }
 
     public humanizeTime(ms: number) {
+        if (ms < 10) ms = 10;
         const seconds = Math.floor((ms / 1000) % 60);
         const minutes = Math.floor((ms / 1000 / 60) % 60);
         // const hours = Math.floor((ms  / 1000 / 3600 ) % 24)
