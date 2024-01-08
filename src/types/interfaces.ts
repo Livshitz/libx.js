@@ -88,7 +88,7 @@ export interface IBrowserHelpers {
         broadcast: Function;
     };
     getAttributes($node, pattern): { [key: string]: string };
-    getHost(absUrl): string;
+    getHost(absUrl?: string): string;
     getIdFromUrl(): string;
     getImageMeta(url): Promise<{ width; height }>;
     getParameters(): [string];

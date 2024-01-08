@@ -216,7 +216,7 @@ export class BrowserHelpers {
         return p;
     };
 
-    public getHost = function (absUrl) {
+    public getHost = function (absUrl?: string) {
         var url = absUrl || location.href;
         var hostname;
         //find & remove protocol (http, ftp, etc.) and get hostname
