@@ -869,12 +869,18 @@ test('escapeRegExp-positive', () => {
     expect(output).toBe('\\[abc\\|123\\]\\*');
 });
 
-test('escapeRegExp-positive', () => {
+test('sanitize-except 1', () => {
     const userInput = "<b>This</b> is <a href='123'>test</a>";
     const allowedTags = ['b'];
 
-    const output = helpers.sanitizeInput(userInput, allowedTags);
+    const output = helpers.sanitize(userInput, allowedTags);
     expect(output).toBe('<b>This</b> is test');
+});
+test('sanitizeInput-all', () => {
+    const userInput = "<b>This</b> is <a href='123'>test</a>";
+
+    const output = helpers.sanitize(userInput);
+    expect(output).toBe('This is test');
 });
 
 

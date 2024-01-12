@@ -9,7 +9,7 @@
         "build": "yarn clean; tsc",
         "watch": "yarn clean; tsc -w",
         "main": "node build/Main.js",
-        "bundle": "yarn bundle:require && yarn bundle:libx && du -sh dist/*",
+        "bundle": "yarn build && yarn bundle:require && yarn bundle:libx && du -sh dist/*",
         "bundle:require": "ts-node tools/browserify.ts --filename='require.libx.min' --input=\"./build/browser/require.js\" --minify",
         "bundle:libx": "ts-node tools/browserify.ts --filename='libx.min' --minify",
         "serve": "nodemon --watch 'tests/modules/mockServer.ts' --exec tsx --inspect tests/modules/mockServer.ts",
