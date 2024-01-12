@@ -434,13 +434,12 @@ export class Helpers {
     public parseUrl(url: string): parseUrlReturn {
         let match = this.getMatches(
             url,
-            /((?<protocol>\w+):\/\/(?<domainName>[\w\d]+)\.(?<domainExt>[\w\d]+))?\/(?<path>[^\?]+)\/?/g,
-            // /((?<protocol>\w+):\/\/(?<domainName>[\w\d]+)\.(?<domainExt>[\w\d]+))?\/(?<path>[^\?]+)\/?([\?\&](?<queryParams>.*))?/g,
-
+            // /((?<protocol>\w+):\/\/(?<domainName>[\w\d]+)\.(?<domainExt>[\w\d]+))?\/(?<path>[^\?]+)\/?/g,
+            /((?<protocol>\w+):\/\/(?<domainName>[\w\d]+)\.(?<domainExt>[\w\d]+))?\/(?<path>[^\?]+)\/?([\?\&](?<queryParams>.*))?/g,
             true
         )?.[0];
 
-        const queryParams = this.getMatches(url, /[\?\&](.*)/)?.[0]?.[1];
+        const queryParams = match?.queryParams ?? this.getMatches(url, /[\?\&](.*)/)?.[0]?.[1];
         if (queryParams && match == null) match = {
             queryParams,
             path: null,
