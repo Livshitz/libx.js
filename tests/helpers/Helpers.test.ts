@@ -850,11 +850,31 @@ describe('helpers.parseUrl', () => {
         let output = helpers.parseUrl('my-service!@#');
         expect(output).toEqual(null);
     });
+
+    test('helpers.parseUrl-only-query', () => {
+        let output = helpers.parseUrl('?queryParam1=1');
+        expect(output).toMatchObject({
+            path: null,
+            queryParams: 'queryParam1=1',
+            segments: null,
+            params: {
+                queryParam1: '1',
+            },
+        });
+    });
 });
 
 test('escapeRegExp-positive', () => {
     let output = helpers.escapeRegExp("[abc|123]*");
     expect(output).toBe('\\[abc\\|123\\]\\*');
+});
+
+test('escapeRegExp-positive', () => {
+    const userInput = "<b>This</b> is <a href='123'>test</a>";
+    const allowedTags = ['b'];
+
+    const output = helpers.sanitizeInput(userInput, allowedTags);
+    expect(output).toBe('<b>This</b> is test');
 });
 
 

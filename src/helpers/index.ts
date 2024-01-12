@@ -279,7 +279,7 @@ export class Helpers {
 
     public getMatches(string, regex, grab = null) {
         // var ret = [...string.matchAll(regex)];
-
+        let safetyCounter = 10000;
         var matches = [];
 
         var rxp = RegExp(regex, 'g'); // make sure it's set to global, otherwise will cause infinite loop
@@ -288,6 +288,7 @@ export class Helpers {
             let res = [];
             matches.push(match);
             if (rxp.lastIndex == 0) break;
+            if (safetyCounter-- <= 0) throw 'getMatches: something went wrong!';
         }
 
         if (grab == null) return matches;
@@ -431,11 +432,20 @@ export class Helpers {
     }
 
     public parseUrl(url: string): parseUrlReturn {
-        const match = this.getMatches(
+        let match = this.getMatches(
             url,
-            /((?<protocol>\w+):\/\/(?<domainName>[\w\d]+)\.(?<domainExt>[\w\d]+))?\/(?<path>[^\?]+)\/?([\?\&](?<queryParams>.*))?/g,
+            /((?<protocol>\w+):\/\/(?<domainName>[\w\d]+)\.(?<domainExt>[\w\d]+))?\/(?<path>[^\?]+)\/?/g,
+            // /((?<protocol>\w+):\/\/(?<domainName>[\w\d]+)\.(?<domainExt>[\w\d]+))?\/(?<path>[^\?]+)\/?([\?\&](?<queryParams>.*))?/g,
+
             true
         )?.[0];
+
+        const queryParams = this.getMatches(url, /[\?\&](.*)/)?.[0]?.[1];
+        if (queryParams && match == null) match = {
+            queryParams,
+            path: null,
+            segments: [],
+        }
 
         if (match == null) return null;
 
@@ -449,7 +459,7 @@ export class Helpers {
 
         return {
             ...match,
-            segments: match.path?.split('/'),
+            segments: match.path?.split('/') ?? null,
             params,
         };
         // libx.getMatches(
@@ -689,6 +699,21 @@ export class Helpers {
         }
 
         return yamlString;
+    }
+
+    public sanitizeInput(input: string, allowedTags: string[] = []): string {
+        // Create a Set for easier look-up of allowed tags
+        const allowedTagsSet = new Set(allowedTags.map(tag => tag.toLowerCase()));
+
+        // Regular expression to match any HTML tag
+        const tagRegExp = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi;
+
+        // Replace tags that are not in the allowed list
+        const sanitizedInput = input.replace(tagRegExp, (match, tagName) => {
+            return allowedTagsSet.has(tagName.toLowerCase()) ? match : '';
+        });
+
+        return sanitizedInput;
     }
 
     /*
