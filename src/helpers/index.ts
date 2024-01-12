@@ -700,7 +700,7 @@ export class Helpers {
         return yamlString;
     }
 
-    public sanitizeInput(input: string, allowedTags: string[] = []): string {
+    public sanitize(input: string, allowedTags: string[] = []): string {
         // Create a Set for easier look-up of allowed tags
         const allowedTagsSet = new Set(allowedTags.map(tag => tag.toLowerCase()));
 
