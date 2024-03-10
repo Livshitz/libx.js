@@ -32,6 +32,7 @@ export class UserManager {
     private token: any;
     private dataProxy: FireProxy<IBasicUser> = null;
     private _options = new Options();
+    private isInitiated = false;
 
     public constructor(firebaseModule: Firebase) {
         this.firebaseModule = firebaseModule;
@@ -243,6 +244,11 @@ export class UserManager {
         this.dataProxy.init();
         this.dataProxy.onChange.subscribe((data) => {
             this.onDataChanged?.trigger(data);
+
+            if (!this.isInitiated) {
+                this.onReady.trigger(this.data);
+                this.isInitiated = true;
+            }
         });
 
         this.dataProxy.skip(() => {
@@ -261,8 +267,6 @@ export class UserManager {
 
         this.events.emit({ step: 'signed-in' }, 'user');
         this.onSignIn.trigger(this.data);
-
-        this.onReady.trigger(this.data);
     }
 }
 
