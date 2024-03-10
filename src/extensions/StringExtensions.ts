@@ -106,6 +106,11 @@ export class StringExtensions {
         return this.substr(0, index) + replacement + this.substr(index + replacement.length);
     };
 
+    public static replaceAll = function (find: string, replace: string) {
+        const findReg = find.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');;
+        return this.replace(new RegExp(findReg, 'g'), replace);
+    }
+
     public static getAbbreviation = function () {
         if (this == null || this === '') return null;
         return this.match(/\b([A-Z])/g)?.join('') ?? this[0].toUpperCase();

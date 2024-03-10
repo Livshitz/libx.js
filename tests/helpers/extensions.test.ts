@@ -172,6 +172,11 @@ describe('extensions test', () => {
         expect(output).toBe(true);
     });
 
+    test('string.replaceAll-positive', () => {
+        let output = 'hello world i\'m home'.replaceAll('h', 'x').replaceAll('l', 'z');
+        expect(output).toBe('xezzo worzd i\'m xome');
+    });
+
     // [[[[[[[[[[  Date Extensions  ]]]]]]]]]]
 
     test('date.toUtc-positive', () => {

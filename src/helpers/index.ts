@@ -74,6 +74,15 @@ export interface _ILodash {
     has: typeof has;
     [key: string]: any;
 }
+
+export interface Encoder {
+    encode(input?: string): Iterable<number>;
+}
+
+export interface Decoder {
+    decode(input?: Iterable<number> | ArrayBuffer | ArrayBufferView): string;
+}
+
 export class Helpers {
     public _: _ILodash = __;
 
@@ -713,6 +722,53 @@ export class Helpers {
         });
 
         return sanitizedInput;
+    }
+
+    public bytesToBase64(bytes: Iterable<number>): string {
+        return btoa(String.fromCharCode(...bytes));
+    }
+
+    public bytesToBase64URL(bytes: Iterable<number>): string {
+        return this.bytesToBase64(bytes)
+            .replaceAll("+", "-")
+            .replaceAll("/", "_")
+            .replaceAll("=", "");
+    }
+
+    public base64ToBytes(str: string): Uint8Array {
+        return Uint8Array.from(atob(str), (c) => c.charCodeAt(0));
+    }
+
+    public base64URLToBytes(str: string): Uint8Array {
+        return this.base64ToBytes(str.replaceAll("-", "+").replaceAll("_", "/"));
+    }
+
+    public base64encode(
+        str: string,
+        encoder: Encoder = new TextEncoder()
+    ): string {
+        return this.bytesToBase64(encoder.encode(str));
+    }
+
+    public base64URLencode(
+        str: string,
+        encoder: Encoder = new TextEncoder()
+    ): string {
+        return this.bytesToBase64URL(encoder.encode(str));
+    }
+
+    public base64decode(
+        str: string,
+        decoder: Decoder = new TextDecoder()
+    ): string {
+        return decoder.decode(this.base64ToBytes(str));
+    }
+
+    public base64URLdecode(
+        str: string,
+        decoder: Decoder = new TextDecoder()
+    ): string {
+        return decoder.decode(this.base64URLToBytes(str));
     }
 
     /*
