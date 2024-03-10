@@ -27,7 +27,7 @@ export class UserManager {
     public onReady = new Callbacks<IBasicUser>();
 
     public events = new EventsStream();
-    public isReady: boolean;
+    public ready: boolean;
     private _fbUser: any;
     private token: any;
     private dataProxy: FireProxy<IBasicUser> = null;
@@ -199,6 +199,10 @@ export class UserManager {
         return this.auth.currentUser != null;
     }
 
+    public isReady() {
+        return this.ready;
+    }
+
     public async signOut() {
         // Sign out of Firebase.
         await this.auth.signOut();
@@ -217,7 +221,7 @@ export class UserManager {
     public async onAuthStateChanged(user) {
         log.debug('userManager:onAuthStateChanged: ', user);
 
-        this.isReady = true;
+        this.ready = true;
         this._fbUser = user;
 
         this.onStatusChanged.trigger(user);
