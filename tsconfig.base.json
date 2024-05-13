@@ -3,6 +3,7 @@
         "target": "es6",
         "lib": ["ES2016", "DOM", "DOM.Iterable", "ES2015.Promise", "ES2015"],
         "module": "commonjs",
+        "forceConsistentCasingInFileNames": false,
         "moduleResolution": "node",
         "removeComments": true,
         "preserveConstEnums": true,
