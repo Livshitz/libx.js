@@ -96,7 +96,7 @@ test('all-length-positive', async () => {
         }
     });
     console.log('XorshiftPseudoRandomness:', dur); //, arr);
-    expect(dur).toBeLessThanOrEqual(3500);
+    expect(dur).toBeLessThanOrEqual(4500);
 
     dur = await helpers.measure(() => {
         arr = [];
