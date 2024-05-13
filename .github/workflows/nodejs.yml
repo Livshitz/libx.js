@@ -31,15 +31,15 @@ jobs:
                   registry-url: 'https://registry.npmjs.org'
                   scope: '@octocat' # Defaults to the user or organization that owns the workflow file:
             - run: bun install
-            - run: bun build
-            - run: bun test:ci
-            - run: bun bundle
-            - name: bun bump
+            - run: bun run build
+            - run: bun run test:ci
+            - run: bun run bundle
+            - name: bun run bump
               if: github.ref == 'refs/heads/master'
               run: |
                   git config user.email "elya.livshitz@gmail.com"
                   git config user.name "Elya Livshitz"
-                  bun bump
+                  bun run bump
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
