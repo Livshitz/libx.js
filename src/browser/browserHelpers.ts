@@ -446,7 +446,7 @@ export class BrowserHelpers {
         return defer.promise();
     };
 
-    public imgToBase64 = async (src, outputFormat) => {
+    public imgToBase64 = async (src, outputFormat?) => {
         var p = libxHelpers.newPromise();
         var img = new Image();
         img.crossOrigin = 'Anonymous';
