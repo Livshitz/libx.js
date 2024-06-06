@@ -772,7 +772,7 @@ describe('helpers dictionary helpers', () => {
     });
 });
 
-describe.only('helpers.parseUrl', () => {
+describe('helpers.parseUrl', () => {
     test('helpers.parseUrl-simple-positive', () => {
         let output = helpers.parseUrl('http://domain.com/my-service/resource/id112233?queryParam1=1&queryParam2=aa');
         expect(output).toMatchObject({
@@ -787,6 +787,15 @@ describe.only('helpers.parseUrl', () => {
                 queryParam1: '1',
                 queryParam2: 'aa',
             },
+        });
+    });
+
+    // TBD: solve this issue, until then switch to new URL('url')
+    test.skip('helpers.parseUrl-short-positive', () => {
+        let output = helpers.parseUrl('http://domain.com');
+        expect(output).toMatchObject({
+            domainExt: 'com',
+            domainName: 'domain',
         });
     });
 
