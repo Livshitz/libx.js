@@ -444,7 +444,7 @@ export class Helpers {
         let match = this.getMatches(
             url,
             // /((?<protocol>\w+):\/\/(?<domainName>[\w\d]+)\.(?<domainExt>[\w\d]+))?\/(?<path>[^\?]+)\/?/g,
-            /((?<protocol>\w+):\/\/(?<domainName>[\w\d]+)\.(?<domainExt>[\w\d]+))?\/(?<path>[^\?]+)\/?([\?\&](?<queryParams>.*))?/g,
+            /((?<protocol>\w+):\/\/(?<subdomain>([\w\d-]+\.)+)?(?<domainName>[\w\d-]+)\.(?<domainExt>[\w\d-]+))?\/(?<path>[^\?]+)\/?([\?\&](?<queryParams>.*))?/g,
             true
         )?.[0];
 
@@ -456,6 +456,8 @@ export class Helpers {
         }
 
         if (match == null) return null;
+
+        if (match.subdomain?.endsWith('.')) match.subdomain = match.subdomain.slice(0, -1);
 
         if (match.path?.endsWith('/')) match.path = match.path.slice(0, -1);
 
