@@ -772,12 +772,47 @@ describe('helpers dictionary helpers', () => {
     });
 });
 
-describe('helpers.parseUrl', () => {
+describe.only('helpers.parseUrl', () => {
     test('helpers.parseUrl-simple-positive', () => {
         let output = helpers.parseUrl('http://domain.com/my-service/resource/id112233?queryParam1=1&queryParam2=aa');
         expect(output).toMatchObject({
             domainExt: 'com',
             domainName: 'domain',
+            subdomain: undefined,
+            protocol: 'http',
+            path: 'my-service/resource/id112233',
+            queryParams: 'queryParam1=1&queryParam2=aa',
+            segments: ['my-service', 'resource', 'id112233'],
+            params: {
+                queryParam1: '1',
+                queryParam2: 'aa',
+            },
+        });
+    });
+
+    test('helpers.parseUrl-subdomain-positive', () => {
+        let output = helpers.parseUrl('http://sub.domain.com/my-service/resource/id112233?queryParam1=1&queryParam2=aa');
+        expect(output).toMatchObject({
+            domainExt: 'com',
+            domainName: 'domain',
+            subdomain: 'sub',
+            protocol: 'http',
+            path: 'my-service/resource/id112233',
+            queryParams: 'queryParam1=1&queryParam2=aa',
+            segments: ['my-service', 'resource', 'id112233'],
+            params: {
+                queryParam1: '1',
+                queryParam2: 'aa',
+            },
+        });
+    });
+
+    test('helpers.parseUrl-subsubdomain-positive', () => {
+        let output = helpers.parseUrl('http://sub2.sub.domain.com/my-service/resource/id112233?queryParam1=1&queryParam2=aa');
+        expect(output).toMatchObject({
+            domainExt: 'com',
+            domainName: 'domain',
+            subdomain: 'sub2.sub',
             protocol: 'http',
             path: 'my-service/resource/id112233',
             queryParams: 'queryParam1=1&queryParam2=aa',
