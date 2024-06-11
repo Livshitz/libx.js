@@ -11,7 +11,7 @@ export class Firebase {
     private entityVersion = 0;
     private static readonly _DEFAULT_SIZE = 100;
 
-    private firebasePathPrefix = null;
+    public firebasePathPrefix = null;
     public onReady = new Callbacks();
     private _database: any;
     public firebaseApp: any;
