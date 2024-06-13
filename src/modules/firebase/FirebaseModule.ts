@@ -193,6 +193,7 @@ export class Firebase {
     }
 
     public async increment(path: string, key: string) {
+        path = this._fixPath(path);
         const r = this._database.ref(path);
         return await r.update({
             [`${key}`]: this._database.app.firebase.database.ServerValue.increment(1)
