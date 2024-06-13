@@ -192,6 +192,13 @@ export class Firebase {
         return defer.promise();
     }
 
+    public async increment(path: string, key: string) {
+        const r = this._database.ref(path);
+        return await r.update({
+            [`${key}`]: this._database.app.firebase.database.ServerValue.increment(1)
+        });
+    }
+
     public filter(path: string, byChild, byValue, lastKey: string = undefined, size = Firebase._DEFAULT_SIZE) {
         path = this._fixPath(path);
         log.debug(
