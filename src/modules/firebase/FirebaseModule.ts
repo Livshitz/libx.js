@@ -200,7 +200,7 @@ export class Firebase {
         });
     }
 
-    public filter(path: string, byChild, byValue, lastKey: string = undefined, size = Firebase._DEFAULT_SIZE) {
+    public filter(path: string, byChild, byValue, lastKey: string = undefined, size = Firebase._DEFAULT_SIZE, asArray = false) {
         path = this._fixPath(path);
         log.debug(
             StringExtensions.format.apply('api.firebase.filter: Querying data from "{0}", by child "{1}", by value "{2}"', [
@@ -221,7 +221,7 @@ export class Firebase {
         ref.once('value')
             .then((snp) => {
                 var obj = snp.val();
-                if (obj != null) obj = this.dictToArray(obj);
+                if (obj != null && asArray) obj = this.dictToArray(obj);
                 defer.resolve(obj);
             })
             .catch((ex) => defer.reject(ex));
