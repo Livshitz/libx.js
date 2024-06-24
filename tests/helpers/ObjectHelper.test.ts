@@ -438,6 +438,42 @@ describe('other', () => {
             'b:bb': ['1', '2', '3'],
         });
     });
+
+    test('excludeKey - single', async () => {
+        let q = {
+            a: 1,
+            b: {
+                bb: ['1', '2', '3'],
+            },
+        };
+        let res = objectHelpers.excludeKeys(q, 'a');
+        expect(res).toEqual({
+            // a: 1,
+            b: {
+                bb: ['1', '2', '3'],
+            },
+        });
+    });
+
+    test('excludeKey - multiple', async () => {
+        let q = {
+            a: 1,
+            b: {
+                bb: ['1', '2', '3'],
+            },
+            c: 3,
+        };
+        let res = objectHelpers.excludeKeys(q, 'a', 'b');
+        expect(res).toEqual({
+            // a: 1,
+            // b: {
+            //     bb: ['1', '2', '3'],
+            // },
+            c: 3,
+        });
+    });
+
+
 });
 
 // test('-positive', () => {
