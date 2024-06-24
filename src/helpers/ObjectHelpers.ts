@@ -9,8 +9,8 @@ import { Mapping } from '../types/interfaces';
 import { StringExtensions } from '../extensions/StringExtensions';
 
 class Dummy {
-    constructor() {}
-    static ___func = () => {};
+    constructor() { }
+    static ___func = () => { };
 }
 
 export class ObjectHelpers {
@@ -33,7 +33,7 @@ export class ObjectHelpers {
         '[object Object]': 'object',
     };
 
-    public constructor() {}
+    public constructor() { }
 
     /**
      * Deep diff between two object, using lodash
@@ -304,7 +304,7 @@ export class ObjectHelpers {
             if (shouldParse && this.isString(value)) {
                 try {
                     value = JSON.parse(value);
-                } catch {}
+                } catch { }
             }
             objectHelpers.spawnHierarchy(path, ret, value, '/');
         }
@@ -338,6 +338,16 @@ export class ObjectHelpers {
     public getObjectHash(obj: Object) {
         if (obj == null) return '';
         return StringExtensions.hashCode.call(JSON.stringify(obj));
+    }
+
+    public excludeKeys<T extends Record<string, any>, K extends keyof T>(
+        obj: T,
+        ...keys: K[]
+    ): Omit<T, K> {
+        return keys.reduce((acc, key) => {
+            const { [key]: _, ...rest } = acc;
+            return rest;
+        }, obj);
     }
 }
 
