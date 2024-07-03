@@ -33,6 +33,11 @@ export class Node {
 
     public isCalledDirectly = () => {
         try {
+            try {
+                //@ts-ignore
+                return import.meta.url === `file://${process.argv[1]}`;
+            } catch { }
+
             // generate a stack trace
             const stack = new Error().stack;
             // the third line refers to our caller
