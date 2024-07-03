@@ -33,13 +33,6 @@ export class Node {
 
     public isCalledDirectly = () => {
         try {
-            try {
-                // Check if CommonJS environment
-                if (typeof require !== 'undefined' && typeof module !== 'undefined') {
-                    return require.main === module;
-                }
-            } catch { }
-
             // generate a stack trace
             const stack = new Error().stack;
             // the third line refers to our caller
@@ -52,6 +45,16 @@ export class Node {
             return require.main.filename === callerModuleName;
         } catch (ex) {
             log.w('libx.node.isCalledDirectly: Error: ', ex);
+
+            try {
+                // Check if CommonJS environment
+                if (typeof require !== 'undefined' && typeof module !== 'undefined') {
+                    return require.main === module;
+                }
+            } catch (err2) {
+
+            }
+
             return false;
         }
     };
