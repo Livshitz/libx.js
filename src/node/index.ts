@@ -38,13 +38,6 @@ export class Node {
                 if (typeof require !== 'undefined' && typeof module !== 'undefined') {
                     return require.main === module;
                 }
-
-                // Check if ES module environment
-                //@ts-ignore
-                if (typeof import.meta !== 'undefined') {
-                    //@ts-ignore
-                    return import.meta.url === `file://${process.argv[1]}`;
-                }
             } catch { }
 
             // generate a stack trace

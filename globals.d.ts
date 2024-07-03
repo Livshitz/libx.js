@@ -108,6 +108,3 @@ declare namespace LibxJSExtensions {
         removeEmpty(): T[];
     }
 }
-
-declare var require: any;
-declare var module: any;
