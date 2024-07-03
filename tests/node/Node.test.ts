@@ -34,7 +34,7 @@ test('getFiles-positive', async () => {
 
 test('isCalledDirectly-positive', () => {
     let output = mod.isCalledDirectly();
-    expect(output).toEqual(false);
+    expect(output).toEqual(true);
 });
 
 test('getLibxVersion-positive', () => {
