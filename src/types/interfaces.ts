@@ -17,7 +17,9 @@ export interface Dictionary<T> {
 
 export type Key = string | number | symbol;
 
+// export type ObjectLiteral<T extends object> = T & { [key: string]: any };
 export type ObjectLiteral<T = any> = { [key: string]: T };
+export type ExtendedObjectLiteral<K extends ObjectLiteral, T = any> = K & ObjectLiteral<T>;
 export type DynamicProperties<T = any> = { [P in keyof T]: T[P] };
 export const DynamicProps = class {
     [key: string]: any;
