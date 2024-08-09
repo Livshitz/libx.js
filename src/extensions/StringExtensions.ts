@@ -107,7 +107,8 @@ export class StringExtensions {
     };
 
     public static replaceAll = function (find: string, replace: string) {
-        const findReg = find.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');;
+        if (find == null) return null;
+        const findReg = find.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         return this.replace(new RegExp(findReg, 'g'), replace);
     }
 
