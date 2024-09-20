@@ -594,6 +594,49 @@ export class Helpers {
         return ret;
     }
 
+    public jsonToCsv(data: any) {
+        // Convert JSON string to object if it's a string
+        data = typeof data === 'string' ? JSON.parse(data) : data;
+
+        // Collect all unique keys from each data entry
+        const allKeys = new Set<any>();
+        const isDataArray = Array.isArray(data);
+        let entries;
+
+        if (isDataArray) {
+            // If data is an array, use index as key and iterate over elements
+            data.forEach((item, index) => {
+                Object.keys(item).forEach(key => allKeys.add(key));
+            });
+            entries = data.map((item, index) => ({ key: index + 1, ...item }));
+        } else {
+            // If data is an object, use object keys and convert to array of entries
+            for (let key in data) {
+                if (data.hasOwnProperty(key)) {
+                    Object.keys(data[key]).forEach(subKey => allKeys.add(subKey));
+                }
+            }
+            entries = Object.keys(data).map(key => ({ key, ...data[key] }));
+        }
+
+        const uniqueKeys = Array.from(allKeys).sort();
+
+        // Create the CSV header row with all unique keys
+        let csv = ',' + uniqueKeys.join(',') + '\n';
+
+        // Create CSV rows for each entry
+        entries.forEach(entry => {
+            let row = [entry.key];  // Use key or index as first column
+            uniqueKeys.forEach(key => {
+                const value = entry[key] !== undefined ? entry[key] : '';
+                row.push(value);
+            });
+            csv += row.join(',') + '\n';
+        });
+
+        return csv;
+    }
+
     public median(values: number[]): number {
         const copy = [...values];
         if (copy.length === 0) throw new Error('No inputs');
