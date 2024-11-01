@@ -110,7 +110,7 @@ export class Log implements ILog {
             console[func].call(console, _msg, args.length == 0 ? '' : this.color(argsStr, this.colors.fgYellow));
         }
         else {
-            console[func].call(console, _msg, '');
+            console[func].call(console, _msg, argsStr);
         }
 
         return msg + ' ' + argsStr;
