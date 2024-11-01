@@ -5,6 +5,7 @@ export class Log implements ILog {
     public colors = ConsoleColors;
     public isBrowser: boolean;
     public isDebug: boolean = false;
+    public isConsole: boolean = true;
     public isShowStacktrace: boolean = false;
     public isShowTime: boolean;
     public isShowPrefix: boolean = true;
@@ -105,8 +106,11 @@ export class Log implements ILog {
             var _msg = `${prefix}${time} ${msg} %c${trace}`; //${color != null ? '%c' : ''}
             if (args.length == 0) console[func].call(console, _msg, 'font-size:8px;');
             else console[func].call(console, _msg, 'font-size:8px;', argsStr);
-        } else {
+        } else if (this.isConsole) {
             console[func].call(console, _msg, args.length == 0 ? '' : this.color(argsStr, this.colors.fgYellow));
+        }
+        else {
+            console[func].call(console, _msg, '');
         }
 
         return msg + ' ' + argsStr;
