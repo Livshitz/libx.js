@@ -1,6 +1,6 @@
 // import Deferred from 'concurrency.libx.js/build/Deferred';
 export { Deferred } from 'concurrency.libx.js';
-import _ from 'lodash';
+import type _ from 'lodash';
 
 export {};
 
