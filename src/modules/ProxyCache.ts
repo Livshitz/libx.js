@@ -1,4 +1,4 @@
-import { merge } from 'lodash';
+import merge from 'lodash/merge';
 import { libx } from '../bundles/essentials';
 import { Deferred } from '../helpers';
 import { objectHelpers } from '../helpers/ObjectHelpers';
