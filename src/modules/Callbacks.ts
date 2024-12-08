@@ -1,5 +1,5 @@
+import * as _ from 'lodash-es';
 import { async } from 'concurrency.libx.js';
-import each from 'lodash/each';
 import { helpers } from '../helpers';
 import { FuncWithArgs } from '../types/interfaces';
 import { di } from './dependencyInjector';
@@ -42,7 +42,7 @@ export class Callbacks<T = any> {
     public trigger(...args: T[]) {
         const p = helpers.newPromise();
         const allP = [];
-        each(this.list, (cb: Function) => {
+        _.each(this.list, (cb: Function) => {
             if (cb == null) return;
 
             const promise = async(cb).apply(cb, args);

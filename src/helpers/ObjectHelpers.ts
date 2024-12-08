@@ -1,10 +1,4 @@
-import each from 'lodash/each';
-import has from 'lodash/has';
-import isObject from 'lodash/isObject';
-import isPlainObject from 'lodash/isPlainObject';
-import transform from 'lodash/transform';
-import isEqual from 'lodash/isEqual';
-import isString from 'lodash/isString';
+import * as _ from 'lodash-es';
 import { Mapping } from '../types/interfaces';
 import { StringExtensions } from '../extensions/StringExtensions';
 
@@ -43,13 +37,13 @@ export class ObjectHelpers {
      */
     public diff<T = object>(object: Object, base: Object, skipEmpty = false) {
         const changes = (object, base, skipEmpty = false) => {
-            let ret = transform(object, (result, value, key) => {
-                if (!isEqual(value, base[key])) {
+            let ret = _.transform(object, (result, value, key) => {
+                if (!_.isEqual(value, base[key])) {
                     if (skipEmpty && this.isEmpty(value)) {
                         result = null;
                         return;
                     }
-                    result[key] = isObject(value) && isObject(base[key]) ? changes(value, base[key], skipEmpty) : value;
+                    result[key] = _.isObject(value) && _.isObject(base[key]) ? changes(value, base[key], skipEmpty) : value;
                     if (skipEmpty && this.isEmpty(result[key])) {
                         delete result[key];
                     }
@@ -66,11 +60,11 @@ export class ObjectHelpers {
 
     public isObject(object) {
         if (object != null && object.isProxy) return typeof object == 'object' && object.constructor == Object;
-        return isPlainObject(object); // && !this.isDate(object);
+        return _.isPlainObject(object); // && !this.isDate(object);
     }
 
     public isString(object) {
-        return isString(object);
+        return _.isString(object);
         // return typeof object === 'string';
     }
 
@@ -121,7 +115,7 @@ export class ObjectHelpers {
         if (typeof obj == 'undefined') return false;
 
         if (prop != null) {
-            return has(obj, prop);
+            return _.has(obj, prop);
         }
 
         return true;
@@ -233,7 +227,7 @@ export class ObjectHelpers {
     }
 
     public makeEmpty(obj) {
-        each(Object.keys(obj), (prop) => {
+        _.each(Object.keys(obj), (prop) => {
             if (!obj.hasOwnProperty(prop)) return;
 
             if (Array.isArray(obj[prop])) {

@@ -1,9 +1,9 @@
-import capitalize from 'lodash/capitalize';
+import * as _ from 'lodash-es';
 import { objectHelpers } from '../helpers/ObjectHelpers';
 
 export class StringExtensions {
     public static capitalize = function () {
-        return this.replace(/(\w+)/g, capitalize).trim();
+        return this.replace(/(\w+)/g, _.capitalize).trim();
         // return this.charAt(0).toUpperCase() + this.slice(1);
     };
 
