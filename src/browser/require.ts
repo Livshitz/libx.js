@@ -332,4 +332,4 @@ const req = (function () {
 if (window.libx == null) window.libx = {};
 window.libx.require = req;
 
-export = req;
+export default req;

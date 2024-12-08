@@ -1,17 +1,6 @@
 import * as concurrency from 'concurrency.libx.js';
 import { Deferred } from 'concurrency.libx.js';
-import mixin from 'lodash/mixin';
-import forEach from 'lodash/forEach';
-import transform from 'lodash/transform';
-import reduce from 'lodash/reduce';
-import map from 'lodash/map';
-import mapKeys from 'lodash/mapKeys';
-import mapValues from 'lodash/mapValues';
-import each from 'lodash/each';
-import toPairs from 'lodash/toPairs';
-import repeat from 'lodash/repeat';
-import join from 'lodash/join';
-import has from 'lodash/has';
+import * as _ from 'lodash-es';
 import { extensions } from '../extensions/index';
 import { ILog, log } from '../modules/log';
 import {
@@ -23,7 +12,6 @@ import {
     IDeferred,
     IDeferredJS,
     IExtensions,
-    ILodash,
     IModuleNode,
     IPromise,
     Mapping,
@@ -44,34 +32,34 @@ export { Deferred };
 // this.fp.flow = require("lodash/fp/flow");
 
 const __ = {
-    forEach,
-    mixin,
-    transform,
-    reduce,
-    map,
-    mapKeys,
-    mapValues,
-    each,
-    toPairs,
-    repeat,
-    join,
-    has,
+    forEach: _.forEach,
+    mixin: _.mixin,
+    transform: _.transform,
+    reduce: _.reduce,
+    map: _.map,
+    mapKeys: _.mapKeys,
+    mapValues: _.mapValues,
+    each: _.each,
+    toPairs: _.toPairs,
+    repeat: _.repeat,
+    join: _.join,
+    has: _.has,
 };
 
 export interface _ILodash {
     VERSION?: string;
-    forEach: typeof forEach;
-    mixin: typeof mixin;
-    transform: typeof transform;
-    reduce: typeof reduce;
-    map: typeof map;
-    mapKeys: typeof mapKeys;
-    mapValues: typeof mapValues;
-    each: typeof each;
-    toPairs: typeof toPairs;
-    repeat: typeof repeat;
-    join: typeof join;
-    has: typeof has;
+    forEach: typeof _.forEach;
+    mixin: typeof _.mixin;
+    transform: typeof _.transform;
+    reduce: typeof _.reduce;
+    map: typeof _.map;
+    mapKeys: typeof _.mapKeys;
+    mapValues: typeof _.mapValues;
+    each: typeof _.each;
+    toPairs: typeof _.toPairs;
+    repeat: typeof _.repeat;
+    join: typeof _.join;
+    has: typeof _.has;
     [key: string]: any;
 }
 
@@ -688,7 +676,7 @@ export class Helpers {
         parts[bumpType] = replace ?? parseInt(parts[bumpType]) + 1;
 
         let found = false;
-        forEach(Object.values(SemverPart), (key) => {
+        _.forEach(Object.values(SemverPart), (key) => {
             if (key != bumpType && !found) return;
             if (key == bumpType) {
                 found = true;

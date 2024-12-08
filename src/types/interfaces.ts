@@ -1,6 +1,5 @@
 // import Deferred from 'concurrency.libx.js/build/Deferred';
 export { Deferred } from 'concurrency.libx.js';
-import type _ from 'lodash';
 
 export {};
 
@@ -227,90 +226,6 @@ export interface ISerializable {
 }
 
 export interface IExtensions {}
-
-export interface ILodash extends _.LoDashStatic {
-    VERSION: string;
-    // camelCase(str: string): string;
-    // forEach(): any;
-    // assignIn(): any;
-    // bind(): any;
-    // length(): any;
-    // name(): any;
-    // arguments(): any;
-    // caller(): any;
-    // prototype(): any;
-    // before(): any;
-    // bind(): any;
-    // chain(): any;
-    // compact(): any;
-    // concat(): any;
-    // create(): any;
-    // defaults(): any;
-    // defer(): any;
-    // delay(): any;
-    // filter(): any;
-    // flatten(): any;
-    // flattenDeep(): any;
-    // iteratee(): any;
-    // keys(): any;
-    // map(): any;
-    // matches(): any;
-    // mixin(): any;
-    // negate(): any;
-    // once(): any;
-    // pick(): any;
-    // slice(): any;
-    // sortBy(): any;
-    // tap(): any;
-    // thru(): any;
-    // toArray(): any;
-    // values(): any;
-    // extend(): any;
-    // clone(): any;
-    // escape(): any;
-    // every(): any;
-    // find(): any;
-    // has(): any;
-    // head(): any;
-    // identity(): any;
-    // indexOf(): any;
-    // isArguments(): any;
-    // isArray(): any;
-    // isBoolean(): any;
-    // isDate(): any;
-    // isEmpty(): any;
-    // isEqual(): any;
-    // isFinite(): any;
-    // isFunction(): any;
-    // isNaN(): any;
-    // isNull(): any;
-    // isNumber(): any;
-    // isObject(): any;
-    // isRegExp(): any;
-    // isString(): any;
-    // isUndefined(): any;
-    // last(): any;
-    // max(): any;
-    // min(): any;
-    // noConflict(): any;
-    // noop(): any;
-    // reduce(): any;
-    // result(): any;
-    // size(): any;
-    // some(): any;
-    // uniqueId(): any;
-    // each(): any;
-    // first(): any;
-    // range(): any;
-    // countBy(): any;
-    // toPairs(): any;
-    // keyBy(): any;
-    // repeat(): any;
-    // transform(): any;
-    // uniq(): any;
-    // sortKeysBy(): any;
-    // fp(): any;
-}
 
 // export class DependencyInjector {
 //     constructor() {}
