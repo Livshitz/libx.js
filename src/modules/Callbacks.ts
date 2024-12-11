@@ -1,4 +1,4 @@
-import * as _ from 'lodash-es';
+import * as _ from 'lodash';
 import { async } from 'concurrency.libx.js';
 import { helpers } from '../helpers';
 import { FuncWithArgs } from '../types/interfaces';

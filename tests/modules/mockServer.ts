@@ -18,15 +18,16 @@ class mod {
     private server: Server;
     private openSockets = new Set<Socket>();
     public options = {
-        port: 5678,
+        port: 5677,
         endpoint: null,
         uploadFolder: './.tmp/uploads',
         verbose: false,
     };
 
     constructor(options = {}) {
-        this.options = objectHelpers.merge(options, this.options);
+        this.options = objectHelpers.merge(this.options, options);
         this.options.endpoint = `http://localhost:${this.options.port}/`;
+        console.log('mockServer:ctor: ', this.options.endpoint, options);
         node.mkdirRecursiveSync(this.options.uploadFolder);
     }
 
