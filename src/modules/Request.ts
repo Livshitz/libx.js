@@ -1,5 +1,5 @@
 import axios from 'axios';
-import * as _ from 'lodash-es'
+import * as _ from 'lodash';
 
 export default class RequestModule {
     public options = new ModuleOptions();

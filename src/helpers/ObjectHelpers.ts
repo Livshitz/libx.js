@@ -1,4 +1,4 @@
-import * as _ from 'lodash-es';
+import * as _ from 'lodash';
 import { Mapping } from '../types/interfaces';
 import { StringExtensions } from '../extensions/StringExtensions';
 

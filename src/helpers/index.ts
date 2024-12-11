@@ -1,6 +1,6 @@
 import * as concurrency from 'concurrency.libx.js';
 import { Deferred } from 'concurrency.libx.js';
-import * as _ from 'lodash-es';
+import * as _ from 'lodash';
 import { extensions } from '../extensions/index';
 import { ILog, log } from '../modules/log';
 import {

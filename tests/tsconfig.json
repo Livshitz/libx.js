@@ -3,6 +3,7 @@
 
 	"include": [
 		"../**/*.ts",
+		"../tools/browserify.mts",
 	],
 	"exclude": [
 		"node_modules",

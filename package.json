@@ -12,11 +12,11 @@
     "watch": "bun run clean; tsc -w",
     "main": "node build/Main.js",
     "bundle": "bun run build && bun run bundle:require && bun run bundle:libx && du -sh dist/*",
-    "bundle:require": "ts-node tools/browserify.ts --filename='require.libx.min' --input=\"./build/browser/require.js\" --minify",
-    "bundle:libx": "ts-node tools/browserify.ts --filename='libx.min' --minify",
+    "bundle:require": "tsx tools/browserify.ts --filename='require.libx.min' --input=\"./build/browser/require.js\" --minify",
+    "bundle:libx": "node --import tsx tools/browserify.ts --filename='libx.min' --minify",
     "serve": "nodemon --watch 'tests/modules/mockServer.ts' --exec tsx --inspect tests/modules/mockServer.ts",
     "test": "jest",
-    "test:debug": "node --inspect ./node_modules/jest/bin/jest.js --runInBand --colors --verbose",
+    "test:debug": "node --inspect ./node_modules/.bin/jest --runInBand --colors --verbose",
     "test:ci": "jest --ci --reporters=default --reporters=jest-junit --coverage --coverageReporters=cobertura --coverageReporters=html",
     "bump": "./bump.sh"
   },
@@ -59,19 +59,20 @@
     "@types/lodash-es": "^4.17.12",
     "@types/node": "18",
     "@types/xregexp": "^4.3.0",
+    "caniuse-lite": "^1.0.30001687",
     "express": "^4.17.1",
     "express-formidable": "^1.2.0",
     "firebase": "^9.6.7",
     "isomorphic-fetch": "^3.0.0",
-    "jest": "^29.0.3",
+    "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.0.3",
     "jest-junit": "^14.0.1",
     "jest-junit-reporter": "^1.1.0",
     "node-fetch": "2",
     "nodemon": "^3.0.2",
-    "pax.libx.js": "^0.6.17",
-    "ts-jest": "^29.0.1",
-    "ts-node": "^10.1.0",
+    "pax.libx.js": "^0.6.27",
+    "ts-jest": "^29.2.5",
+    "tsx": "^4.19.2",
     "typescript": "^5.4.5"
   },
   "not-in-use-dependencies": {
@@ -92,5 +93,11 @@
     "titleTemplate": "{classname} - {title}",
     "ancestorSeparator": " > ",
     "usePathForSuiteName": "true"
+  },
+  "exports": {
+    ".": {
+      "import": "./build/esm/index.js",
+      "require": "./build/index.js"
+    }
   }
 }
