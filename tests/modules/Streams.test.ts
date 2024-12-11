@@ -45,7 +45,7 @@ data: 100
 
 describe('streams', () => {
     let url: string;
-    let server = new mockServer();
+    let server = new mockServer({ port: 5600 });
 
     beforeAll(async () => {
         url = await server.run();
