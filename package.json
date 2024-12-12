@@ -93,11 +93,5 @@
     "titleTemplate": "{classname} - {title}",
     "ancestorSeparator": " > ",
     "usePathForSuiteName": "true"
-  },
-  "exports": {
-    ".": {
-      "import": "./build/esm/index.js",
-      "require": "./build/index.js"
-    }
   }
 }
