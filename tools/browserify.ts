@@ -25,12 +25,12 @@ log.v('Starting...', { shouldMinify, mainJS: input, dest });
 
 var bundlerOptions = {
     tsify: true,
-    // target: { node: 'v6.16.0' },
+    esmify: libx.node.args.esm,
     babelifyOptions: {
         sourceMaps: true,
         presets: ['@babel/preset-env'],
         // global: false,
-    },
+    }
 };
 
 var p1 = libx.pax.copy(

@@ -13,7 +13,7 @@
     "main": "node build/Main.js",
     "bundle": "bun run build && bun run bundle:require && bun run bundle:libx && du -sh dist/*",
     "bundle:require": "tsx tools/browserify.ts --filename='require.libx.min' --input=\"./build/browser/require.js\" --minify",
-    "bundle:libx": "node --import tsx tools/browserify.ts --filename='libx.min' --minify",
+    "bundle:libx": "tsx tools/browserify.ts --filename='libx.min' --minify --esm",
     "serve": "nodemon --watch 'tests/modules/mockServer.ts' --exec tsx --inspect tests/modules/mockServer.ts",
     "test": "jest",
     "test:debug": "node --inspect ./node_modules/.bin/jest --runInBand --colors --verbose",

@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 import { objectHelpers } from '../helpers/ObjectHelpers';
 
 export class StringExtensions {

@@ -73,21 +73,21 @@ export class HttpError extends Exception {
 }
 
 export class HttpErrorBadRequest extends HttpError {
-    public statusCode: number;
+    declare public statusCode: number;
     constructor(message, metadata?, stack?) {
         super(400, message, metadata, stack);
     }
 }
 
 export class HttpErrorNotFound extends HttpError {
-    public statusCode: number;
+    declare public statusCode: number;
     constructor(message, metadata?, stack?) {
         super(404, message, metadata, stack);
     }
 }
 
 export class HttpErrorDuplicate extends HttpError {
-    public statusCode: number;
+    declare public statusCode: number;
     constructor(message, metadata?, stack?) {
         super(409, message, metadata, stack);
     }
