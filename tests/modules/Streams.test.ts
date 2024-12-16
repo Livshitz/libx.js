@@ -1,3 +1,4 @@
+import { expect, test, beforeAll, beforeEach, describe, afterAll } from 'vitest'
 /**
  * @jest-environment node
  */
@@ -51,7 +52,7 @@ describe('streams', () => {
         url = await server.run();
     })
 
-    test('getStream-positive', (done) => {
+    test('getStream-positive', () => new Promise<void>(done => {
         let buffer = '';
         Streams.getStream(url + 'stream/100', delta => {
             log.v('delta: ', delta);
@@ -63,9 +64,9 @@ describe('streams', () => {
             expect(buffer).toEqual(expected);
             done();
         });
-    });
+    }));
 
-    test('getStream-chop', (done) => {
+    test('getStream-chop', () => new Promise<void>(done => {
         let buffer = <string[]>[];
         Streams.getStream(url + 'stream/100/chop', delta => {
             log.v('delta: ', delta);
@@ -78,7 +79,7 @@ describe('streams', () => {
             expect(buffer).toEqual(expected);
             done();
         });
-    });
+    }));
 
     afterAll(() => {
         log.i('shutting down server...');

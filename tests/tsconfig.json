@@ -4,6 +4,8 @@
 	"include": [
 		"../**/*.ts",
 		"../tools/browserify.mts",
+		"../vitest.config.mts",
+		"../vitest.global-setup.mts",
 	],
 	"exclude": [
 		"node_modules",

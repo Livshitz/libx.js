@@ -1,3 +1,4 @@
+import { expect, test, beforeAll, beforeEach } from 'vitest'
 import { browserHelpers } from '../../src/browser/browserHelpers';
 
 beforeEach(() => {});

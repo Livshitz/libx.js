@@ -1,3 +1,4 @@
+import { expect, test, beforeAll, beforeEach, describe } from 'vitest'
 import DeepProxy from '../../src/modules/DeepProxy';
 
 let existingObj = null;

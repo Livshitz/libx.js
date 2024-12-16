@@ -3,7 +3,8 @@ import path from 'path';
 import { argv } from 'yargs';
 import { exec } from 'child_process';
 import glob from 'glob';
-
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 import { helpers, SemverPart } from '../helpers';
 import { objectHelpers } from '../helpers/ObjectHelpers';
 import { di } from '../modules/dependencyInjector';
@@ -17,6 +18,9 @@ export class Node {
     public args: any = argv;
     public prompts = new Prompts();
     private onExitCallbacks = new Callbacks();
+    //@ts-ignore
+    private filename = fileURLToPath(import.meta.url);
+    private dirname = dirname(this.filename);
 
     public async getFiles(query = '**/*', options?): Promise<string[]> {
         let p = helpers.newPromise<string[]>();
@@ -31,6 +35,11 @@ export class Node {
         return glob.sync(query, options);
     }
 
+    public getMainModule() {
+        return process.argv[1];
+        // return this.filename;
+    }
+
     public isCalledDirectly = () => {
         try {
             // generate a stack trace
@@ -42,7 +51,10 @@ export class Node {
             if (caller == null || caller.length == 0) return true;
             const callerModuleName = caller[caller.length - 1];
 
-            return require.main.filename === callerModuleName;
+            let filename = this.getMainModule(); //require.main?.filename ?? new URL('', import.meta?.url).href;
+            // filename = filename.replace('file://', '');
+
+            return filename === callerModuleName;
         } catch (ex) {
             log.w('libx.node.isCalledDirectly: Error: ', ex);
 

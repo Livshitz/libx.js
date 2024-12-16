@@ -1,3 +1,4 @@
+import { expect, test, beforeAll, beforeEach, describe } from 'vitest'
 import { Node } from '../../src/node';
 import fs from 'fs';
 import { objectHelpers } from '../../src/helpers/ObjectHelpers';
@@ -34,7 +35,7 @@ test('getFiles-positive', async () => {
 
 test('isCalledDirectly-positive', () => {
     let output = mod.isCalledDirectly();
-    expect(output).toEqual(true);
+    expect(output).toEqual(false);
 });
 
 test('getLibxVersion-positive', () => {

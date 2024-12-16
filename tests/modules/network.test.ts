@@ -1,3 +1,4 @@
+import { expect, test, beforeAll, beforeEach, describe, afterAll } from 'vitest'
 import { extensions } from '../../src/extensions/';
 import { helpers } from '../../src/helpers';
 import { di } from '../../src/modules/dependencyInjector';

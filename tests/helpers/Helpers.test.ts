@@ -1,3 +1,4 @@
+import { expect, test, beforeAll, beforeEach, describe } from 'vitest'
 import { NumberExtensions } from '../../src/extensions/NumberExtensions';
 import { helpers, SemverPart } from '../../src/helpers';
 import fs from 'fs';

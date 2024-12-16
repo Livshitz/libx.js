@@ -1,3 +1,4 @@
+import { expect, test, beforeAll, beforeEach, describe } from 'vitest'
 import { Action, EventsStream } from '../../src/modules/EventsStream';
 
 interface IMyPayload {

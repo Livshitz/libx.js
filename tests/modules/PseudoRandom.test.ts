@@ -1,3 +1,4 @@
+import { expect, test, beforeAll, beforeEach, describe } from 'vitest'
 import { helpers } from '../../src/helpers';
 import { IPseudoRandomGenerator } from '../../src/modules/pseudoRandom/IPseudoRandomGenerator';
 import { LCGPseudoRandomness } from '../../src/modules/pseudoRandom/LCGPseudoRandomness';

@@ -1,4 +1,4 @@
-import {} from 'module';
+import { expect, test, beforeAll, beforeEach, describe } from 'vitest'
 import { ProxyCache } from '../../src/modules/ProxyCache';
 import { LocalStorageMock } from '../../src/modules/LocalStorageMock';
 

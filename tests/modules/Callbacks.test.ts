@@ -1,9 +1,10 @@
+import { expect, test, beforeAll, beforeEach, describe } from 'vitest'
 import { delay } from 'concurrency.libx.js';
 import { Callbacks } from '../../src/modules/Callbacks';
 
 beforeEach(() => {});
 
-test('subscribe-simple-positive', (done) => {
+test('subscribe-simple-positive', () => new Promise<void>(done => {
     const c = new Callbacks();
     c.subscribe((arg) => {
         expect(true).toEqual(true);
@@ -12,9 +13,9 @@ test('subscribe-simple-positive', (done) => {
     setTimeout(() => {
         c.trigger(1);
     }, 10);
-});
+}));
 
-test('subscribe-simple-ctor-positive', (done) => {
+test('subscribe-simple-ctor-positive', () => new Promise<void>(done => {
     const c = new Callbacks({
         cb: (arg) => {
             expect(true).toEqual(true);
@@ -24,9 +25,9 @@ test('subscribe-simple-ctor-positive', (done) => {
     setTimeout(() => {
         c.trigger(1);
     }, 10);
-});
+}));
 
-test('subscribe-subsequent-positive', (done) => {
+test('subscribe-subsequent-positive', () => new Promise<void>(done => {
     const c = new Callbacks();
     c.subscribe((arg) => {
         expect(arg == 1 || arg == 2).toEqual(true);
@@ -38,9 +39,9 @@ test('subscribe-subsequent-positive', (done) => {
     setTimeout(() => {
         c.trigger(2);
     }, 20);
-});
+}));
 
-test('once-positive', (done) => {
+test('once-positive', () => new Promise<void>(done => {
     const c = new Callbacks();
     c.once((arg) => {
         if (arg == 2) throw "Shouldn't get here";
@@ -53,9 +54,9 @@ test('once-positive', (done) => {
     setTimeout(() => {
         c.trigger(2);
     }, 20);
-});
+}));
 
-test('until-after-positive', (done) => {
+test('until-after-positive', () => new Promise<void>(done => {
     const c = new Callbacks();
     const stopFn = c.until((arg) => {
         if (arg != 1) throw "Shouldn't get here";
@@ -68,9 +69,9 @@ test('until-after-positive', (done) => {
     setTimeout(() => {
         c.trigger(1);
     }, 20);
-});
+}));
 
-test('until-before-positive', (done) => {
+test('until-before-positive', () => new Promise<void>(done => {
     const c = new Callbacks();
     const stopFn = c.until((arg) => {
         throw "Shouldn't get here";
@@ -82,9 +83,9 @@ test('until-before-positive', (done) => {
     setTimeout(() => {
         done();
     }, 20);
-});
+}));
 
-test('clear-positive', (done) => {
+test('clear-positive', () => new Promise<void>(done => {
     const c = new Callbacks();
     const handle = c.subscribe((arg) => {
         throw "Shouldn't get here";
@@ -101,9 +102,9 @@ test('clear-positive', (done) => {
     setTimeout(() => {
         done();
     }, 20);
-});
+}));
 
-test('clearAll-positive', (done) => {
+test('clearAll-positive', () => new Promise<void>(done => {
     const c = new Callbacks();
     const handle = c.subscribe((arg) => {
         throw "Shouldn't get here";
@@ -115,7 +116,7 @@ test('clearAll-positive', (done) => {
     setTimeout(() => {
         done();
     }, 20);
-});
+}));
 
 test('subscribe-trigger-all-promise', async () => {
     const c = new Callbacks();

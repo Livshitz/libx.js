@@ -1,3 +1,4 @@
+import { expect, test, beforeAll, beforeEach } from 'vitest'
 import { BitwiseEnumHelper } from '../../src/helpers/BitwiseEnumHelper';
 
 enum BasicBitwiseMap {
