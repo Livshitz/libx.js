@@ -1,5 +1,6 @@
 // import iMyModule from '../interfaces/IMyModule';
 // import myModule from '../myModule';
+import { expect, test, beforeAll } from 'vitest'
 
 interface IMyModule {
 	// constructor(val: string): void;

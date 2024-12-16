@@ -1,3 +1,4 @@
+import { expect, test, beforeAll, beforeEach, describe } from 'vitest'
 import BinaryHeap, { BinaryHeapType } from '../../src/modules/BinaryHeap';
 
 let obj: BinaryHeap;

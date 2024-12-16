@@ -1,3 +1,4 @@
+import { expect, test, beforeAll, beforeEach, describe } from 'vitest'
 import { helpers } from '../../src/helpers';
 // helpers.getMeasure-positive
 // import iMyModule from '../interfaces/IMyModule';

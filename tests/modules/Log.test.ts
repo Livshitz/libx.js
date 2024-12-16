@@ -1,13 +1,17 @@
+import { expect, test, beforeAll, beforeEach, describe, vi, Mock } from 'vitest'
 import { ArrayExtensions } from '../../src/extensions/ArrayExtensions';
 import { ConsoleColors, Log, LogLevel } from '../../src/modules/log';
 
 beforeEach(() => {
-    console.log = console.info = console.warn = console.error = jest.fn();
+    console.log = console.info = console.warn = console.error = vi.fn();
 });
 
 const getTime = () => new Date().format('HH:MM:ss.l');
 const getCalledWith = () => {
-    return (ArrayExtensions.last.call((<any>console.log).mock.calls) || [])[0];
+    // Get the calls of the mocked console.log function
+    const calls = (console.log as Mock).mock.calls;
+    // Return the last call's first argument, or undefined if no calls
+    return calls.length > 0 ? calls[calls.length - 1][0] : undefined;
 };
 
 test('write-allLevels-positive', () => {
@@ -84,8 +88,9 @@ test('verbose-consoleColors-positive', () => {
 test('verbose-stacktrace-positive', () => {
     const mod = new Log(LogLevel.All);
     mod.isShowStacktrace = true;
-    const output = mod.error('error');
-    expect(getCalledWith()).toMatch(/\s+\[\!\]\s+\[\d+:\d+:\d+\.\d+\] error\s+\n\s+at Object\.\<anonymous\>.* /);
+    mod.error('error');
+    const output = getCalledWith();
+    expect(output).toMatch(/^\s+\[\!\]\s+\[\d{2}:\d{2}:\d{2}\.\d{3}\]\s+error\s+\n\s+at\s+.*$/);
     // [!]     [16:54:58.440] error·
     // at Object.<anonymous> (/Users/livshitz/Projects/Livshitz/libx.js/tests/modules/Log.test.ts:80:24)
 });

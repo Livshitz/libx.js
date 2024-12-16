@@ -1,5 +1,5 @@
+import { expect, test, beforeAll, beforeEach, describe } from 'vitest'
 import { Deferred, delay, sleep } from 'concurrency.libx.js';
-import {} from 'module';
 import { Cache } from '../../src/modules/Cache';
 import { LocalStorageMock } from '../../src/modules/LocalStorageMock';
 

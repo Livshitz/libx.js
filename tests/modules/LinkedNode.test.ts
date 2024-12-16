@@ -1,3 +1,4 @@
+import { expect, test, beforeAll, beforeEach, describe } from 'vitest'
 // helpers.getMeasure-positive
 // import iMyModule from '../interfaces/IMyModule';
 import LinkedNode from '../../src/modules/LinkedNode';

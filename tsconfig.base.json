@@ -24,7 +24,6 @@
             "xregexp",
             "crypto-js",
             "lodash-es",
-            "jest",
             "node"
         ]
     }

@@ -1,3 +1,4 @@
+import { expect, test, beforeAll, beforeEach, describe } from 'vitest'
 import { extensions } from '../../src/extensions';
 import { Isolator, cleanRun } from '../../src/extensions/Isolator';
 

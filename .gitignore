@@ -32,3 +32,5 @@ compiled/**/*.js.map
 **/ts/**/*.js.map
 
 examples/forBrowser_test.html
+
+coverage

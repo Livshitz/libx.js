@@ -1,3 +1,4 @@
+import { expect, test, beforeAll, beforeEach, describe } from 'vitest'
 import { Hash } from "../../src/modules/Hash";
 import { Measurement } from "../../src/modules/Measurement";
 

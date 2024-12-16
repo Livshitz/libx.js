@@ -1,3 +1,4 @@
+import { expect, test, beforeAll, beforeEach, describe } from 'vitest'
 import { ObjectIdentifiers } from '../../src/modules/ObjectIdentifiers';
 
 test('ObjectIdentifiers-simple-positive', () => {

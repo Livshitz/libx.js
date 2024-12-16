@@ -1,3 +1,5 @@
+import { expect, test, beforeAll, beforeEach, describe, afterAll } from 'vitest'
+
 describe('dependencyInjector tests', () => {
     let dataset: any = {};
 
@@ -7,8 +9,8 @@ describe('dependencyInjector tests', () => {
         expect(true).toBe(true);
     });
 
-    afterAll((done) => {
-        done();
+    afterAll(() => {
+
     });
 
     /*
