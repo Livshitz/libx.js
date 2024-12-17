@@ -60,4 +60,4 @@ export class DataStore implements IDataProvider {
     }
 }
 
-di.register('DataStore', module.exports);
+di.register('DataStore', DataStore);

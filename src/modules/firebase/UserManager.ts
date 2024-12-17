@@ -293,4 +293,4 @@ export interface IBasicUser {
     };
 }
 
-di.register('UserManager', module.exports);
+di.register('UserManager', UserManager);
