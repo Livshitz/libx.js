@@ -1,4 +1,5 @@
 import { helpers as libxHelpers } from '../helpers';
+import { MyLodash } from '../helpers/MyLodash';
 import { objectHelpers } from '../helpers/ObjectHelpers';
 import { log } from '../modules/log';
 import { network } from '../modules/Network';
@@ -322,12 +323,12 @@ export class BrowserHelpers {
         ['log', 'warn', 'error'].forEach(function (verb) {
             console[verb] = (function (method, verb, log) {
                 return function (text) {
-                    method(libxHelpers._.join(arguments, ''));
+                    method(MyLodash.join(<any>arguments, ''));
                     // handle distinguishing between methods any way you'd like
                     var msg = document.createElement('code');
                     (<any>msg).style = 'display:block;';
                     msg.classList.add(verb);
-                    msg.textContent = verb + ': ' + libxHelpers._.join(arguments, '');
+                    msg.textContent = verb + ': ' + MyLodash.join(<any>arguments, '');
                     log.appendChild(msg);
                     log.scrollTo(0, log.scrollHeight);
                 };

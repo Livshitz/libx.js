@@ -21,9 +21,7 @@
         "declaration": true,
 
         "types": [
-            "xregexp",
             "crypto-js",
-            "lodash-es",
             "node"
         ]
     }

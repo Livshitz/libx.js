@@ -1,5 +1,5 @@
 import { expect, test, beforeAll, beforeEach, describe } from 'vitest'
-import { delay } from 'concurrency.libx.js';
+import { delay, Deferred } from 'concurrency.libx.js';
 import { Callbacks } from '../../src/modules/Callbacks';
 
 beforeEach(() => {});
@@ -121,15 +121,20 @@ test('clearAll-positive', () => new Promise<void>(done => {
 test('subscribe-trigger-all-promise', async () => {
     const c = new Callbacks();
     let counter = { a: 0, b: 0 };
+    const p0 = new Deferred();
+    const p1 = new Deferred();
     c.subscribe(async (arg) => {
         await delay(5);
         counter.a = 1;
+        p0.resolve();
     });
     c.subscribe(async (arg) => {
         await delay(5);
         counter.b = 1;
+        p1.resolve();
     });
     await c.trigger();
+    await Promise.all([p0, p1]);
 
     expect(counter).toEqual({ a: 1, b: 1 });
 });

@@ -1,11 +1,12 @@
-import * as _ from 'lodash-es';
+import { MyLodash } from '../helpers/MyLodash';
 import { objectHelpers } from '../helpers/ObjectHelpers';
 
 export class StringExtensions {
-    public static capitalize = function () {
-        return this.replace(/(\w+)/g, _.capitalize).trim();
-        // return this.charAt(0).toUpperCase() + this.slice(1);
-    };
+    public static capitalize = function (): string {
+        const str = this;
+        if (!str) return '';
+        return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+    }
 
     public static ellipsis = function (maxLength) {
         let ret = this;

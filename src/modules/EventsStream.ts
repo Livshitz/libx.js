@@ -1,11 +1,6 @@
 import { di } from './dependencyInjector';
 // import { Observable, Observer, ReplaySubject, BehaviorSubject, Subject, of, from } from 'rxjs';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subject } from 'rxjs/Subject';
-import { from } from 'rxjs/observable/from';
-import { filter } from 'rxjs/operators/filter';
-import { take } from 'rxjs/operators/take';
+import { ReplaySubject, BehaviorSubject, Subject, from, filter, take } from 'rxjs';
 
 export interface IEvent<T> {
     payload: T;
