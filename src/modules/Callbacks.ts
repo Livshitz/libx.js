@@ -1,8 +1,8 @@
-import * as _ from 'lodash-es';
 import { async } from 'concurrency.libx.js';
 import { helpers } from '../helpers';
 import { FuncWithArgs } from '../types/interfaces';
 import { di } from './dependencyInjector';
+import { ArrayExtensions } from '../extensions/ArrayExtensions';
 
 export class Callbacks<T = any> {
     private counter: number;
@@ -42,7 +42,7 @@ export class Callbacks<T = any> {
     public trigger(...args: T[]) {
         const p = helpers.newPromise();
         const allP = [];
-        _.each(this.list, (cb: Function) => {
+        ArrayExtensions.each.call(this.list, (cb: Function) => {
             if (cb == null) return;
 
             const promise = async(cb).apply(cb, args);

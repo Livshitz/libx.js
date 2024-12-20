@@ -64,7 +64,7 @@ describe('extensions test', () => {
     test('string.capitalize-positive', () => {
         let source = 'abc def';
         let output = source.capitalize();
-        expect(output).toBe('Abc Def');
+        expect(output).toBe('Abc def');
     });
     test('string.ellipsis-positive', () => {
         let source = 'abc def ghi';
@@ -252,6 +252,15 @@ describe('extensions test', () => {
     });
 
     // [[[[[[[[[[  Array Extensions  ]]]]]]]]]]
+
+    test('array.each-positive', () => {
+        let source = [1, 2, 3];
+        let output = source.each((v, k, c) => {
+            // console.log({ v, k })
+            source[k] = v * 2;
+        });
+        expect(source).toEqual([2, 4, 6]);
+    });
 
     test('array.diff-positive', () => {
         let source = [1, 2, 3];

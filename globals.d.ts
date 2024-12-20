@@ -97,6 +97,7 @@ declare namespace LibxJSExtensions {
     }
 
     interface IExtensionsArray<T = any> {
+        each(callback: (value: T, index: number, array: T[]) => void): void;
         diff(a: T[]): T[];
         myFilter(fn: Function): T[];
         myFilterSingle(fn: Function): T;

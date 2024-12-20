@@ -1,6 +1,5 @@
 import * as concurrency from 'concurrency.libx.js';
 import { Deferred } from 'concurrency.libx.js';
-import * as _ from 'lodash-es';
 import { extensions } from '../extensions/index';
 import { ILog, log } from '../modules/log';
 import {
@@ -22,46 +21,9 @@ import { StringExtensions } from '../extensions/StringExtensions';
 import { DateExtensions } from '../extensions/DateExtensions';
 import { Measurement } from '../modules/Measurement';
 import { Hash } from '../modules/Hash';
+import { MyLodash } from './MyLodash';
 
 export { Deferred };
-
-// import XRegExp from "XRegExp";
-// this.fp.map = require("lodash/fp/map");
-// this.fp.flatten = require("lodash/fp/flatten");
-// this.fp.sortBy = require("lodash/fp/sortBy");
-// this.fp.flow = require("lodash/fp/flow");
-
-const __ = {
-    forEach: _.forEach,
-    mixin: _.mixin,
-    transform: _.transform,
-    reduce: _.reduce,
-    map: _.map,
-    mapKeys: _.mapKeys,
-    mapValues: _.mapValues,
-    each: _.each,
-    toPairs: _.toPairs,
-    repeat: _.repeat,
-    join: _.join,
-    has: _.has,
-};
-
-export interface _ILodash {
-    VERSION?: string;
-    forEach: typeof _.forEach;
-    mixin: typeof _.mixin;
-    transform: typeof _.transform;
-    reduce: typeof _.reduce;
-    map: typeof _.map;
-    mapKeys: typeof _.mapKeys;
-    mapValues: typeof _.mapValues;
-    each: typeof _.each;
-    toPairs: typeof _.toPairs;
-    repeat: typeof _.repeat;
-    join: typeof _.join;
-    has: typeof _.has;
-    [key: string]: any;
-}
 
 export interface Encoder {
     encode(input?: string): Iterable<number>;
@@ -72,8 +34,6 @@ export interface Decoder {
 }
 
 export class Helpers {
-    public _: _ILodash = __;
-
     public concurrency: typeof concurrency;
     public Deferred: typeof concurrency.Deferred;
     public throttle: (func: Function, wait: any, immediate?: boolean) => (...args) => void;
@@ -100,11 +60,9 @@ export class Helpers {
     public isBrowser: boolean;
     public extensions = extensions;
 
-    // public XRegExp = XRegExp;
-
     public constructor() {
         this.initConcurrency();
-        this.initCustomLodashMixins();
+        // this.initCustomLodashMixins();
 
         this.isBrowser = typeof window !== 'undefined';
     }
@@ -290,15 +248,15 @@ export class Helpers {
 
         if (grab == null) return matches;
 
-        if (typeof grab == 'number') return this._.map(matches, (item) => item[grab]);
-        if (typeof grab == 'string') return this._.map(matches, (item) => item.groups[grab]);
-        if (typeof grab == 'boolean') return this._.map(matches, (item) => item.groups);
+        if (typeof grab == 'number') return MyLodash.map(matches, (item) => item[grab]);
+        if (typeof grab == 'string') return MyLodash.map(matches, (item) => item.groups[grab]);
+        if (typeof grab == 'boolean') return MyLodash.map(matches, (item) => item.groups);
 
         return matches;
     }
 
     public base64ToUint8Array(base64String) {
-        var padding = this._.repeat('=', (4 - (base64String.length % 4)) % 4);
+        var padding = MyLodash.repeat('=', (4 - (base64String.length % 4)) % 4);
         var base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
 
         // var rawData = window.atob(base64);
@@ -676,7 +634,7 @@ export class Helpers {
         parts[bumpType] = replace ?? parseInt(parts[bumpType]) + 1;
 
         let found = false;
-        _.forEach(Object.values(SemverPart), (key) => {
+        MyLodash.forEach(Object.values(SemverPart), (key) => {
             if (key != bumpType && !found) return;
             if (key == bumpType) {
                 found = true;
@@ -693,9 +651,9 @@ export class Helpers {
     }
 
     public dictToArray(dict: {}) {
-        var pairs = helpers._.toPairs(dict);
+        var pairs = MyLodash.toPairs(dict);
         var ret = [];
-        helpers._.each(<any>pairs, (pair) => {
+        MyLodash.each(<any>pairs, (pair) => {
             const key = pair[0];
             let val = pair[1];
             if (objectHelpers.isObject(val)) {
@@ -712,7 +670,7 @@ export class Helpers {
     }
 
     public arrayToDic(arr: []) {
-        return this._.transform(arr, (agg, key: string) => (agg[key] = true), {});
+        return MyLodash.transform(arr, (agg, key: string) => (agg[key] = true), {});
     }
 
     public escapeRegExp(string) {
@@ -838,22 +796,22 @@ export class Helpers {
         this.sleep = concurrency.sleep;
     }
 
-    private initCustomLodashMixins() {
-        this._.mixin({
-            sortKeysBy: function (obj, comparator) {
-                var keys = this._.sortBy(this._.keys(obj), function (key) {
-                    return comparator ? comparator(obj[key], key) : key;
-                });
+    // private initCustomLodashMixins() {
+    //     MyLodash.mixin({
+    //         sortKeysBy: function (obj, comparator) {
+    //             var keys = this._.sortBy(this._.keys(obj), function (key) {
+    //                 return comparator ? comparator(obj[key], key) : key;
+    //             });
 
-                return this._.zipObject(
-                    keys,
-                    this._.map(keys, function (key) {
-                        return obj[key];
-                    })
-                );
-            },
-        });
-    }
+    //             return this._.zipObject(
+    //                 keys,
+    //                 this._.map(keys, function (key) {
+    //                     return obj[key];
+    //                 })
+    //             );
+    //         },
+    //     });
+    // }
 }
 
 export const helpers = new Helpers();

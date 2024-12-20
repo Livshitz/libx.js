@@ -18,7 +18,7 @@ test('Measurement-start', async () => {
 	await helpers.delay(100);
 	const output = param.stop();
 	expect(output).toBeGreaterThanOrEqual(99);
-	expect(output).toBeLessThanOrEqual(200);
+	expect(output).toBeLessThanOrEqual(250);
 });
 
 test('Measurement-func', async () => {

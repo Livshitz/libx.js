@@ -1,4 +1,18 @@
 export class ArrayExtensions {
+    public static each = function <T>(callback: (value: T, index: number | string, array: T[]) => void
+    ): void {
+        const collection = this;
+        if (Array.isArray(collection)) {
+            collection.forEach((value, index) => callback(value, index, collection));
+        } else {
+            for (const key in collection) {
+                if (Object.prototype.hasOwnProperty.call(collection, key)) {
+                    callback(collection[key], key, collection);
+                }
+            }
+        }
+    };
+
     public static diff = function (a, fn) {
         return this.filter(function (i) {
             return a.indexOf(i) < 0;

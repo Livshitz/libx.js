@@ -13,6 +13,7 @@ import { Crypto } from '../modules/Crypto';
 import { Prompts } from './Prompts';
 import { DynamicProperties } from '../types/interfaces';
 import { Callbacks } from '../modules/Callbacks';
+import { MyLodash } from '../helpers/MyLodash';
 
 export class Node {
     public args: any = argv;
@@ -75,7 +76,7 @@ export class Node {
         var cmd = commands;
         if (Array.isArray(commands)) {
             cmd = '';
-            helpers._.forEach(commands, (i) => {
+            MyLodash.forEach(commands, (i) => {
                 cmd += i + ' && ';
             });
             cmd = cmd.slice(0, -4);
