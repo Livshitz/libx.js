@@ -40,7 +40,7 @@
     "cors": "^2.8.5",
     "crypto-js": "^4.2.0",
     "detect-browser": "^5.3.0",
-    "di.libx.js": "^2.3.2",
+    "di.libx.js": "^2.5.0",
     "form-data": "^4.0.1",
     "glob": "^7.2.3",
     "junit": "^1.4.9",
