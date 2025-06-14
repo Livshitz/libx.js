@@ -14,6 +14,7 @@ import { Prompts } from './Prompts';
 import { DynamicProperties } from '../types/interfaces';
 import { Callbacks } from '../modules/Callbacks';
 import { MyLodash } from '../helpers/MyLodash';
+import { loadEnv } from './env';
 
 export class Node {
     public args: any = argv;
@@ -335,6 +336,14 @@ export class Node {
         const str = fs.readFileSync(path).toString();
         return <T>JSON.parse(str);
     }
+
+    /**
+     * Loads environment variables from .env files into process.env, similar to dotenv.
+     * Delegates to src/node/env.ts:loadEnv.
+     * @param opts Options for env loading (see loadEnv docs)
+     * @returns {Record<string, string>} The loaded env variables as an object
+     */
+    public loadEnv = loadEnv;
 }
 
 export const node = new Node();
