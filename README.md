@@ -108,6 +108,48 @@ Grab from CDN:
 https://cdn.jsdelivr.net/npm/libx.js@latest/dist/libx.min.js
 ```
 
+
+## Node: Environment Variable Loading (.env)
+
+Libx.js provides a robust dotenv-equivalent loader for Node.js/TS projects:
+
+### Features
+- Loads `.env` by default, or `.env.<env>` if an env arg is supplied
+- Allows overriding the .env path as a string or array, merging in order
+- Merges multiple env files in order
+- Applies loaded variables to `process.env` (without overwriting existing ones)
+- Returns the loaded variables as an object
+- Supports multiline quoted values, escaped characters, inline comments, `export` keyword, and variable expansion (`$VAR`, `${VAR}`)
+
+### Usage
+```ts
+import { loadEnv } from 'libx.js/src/node/env';
+
+// Load .env from current directory
+loadEnv();
+
+// Load .env.production (merges with .env if both exist)
+loadEnv({ env: 'production' });
+
+// Load custom env files in order (merging)
+loadEnv({ path: ['.env', '.env.local'] });
+
+// All loaded variables are applied to process.env and also returned as an object
+const env = loadEnv();
+console.log(env.MY_KEY);
+```
+
+### Supported .env Features
+- Unquoted, single-quoted, and double-quoted values
+- Multiline quoted values
+- Escaped characters: `\n`, `\t`, `\r`, `\\`, `\"`, `\'`
+- Inline comments (after values)
+- `export` keyword (optional)
+- Variable expansion: `$VAR` and `${VAR}` (from previous keys or process.env)
+
+See `src/node/env.ts` and tests in `tests/node/env.test.ts` for more details and examples.
+
+
 ## Contributing
 
 Fork into your own repo, run locally, make changes and submit PullRequests to the main repository.
