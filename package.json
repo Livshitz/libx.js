@@ -20,6 +20,24 @@
     "test:ci": "vitest --reporter=junit --coverage",
     "bump": "./bump.sh"
   },
+  "exports": {
+    ".": {
+      "import": "./build/bundles/essentials.js",
+      "types": "./build/bundles/essentials.d.ts"
+    },
+    "./essentials": {
+      "import": "./build/bundles/essentials.js",
+      "types": "./build/bundles/essentials.d.ts"
+    },
+    "./node": {
+      "import": "./build/bundles/node.essentials.js",
+      "types": "./build/bundles/node.essentials.d.ts"
+    },
+    "./browser": {
+      "import": "./build/bundles/browser.essentials.js",
+      "types": "./build/bundles/browser.essentials.d.ts"
+    }
+  },
   "files": [
     "dist/**",
     "build/**",
