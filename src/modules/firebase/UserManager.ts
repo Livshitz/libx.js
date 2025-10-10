@@ -10,12 +10,33 @@ import { FireProxy } from './FireProxy';
 import { Firebase, IFirebaseInstance } from './FirebaseModule';
 import { LocalStorageMock } from '../LocalStorageMock';
 
+// Firebase Modular SDK - Auth imports
+import {
+    getAuth,
+    onAuthStateChanged,
+    signInWithPopup,
+    signOut as fbSignOut,
+    signInAnonymously as fbSignInAnonymously,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    linkWithPopup,
+    linkWithCredential,
+    GoogleAuthProvider,
+    GithubAuthProvider,
+    FacebookAuthProvider,
+    EmailAuthProvider,
+    getIdToken,
+    type Auth,
+    type User as FirebaseUser,
+} from 'firebase/auth';
+import type { FirebaseApp } from 'firebase/app';
+
 let localStorage = LocalStorageMock.safeGetLocalStorage();
 
 export class UserManager {
     public firebaseModule: Firebase;
-    public firebase: IFirebaseInstance;
-    public auth;
+    public firebaseApp: FirebaseApp;
+    public auth: Auth;
     // public profile: any = {};
     public data: IBasicUser = null;
 
@@ -28,17 +49,20 @@ export class UserManager {
 
     public events = new EventsStream();
     public ready: boolean;
-    private _fbUser: any;
-    private token: any;
+    private _fbUser: FirebaseUser;
+    private token: string;
     private dataProxy: FireProxy<IBasicUser> = null;
     private _options = new Options();
     private isInitiated = false;
 
     public constructor(firebaseModule: Firebase) {
         this.firebaseModule = firebaseModule;
-        this.firebase = firebaseModule.firebaseApp;
-        if (this.firebase.auth == null) throw new Error('Firebase.Auth is not defined. Did you import "firebase-auth" package?');
-        this.auth = this.firebase.auth();
+        this.firebaseApp = firebaseModule.firebaseApp;
+        this.auth = getAuth(this.firebaseApp);
+
+        if (!this.auth) {
+            throw new Error('Firebase Auth is not defined. Did you import "firebase/auth"?');
+        }
 
         // this.events.emit({ step: 'init' }, 'user');
 
@@ -47,7 +71,7 @@ export class UserManager {
         //     this.observeUser();
         // });
 
-        this.auth.onAuthStateChanged(this.onAuthStateChanged.bind(this));
+        onAuthStateChanged(this.auth, this.onAuthStateChanged.bind(this));
 
         const cachedUserId = localStorage.loggedInUserId;
         if (cachedUserId != null) {
@@ -62,72 +86,56 @@ export class UserManager {
     }
 
     //#region Signin methods
-    public async signInGoogle(customScopes?: string) {
-        let p = helpers.newPromise();
-        // Sign in Firebase using popup auth and Google as the identity provider.
-        var provider = new this.firebaseModule.firebaseProvider.auth.GoogleAuthProvider();
+    public async signInGoogle(customScopes?: string): Promise<void> {
+        const provider = new GoogleAuthProvider();
         provider.addScope('profile');
         provider.addScope('email');
         provider.setCustomParameters({ prompt: 'select_account' });
 
         if (customScopes != null) {
-            customScopes.split(',').map((x) => provider.addScope(x));
+            customScopes.split(',').forEach((scope) => provider.addScope(scope));
         }
 
-        if (this.auth.currentUser != null && this.auth.currentUser.isAnonymous)
-            this.auth.currentUser
-                .linkWithPopup(provider)
-                .then(() => p.resolve())
-                .catch((ex) => p.reject(ex));
-        else
-            this.auth
-                .signInWithPopup(provider)
-                .then(() => p.resolve())
-                .catch((ex) => p.reject(ex));
-        return p;
+        try {
+            if (this.auth.currentUser?.isAnonymous) {
+                await linkWithPopup(this.auth.currentUser, provider);
+            } else {
+                await signInWithPopup(this.auth, provider);
+            }
+        } catch (ex) {
+            throw ex;
+        }
     }
 
-    public async signInGithub() {
-        let p = helpers.newPromise();
-        // Sign in Firebase using popup auth and Google as the identity provider.
-        var provider = new this.firebaseModule.firebaseProvider.auth.GithubAuthProvider();
+    public async signInGithub(): Promise<void> {
+        const provider = new GithubAuthProvider();
 
-        if (this.auth.currentUser != null && this.auth.currentUser.isAnonymous)
-            this.auth.currentUser
-                .linkWithPopup(provider)
-                .then(() => p.resolve())
-                .catch((ex) => p.reject(ex));
-        else
-            this.auth
-                .signInWithPopup(provider)
-                .then(() => p.resolve())
-                .catch((ex) => p.reject(ex));
-        return p;
+        try {
+            if (this.auth.currentUser?.isAnonymous) {
+                await linkWithPopup(this.auth.currentUser, provider);
+            } else {
+                await signInWithPopup(this.auth, provider);
+            }
+        } catch (ex) {
+            throw ex;
+        }
     }
 
-    public async signInAnon(displayName) {
-        let p = helpers.newPromise();
-
-        this.auth
-            .signInAnonymously()
-            .then((u) => {
-                log.verbose(' > app:user: Got anon user', u);
-                this.onSignIn.once(() => {
-                    this.data.public.displayName = displayName;
-                });
-                p.resolve();
-            })
-            .catch((error) => {
-                log.verbose(' ! app:user: Failed to get anon user', error);
-                p.reject(error);
+    public async signInAnon(displayName: string): Promise<void> {
+        try {
+            const result = await fbSignInAnonymously(this.auth);
+            log.verbose(' > app:user: Got anon user', result.user);
+            this.onSignIn.once(() => {
+                this.data.public.displayName = displayName;
             });
-        return p;
+        } catch (error) {
+            log.verbose(' ! app:user: Failed to get anon user', error);
+            throw error;
+        }
     }
 
-    public async signInFacebook() {
-        let p = helpers.newPromise();
-        // Sign in Firebase using popup auth and Google as the identity provider.
-        var provider = new this.firebaseModule.firebaseProvider.auth.FacebookAuthProvider();
+    public async signInFacebook(): Promise<void> {
+        const provider = new FacebookAuthProvider();
         provider.addScope('email');
         provider.addScope('public_profile');
         // provider.addScope("user_about_me");
@@ -135,63 +143,46 @@ export class UserManager {
 
         provider.setCustomParameters({ display: 'popup' });
 
-        if (this.auth.currentUser != null && this.auth.currentUser.isAnonymous)
-            this.auth.currentUser
-                .linkWithPopup(provider)
-                .then(() => p.resolve())
-                .catch((ex) => p.reject(ex));
-        else
-            this.auth
-                .signInWithPopup(provider)
-                .then(() => p.resolve())
-                .catch((ex) => p.reject(ex));
-
-        return p;
+        try {
+            if (this.auth.currentUser?.isAnonymous) {
+                await linkWithPopup(this.auth.currentUser, provider);
+            } else {
+                await signInWithPopup(this.auth, provider);
+            }
+        } catch (ex) {
+            throw ex;
+        }
     }
 
-    public async signUpEmail(email, password) {
-        let p = helpers.newPromise();
-        this.auth
-            .createUserWithEmailAndPassword(email, password)
-            .then(() => p.resolve())
-            .catch(function (error) {
-                log.error('app:user:signInEmail: Error- ', error);
-                var errorCode = error.code;
-                var errorMessage = error.message;
-                p.reject(error);
-            });
-        return p;
+    public async signUpEmail(email: string, password: string): Promise<void> {
+        try {
+            await createUserWithEmailAndPassword(this.auth, email, password);
+        } catch (error) {
+            log.error('app:user:signUpEmail: Error- ', error);
+            throw error;
+        }
     }
 
-    public async signInEmail(email, password) {
-        let p = helpers.newPromise();
-        if (this.auth.currentUser != null && this.auth.currentUser.isAnonymous) {
-            var credential = this.auth.EmailAuthProvider.credential(email, password);
-            this.auth.currentUser.linkWithCredential(credential).then(
-                function (user) {
-                    log.verbose('Account linking success', user);
-                    this.onAuthStateChanged(user);
-                    p.resolve(user);
-                },
-                function (error) {
-                    log.verbose('Account linking error', error);
-                    p.reject(error);
-                }
-            );
-            return;
+    public async signInEmail(email: string, password: string): Promise<FirebaseUser | void> {
+        if (this.auth.currentUser?.isAnonymous) {
+            const credential = EmailAuthProvider.credential(email, password);
+            try {
+                const result = await linkWithCredential(this.auth.currentUser, credential);
+                log.verbose('Account linking success', result.user);
+                await this.onAuthStateChanged(result.user);
+                return result.user;
+            } catch (error) {
+                log.verbose('Account linking error', error);
+                throw error;
+            }
         }
 
-        this.auth
-            .signInWithEmailAndPassword(email, password)
-            .then(() => p.resolve())
-            .catch(function (error) {
-                log.verbose(' ! app:user:signInEmail: Error- ', error);
-                p.reject(error);
-                var errorCode = error.code;
-                var errorMessage = error.message;
-            });
-
-        return p;
+        try {
+            await signInWithEmailAndPassword(this.auth, email, password);
+        } catch (error) {
+            log.verbose(' ! app:user:signInEmail: Error- ', error);
+            throw error;
+        }
     }
     //#endregion
 
@@ -203,17 +194,17 @@ export class UserManager {
         return this.ready;
     }
 
-    public async signOut() {
+    public async signOut(): Promise<void> {
         // Sign out of Firebase.
-        await this.auth.signOut();
+        await fbSignOut(this.auth);
 
         browser.helpers.reload();
     }
 
-    public async refreshToken() {
+    public async refreshToken(): Promise<string> {
         log.debug('userManager:refreshToken: ');
 
-        this.token = await this._fbUser.getIdToken();
+        this.token = await getIdToken(this._fbUser, true);
 
         return this.token;
     }

@@ -6,6 +6,45 @@ import { Callbacks } from '../Callbacks';
 import { di } from '../dependencyInjector';
 import { log } from '../log';
 
+console.log('DEBUG TST 6');
+
+// Firebase Modular SDK imports
+import {
+    getDatabase,
+    ref,
+    get,
+    set,
+    update,
+    remove,
+    onValue,
+    off,
+    push as fbPush,
+    query,
+    orderByChild,
+    orderByKey,
+    equalTo,
+    startAt,
+    limitToFirst,
+    onDisconnect as fbOnDisconnect,
+    increment as fbIncrement,
+    onChildChanged,
+    type Database,
+    type DatabaseReference,
+    type DataSnapshot,
+    type Unsubscribe,
+} from 'firebase/database';
+import {
+    getStorage,
+    ref as fbStorageRef,
+    uploadBytes,
+    getDownloadURL,
+    deleteObject,
+    type FirebaseStorage,
+    type StorageReference,
+} from 'firebase/storage';
+import type { FirebaseApp } from 'firebase/app';
+import { libx } from '../../bundles/essentials';
+
 export class Firebase {
     private maxDate = new Date('01/01/2200').getTime(); //7258111200000 //32503672800000;
     private entityVersion = 0;
@@ -13,35 +52,46 @@ export class Firebase {
 
     public firebasePathPrefix = null;
     public onReady = new Callbacks();
-    private _database: any;
-    public firebaseApp: any;
-    public firebaseProvider: any;
+    private _database: Database;
+    private _storage: FirebaseStorage;
+    public firebaseApp: FirebaseApp;
+    public firebaseConfig: any;
+    private _listeners: Map<string, Unsubscribe> = new Map();
+    private presenceListener: Unsubscribe = null;
     // public events = new EventsStream();
 
-    constructor(firebaseApp, firebaseProvider) {
+    constructor(firebaseApp: FirebaseApp, firebaseConfig?: any) {
         // libx.di.require(_appEvents=> {
         // 	appEvents = _appEvents;
         // })
 
+        console.log('[TEST] 6');
+
         this.firebaseApp = firebaseApp;
-        this.firebaseProvider = firebaseProvider;
-        this._database = this.firebaseApp.database();
+        this.firebaseConfig = firebaseConfig;
+        // The databaseURL is already configured in firebaseApp via initializeApp.
+        // Calling getDatabase with the URL again can cause initialization conflicts.
+        this._database = getDatabase(firebaseApp);
+        this._storage = getStorage(firebaseApp);
 
         this.isConnected((connected) => {
             if (connected) this.onReady.trigger();
+        }).catch(err => {
+            libx.log.w('FirebaseModule:ctor: error while setting up isConnected', err?.message ?? err);
         });
     }
 
-    public async isConnected(callback: Function) {
+    public async isConnected(callback?: Function) {
         if (this._database == null) return false;
-        var ret = this.get('.info/connected');
-        if (callback != null) {
-            this.listen('.info/connected', (isConnected) => {
-                callback(isConnected);
-                // this.events.emit({ step: 'connection-changed', value: isConnected }, 'firebase');
-            });
-        }
-        return ret;
+        const p = helpers.newPromise();
+        if (this.presenceListener) this.presenceListener();
+        this.presenceListener = this.listen('.info/connected', (isConnected) => {
+            console.log('DBG: isConnected', isConnected);
+            if (!p?._settled) p.resolve(isConnected);
+            if (callback) callback(isConnected);
+            // this.events.emit({ step: 'connection-changed', value: isConnected }, 'firebase');
+        });
+        return p;
     }
 
     public makeKey(givenTimestamp?: number) {
@@ -49,158 +99,197 @@ export class Firebase {
         return (this.maxDate - date).toString() + '-' + Math.round(helpers.randomNumber(0, 100) * 100);
     }
 
-    public getRef(path: string, type?, callback?: Function) {
+    public getRef(path: string, type?: string, callback?: Function): DatabaseReference | Unsubscribe {
         path = this._fixPath(path);
+        const dbRef = ref(this._database, path);
+
         if (type != null && callback != null) {
-            return this._database.ref(path).on(type, callback);
+            // Return unsubscribe function
+            return onValue(dbRef, (snapshot: DataSnapshot) => {
+                callback(snapshot);
+            });
         } else {
-            return this._database.ref(path);
+            return dbRef;
         }
     }
 
-    public listen(path: string, callback: Function) {
+    public listen(path: string, callback: Function): Unsubscribe {
         path = this._fixPath(path);
         log.debug('api.firebase.listen: Listening to "' + path + '"');
-        return this._database.ref(path).on('value', function (snp) {
+
+        // Unlisten to existing listener if any
+        this.unlisten(path);
+
+        const dbRef = ref(this._database, path);
+        const unsubscribe = onValue(dbRef, (snapshot: DataSnapshot) => {
             log.debug('api.firebase.listen: Value Changed at "' + path + '"');
-            var obj = snp?.val();
+            const obj = snapshot?.val();
             callback(obj);
         });
+
+        // Store unsubscribe function
+        this._listeners.set(path, unsubscribe);
+
+        return unsubscribe;
     }
 
-    public listenChild<T = any>(path: string, callback: (string, T) => void) {
+    public listenChild<T = any>(path: string, callback: (childPath: string, data: T) => void): Unsubscribe {
         path = this._fixPath(path);
         log.debug('api.firebase.listenChild: Listening to "' + path + '"');
-        this._database.ref(path).on('child_changed', function (snp) {
-            const childPath = snp.getRef().path.pieces_.slice(1).join('/');
-            var obj = snp?.val();
+
+        const dbRef = ref(this._database, path);
+        const unsubscribe = onChildChanged(dbRef, (snapshot: DataSnapshot) => {
+            // Extract child path from ref
+            const fullPath = snapshot.ref.toString();
+            const databaseURL = this._database.app.options.databaseURL as string;
+            const childPath = fullPath.split(databaseURL)[1] || fullPath;
+            const obj = snapshot?.val();
             log.debug('api.firebase.listenChild: Value Changed at "' + childPath + '"', obj);
             callback(childPath, obj);
         });
+
+        return unsubscribe;
     }
 
-    public unlisten(path: string) {
+    public unlisten(path: string): void {
         path = this._fixPath(path);
         log.debug('api.firebase.unlisten: Stopping listening to "' + path + '"');
-        this._database.ref(path).off('value');
+
+        const unsubscribe = this._listeners.get(path);
+        if (unsubscribe) {
+            unsubscribe();
+            this._listeners.delete(path);
+        }
     }
 
-    public get(path: string) {
-        path = this._fixPath(path);
-        log.debug('api.firebase.get: Getting "' + path + '"');
-        var defer = helpers.newPromise();
-        this._database
-            .ref(path)
-            .once('value')
-            .then(function (snp) {
-                var obj = snp.val();
-                defer.resolve(obj);
-            })
-            .catch((ex) => defer.reject(ex));
-        return defer.promise();
-    }
-
-    public getPage(path: string, lastKey = null, size = Firebase._DEFAULT_SIZE) {
-        path = this._fixPath(path);
-        log.debug('api.firebase.get: Getting "' + path + '"');
-        var defer = helpers.newPromise();
-        let ref = this._database.ref(path).orderByKey();
-
-        if (lastKey != null) {
-            ref = ref.startAt(lastKey);
+    public async get(path: string): Promise<any> {
+        // Hardcoded fix for .info/connected path with modular SDK
+        if (path.includes('.info/connected')) {
+            try {
+                const dbRef = ref(this._database, '/.info/connected');
+                const snapshot = await get(dbRef);
+                return snapshot.val();
+            } catch (ex) {
+                throw ex;
+            }
         }
 
-        ref.limitToFirst(size)
-            .once('value')
-            .then(function (snp) {
-                var obj = snp.val();
-                defer.resolve(obj);
-            })
-            .catch((ex) => defer.reject(ex));
+        path = this._fixPath(path);
+        log.debug('api.firebase.get: Getting "' + path + '"');
 
-        return defer.promise();
+        try {
+            const dbRef = ref(this._database, path);
+            const snapshot = await get(dbRef);
+            return snapshot.val();
+        } catch (ex) {
+            throw ex;
+        }
     }
 
-    public update(path: string, data, avoidFill = true) {
+    public async getPage(path: string, lastKey: string = null, size = Firebase._DEFAULT_SIZE): Promise<any> {
+        path = this._fixPath(path);
+        log.debug('api.firebase.get: Getting "' + path + '"');
+
+        try {
+            const dbRef = ref(this._database, path);
+            let dbQuery;
+
+            if (lastKey != null) {
+                dbQuery = query(dbRef, orderByKey(), startAt(lastKey), limitToFirst(size));
+            } else {
+                dbQuery = query(dbRef, orderByKey(), limitToFirst(size));
+            }
+
+            const snapshot = await get(dbQuery);
+            return snapshot.val();
+        } catch (ex) {
+            throw ex;
+        }
+    }
+
+    public async update(path: string, data: any, avoidFill = true): Promise<string> {
         path = this._fixPath(path);
         log.debug('api.firebase.update: Updating data to "' + path + '"', data);
-        var defer = helpers.newPromise();
 
         data = this._fixObj(data);
 
         if (!avoidFill) data = this._fillMissingFields(data, path);
-        this._database
-            .ref(path)
-            .update(data)
-            .then(function () {
-                defer.resolve(path);
-            })
-            .catch((ex) => defer.reject(ex));
-        return defer.promise();
+
+        try {
+            const dbRef = ref(this._database, path);
+            await update(dbRef, data);
+            return path;
+        } catch (ex) {
+            throw ex;
+        }
     }
 
-    public set(path: string, data, avoidFill = true) {
+    public async set(path: string, data: any, avoidFill = true): Promise<string> {
         path = this._fixPath(path);
         log.debug('api.firebase.set: Setting data to "' + path + '"', data);
-        var defer = helpers.newPromise();
 
         data = this._fixObj(data);
 
         if (!avoidFill) data = this._fillMissingFields(data, path);
-        this._database
-            .ref(path)
-            .set(data)
-            .then(function () {
-                defer.resolve(path);
-            })
-            .catch((ex) => defer.reject(ex));
-        return defer.promise();
+
+        try {
+            const dbRef = ref(this._database, path);
+            await set(dbRef, data);
+            return path;
+        } catch (ex) {
+            throw ex;
+        }
     }
 
-    public push(path: string, data, avoidFill = true) {
+    public async push(path: string, data: any, avoidFill = true): Promise<{ key: string; path: string; }> {
         path = this._fixPath(path);
-        var key = this.makeKey();
+        const key = this.makeKey();
         log.debug('api.firebase.push: Pushing to "' + path + '" key=' + key, data);
-        var defer = helpers.newPromise();
 
         data = this._fixObj(data);
 
         if (data._entity == null) data._entity = {};
         data._entity.id = key;
         if (!avoidFill) data = this._fillMissingFields(data, path);
-        this._database
-            .ref(path + '/' + key)
-            .set(data)
-            .then(function () {
-                defer.resolve({ key, path: path + '/' + key });
-            })
-            .catch((ex) => defer.reject(ex));
-        return defer.promise();
+
+        try {
+            const dbRef = ref(this._database, path + '/' + key);
+            await set(dbRef, data);
+            return { key, path: path + '/' + key };
+        } catch (ex) {
+            throw ex;
+        }
     }
 
-    public delete(path: string) {
+    public async delete(path: string): Promise<string> {
         path = this._fixPath(path);
         log.debug('api.firebase.delete: Removing data to "' + path + '"');
-        var defer = helpers.newPromise();
-        this._database
-            .ref(path)
-            .remove()
-            .then(function () {
-                defer.resolve(path);
-            })
-            .catch((ex) => defer.reject(ex));
-        return defer.promise();
+
+        try {
+            const dbRef = ref(this._database, path);
+            await remove(dbRef);
+            return path;
+        } catch (ex) {
+            throw ex;
+        }
     }
 
-    public async increment(path: string, key: string) {
+    public async increment(path: string, key: string): Promise<void> {
         path = this._fixPath(path);
-        const r = this._database.ref(path);
-        return await r.update({
-            [`${key}`]: this._database.app.firebase.database.ServerValue.increment(1)
+        const dbRef = ref(this._database, path);
+        await update(dbRef, {
+            [key]: fbIncrement(1),
         });
     }
 
-    public filter(path: string, byChild, byValue, lastKey: string = undefined, size = Firebase._DEFAULT_SIZE, asArray = false) {
+    public async filter(
+        path: string,
+        byChild: string,
+        byValue: any,
+        lastKey: string = undefined,
+        size = Firebase._DEFAULT_SIZE,
+        asArray = false
+    ): Promise<any> {
         path = this._fixPath(path);
         log.debug(
             StringExtensions.format.apply('api.firebase.filter: Querying data from "{0}", by child "{1}", by value "{2}"', [
@@ -209,23 +298,24 @@ export class Firebase {
                 byValue,
             ])
         );
-        var defer = helpers.newPromise();
-        let ref = this._database.ref(path).orderByChild(byChild);
 
-        if (lastKey != undefined) {
-            ref = ref.startAt(byValue, lastKey).limitToFirst(size);
-        } else if (lastKey == null) {
-            ref = ref.equalTo(byValue).limitToFirst(size);
+        try {
+            const dbRef = ref(this._database, path);
+            let dbQuery;
+
+            if (lastKey !== undefined) {
+                dbQuery = query(dbRef, orderByChild(byChild), startAt(byValue, lastKey), limitToFirst(size));
+            } else if (lastKey === null) {
+                dbQuery = query(dbRef, orderByChild(byChild), equalTo(byValue), limitToFirst(size));
+            }
+
+            const snapshot = await get(dbQuery);
+            let obj = snapshot.val();
+            if (obj != null && asArray) obj = this.dictToArray(obj);
+            return obj;
+        } catch (ex) {
+            throw ex;
         }
-
-        ref.once('value')
-            .then((snp) => {
-                var obj = snp.val();
-                if (obj != null && asArray) obj = this.dictToArray(obj);
-                defer.resolve(obj);
-            })
-            .catch((ex) => defer.reject(ex));
-        return defer.promise();
     }
 
     public getIdFromPath(path: string) {
@@ -249,17 +339,24 @@ export class Firebase {
         return new Date(timestamp);
     }
 
-    public onPresent(path: string, value, onDisconnectValue: Function) {
+    public onPresent(path: string, value: any, onDisconnectValue?: any): void {
         path = this._fixPath(path);
         this.isConnected((isConnected) => {
             log.debug(
                 `api.firebase.onPresent: Setting presence on '${path}', with value '${value}' (onDisconnectValue: '${onDisconnectValue}')`
             );
             if (!isConnected) return;
-            var ref = this.getRef(path);
-            if (onDisconnectValue == null) ref.onDisconnect().remove();
-            else ref.onDisconnect().set(onDisconnectValue);
-            ref.set(value || true);
+
+            const dbRef = ref(this._database, path);
+            const disconnectRef = fbOnDisconnect(dbRef);
+
+            if (onDisconnectValue == null) {
+                disconnectRef.remove();
+            } else {
+                disconnectRef.set(onDisconnectValue);
+            }
+
+            set(dbRef, value || true);
         });
     }
 
@@ -302,11 +399,89 @@ export class Firebase {
     }
 
     public _fixPath(path: string) {
+        // Special .info paths require a leading slash and should not be prefixed.
+        if (path.includes('.info')) {
+            return path.startsWith('/') ? path : '/' + path;
+        }
+
         if (this.firebasePathPrefix == null) return path;
         if (path.startsWith(this.firebasePathPrefix)) return path;
-        if (path.startsWith('.')) return path;
+
         if (!path.startsWith('/') && !this.firebasePathPrefix.endsWith('/')) path = '/' + path;
         return this.firebasePathPrefix + path;
+    }
+
+    // ==================== Storage Methods ====================
+
+    /**
+     * Upload a file to Firebase Storage
+     * @param path - Storage path (e.g., 'user/123/file.jpg')
+     * @param data - File data (Blob, File, or Uint8Array)
+     * @param metadata - Optional metadata for the file
+     * @returns Storage path
+     */
+    public async uploadFile(path: string, data: Blob | Uint8Array | ArrayBuffer): Promise<string> {
+        try {
+            const storageRef = fbStorageRef(this._storage, path);
+            await uploadBytes(storageRef, data);
+            log.debug('api.firebase.uploadFile: Uploaded to "' + path + '"');
+            return path;
+        } catch (ex) {
+            log.error('api.firebase.uploadFile: Failed:', ex);
+            throw ex;
+        }
+    }
+
+    /**
+     * Get download URL for a file
+     * @param path - Storage path
+     * @returns Download URL
+     */
+    public async getFileUrl(path: string): Promise<string> {
+        try {
+            const storageRef = fbStorageRef(this._storage, path);
+            const url = await getDownloadURL(storageRef);
+            log.debug('api.firebase.getFileUrl: Got URL for "' + path + '"');
+            return url;
+        } catch (ex) {
+            log.error('api.firebase.getFileUrl: Failed:', ex);
+            throw ex;
+        }
+    }
+
+    /**
+     * Delete a file from Storage
+     * @param path - Storage path
+     */
+    public async deleteFile(path: string): Promise<void> {
+        try {
+            const storageRef = fbStorageRef(this._storage, path);
+            await deleteObject(storageRef);
+            log.debug('api.firebase.deleteFile: Deleted "' + path + '"');
+        } catch (ex) {
+            log.error('api.firebase.deleteFile: Failed:', ex);
+            throw ex;
+        }
+    }
+
+    /**
+     * Upload and get URL in one call (convenience method)
+     * @param path - Storage path
+     * @param data - File data (Blob, File, or Uint8Array)
+     * @returns Download URL
+     */
+    public async uploadAndGetUrl(path: string, data: Blob | Uint8Array | ArrayBuffer): Promise<string> {
+        await this.uploadFile(path, data);
+        return await this.getFileUrl(path);
+    }
+
+    /**
+     * Get a storage reference for advanced operations
+     * @param path - Storage path
+     * @returns StorageReference
+     */
+    public getStorageRef(path: string): StorageReference {
+        return fbStorageRef(this._storage, path);
     }
 }
 
