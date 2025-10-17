@@ -72,6 +72,18 @@ function parseEnv(src: string): Record<string, string> {
 		let key = line.slice(0, eqIdx).trim();
 		let val = line.slice(eqIdx + 1).trim();
 
+		// Remove inline comments first (before processing quotes)
+		// Find comment start by looking for # preceded by whitespace or at start
+		const hashIdx = val.indexOf('#');
+		if (hashIdx !== -1) {
+			// Check if # is at the start or preceded by whitespace (not inside quotes)
+			if (hashIdx === 0) {
+				val = '';
+			} else if (/\s/.test(val[hashIdx - 1])) {
+				val = val.slice(0, hashIdx).trim();
+			}
+		}
+
 		// Handle multiline quoted values
 		if ((val.startsWith('"') && !val.endsWith('"')) || (val.startsWith("'") && !val.endsWith("'"))) {
 			const quote = val[0];
@@ -92,17 +104,6 @@ function parseEnv(src: string): Record<string, string> {
 			// Remove surrounding quotes
 			if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
 				val = val.slice(1, -1);
-			}
-		}
-
-		// Remove inline comments (only if not quoted)
-		if (!(val.startsWith('"') || val.startsWith("'"))) {
-			const hashIdx = val.indexOf(' #');
-			if (hashIdx !== -1) val = val.slice(0, hashIdx).trim();
-			else {
-				const hashIdx2 = val.indexOf('#');
-				if (hashIdx2 === 0) val = '';
-				else if (hashIdx2 > 0 && /\s/.test(val[hashIdx2 - 1])) val = val.slice(0, hashIdx2).trim();
 			}
 		}
 
