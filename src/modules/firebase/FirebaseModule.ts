@@ -113,15 +113,24 @@ export class Firebase {
         }
     }
 
-    public listen(path: string, callback: Function): Unsubscribe {
+    public listen(path: string, callback: Function, options?: { newOnly?: boolean }): Unsubscribe {
         path = this._fixPath(path);
-        log.debug('api.firebase.listen: Listening to "' + path + '"');
+        log.debug('api.firebase.listen: Listening to "' + path + '"' + (options?.newOnly ? ' (new values only)' : ''));
 
         // Unlisten to existing listener if any
         this.unlisten(path);
 
         const dbRef = ref(this._database, path);
+        let isFirstCall = options?.newOnly === true;
+
         const unsubscribe = onValue(dbRef, (snapshot: DataSnapshot) => {
+            // Skip the first call if newOnly is true
+            if (isFirstCall) {
+                isFirstCall = false;
+                log.debug('api.firebase.listen: Skipping initial value at "' + path + '"');
+                return;
+            }
+
             log.debug('api.firebase.listen: Value Changed at "' + path + '"');
             const obj = snapshot?.val();
             callback(obj);
@@ -488,7 +497,7 @@ export class Firebase {
 export interface IFirebaseInstance {
     set(path: string, value: any);
     auth();
-    listen(string, callback: Function);
+    listen(path: string, callback: Function, options?: { newOnly?: boolean });
 }
 
 di.register('Firebase', Firebase);
