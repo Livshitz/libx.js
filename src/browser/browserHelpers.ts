@@ -501,6 +501,449 @@ export class BrowserHelpers {
             },
         });
     }
+
+    //#region RTL & Text Direction
+
+    /**
+     * Check if a string contains RTL (Right-To-Left) characters
+     * @param str String to check
+     * @returns True if string contains RTL characters (Hebrew, Arabic, etc.)
+     */
+    public isRTL(str: string): boolean {
+        const rtlPattern = /[\u0590-\u05FF\u0600-\u06FF\u0680-\u06FF\u0700-\u074F\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDCF\uFDF0-\uFDFF\uFE70-\uFEFF\u200F]/;
+        return rtlPattern.test(str);
+    }
+
+    /**
+     * Apply automatic text direction (RTL/LTR) to elements matching a selector
+     * @param selector CSS selector for elements to apply direction to (default: '.auto-dir')
+     * @param applyLTR Whether to explicitly set LTR direction for non-RTL text (default: false)
+     * @param delay Delay in milliseconds before applying (default: 1)
+     */
+    public applyAutoDir(selector = '.auto-dir', applyLTR = false, delay = 1) {
+        setTimeout(() => {
+            const dur = libxHelpers.Measurement.start();
+            const elms = document.querySelectorAll(selector);
+            elms.forEach((x) => {
+                let content = (<HTMLInputElement>x).value;
+                if (!objectHelpers.isEmptyString(x.textContent)) content = x.textContent;
+                if (objectHelpers.isEmptyString(content)) content = (<HTMLInputElement>x).placeholder;
+
+                const isRTL = this.isRTL(content);
+                if (!isRTL) {
+                    if (applyLTR) x.setAttribute('dir', 'ltr');
+                    return;
+                }
+                x.setAttribute('dir', 'rtl');
+            });
+            log.debug(`browserHelpers:applyAutoDir: dur: ${dur.peek()}ms`);
+        }, delay);
+    }
+
+    /**
+     * Debounced version of applyAutoDir
+     * @param wait Debounce wait time in milliseconds (default: 100)
+     * @param selector CSS selector for elements (default: '.auto-dir')
+     * @param applyLTR Whether to explicitly set LTR direction (default: true)
+     * @returns Debounced function
+     */
+    public applyAutoDirDebounced(wait = 100, selector = '.auto-dir', applyLTR = true) {
+        return libxHelpers.debounce(() => {
+            this.applyAutoDir(selector, applyLTR);
+        }, wait);
+    }
+
+    //#endregion
+
+    //#region Screen & Viewport
+
+    /**
+     * Screen size breakpoints
+     */
+    public ScreenSize = {
+        xs: 'xs',
+        sm: 'sm',
+        md: 'md',
+        lg: 'lg',
+        xl: 'xl',
+    } as const;
+
+    /**
+     * Get current screen size based on window width
+     * @returns Screen size identifier (xs, sm, md, lg, xl)
+     */
+    public getScreenSize(): string {
+        const screenWidth = window.innerWidth;
+
+        if (screenWidth <= 599) return this.ScreenSize.xs;
+        if (screenWidth <= 959) return this.ScreenSize.sm;
+        if (screenWidth <= 1279) return this.ScreenSize.md;
+        if (screenWidth <= 1919) return this.ScreenSize.lg;
+        return this.ScreenSize.xl;
+    }
+
+    //#endregion
+
+    //#region Image & Canvas Operations
+
+    /**
+     * Resize an image file
+     * @param file Image file to resize
+     * @param maxSizeWidthPx Maximum width/height in pixels
+     * @param bgColor Background color (default: '#111')
+     * @param mimetype Output MIME type (default: 'image/jpeg')
+     * @returns Blob of resized image
+     */
+    public async resizeImageFile(
+        file: File,
+        maxSizeWidthPx: number,
+        bgColor = '#111',
+        mimetype = 'image/jpeg'
+    ): Promise<Blob> {
+        if (!file.type.match(/image.*/)) {
+            throw new Error('Not an image');
+        }
+
+        const reader = new FileReader();
+        const p = libxHelpers.newPromise<string>();
+        reader.onload = (readerEvent: any) => {
+            try {
+                p.resolve(readerEvent.target.result);
+            } catch (err) {
+                p.reject(err);
+            }
+        };
+        reader.readAsDataURL(file);
+        const dataURI = await p;
+
+        const resizedDataURI = await this.resizeImage(dataURI, maxSizeWidthPx, bgColor, mimetype);
+        return libxHelpers.dataURItoBlob(resizedDataURI);
+    }
+
+    /**
+     * Resize an image from data URI
+     * @param dataURI Image data URI
+     * @param maxSizeWidthPx Maximum width/height in pixels
+     * @param bgColor Background color (default: '#111')
+     * @param mimetype Output MIME type (default: 'image/jpeg')
+     * @param quality Image quality 0-1 (default: 0.85)
+     * @returns Resized image as data URI
+     */
+    public async resizeImage(
+        dataURI: string,
+        maxSizeWidthPx: number,
+        bgColor = '#111',
+        mimetype = 'image/jpeg',
+        quality = 0.85
+    ): Promise<string> {
+        const image = new Image();
+        const canvas = document.createElement('canvas');
+
+        const resize = () => {
+            let width = image.width;
+            let height = image.height;
+
+            log.verbose(`browserHelpers:resizeImage: Original dimensions: ${width}x${height}`);
+
+            if (width > height) {
+                if (width > maxSizeWidthPx) {
+                    height *= maxSizeWidthPx / width;
+                    width = maxSizeWidthPx;
+                }
+            } else {
+                if (height > maxSizeWidthPx) {
+                    width *= maxSizeWidthPx / height;
+                    height = maxSizeWidthPx;
+                }
+            }
+
+            log.verbose(`browserHelpers:resizeImage: Target dimensions: ${Math.round(width)}x${Math.round(height)}`);
+
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+
+            ctx.fillStyle = bgColor;
+            ctx.fillRect(0, 0, width, height);
+            ctx.drawImage(image, 0, 0, width, height);
+
+            const resultDataURI = canvas.toDataURL(mimetype, quality);
+            const resultSize = (resultDataURI.length * 2) / 1024;
+            log.verbose(`browserHelpers:resizeImage: Result size: ${resultSize.toFixed(0)}KB`);
+
+            return resultDataURI;
+        };
+
+        const p = libxHelpers.newPromise<string>();
+        image.onload = () => {
+            try {
+                const result = resize();
+                p.resolve(result);
+            } catch (err) {
+                log.error('browserHelpers:resizeImage: Error during resize:', err);
+                p.reject(err);
+            }
+        };
+        image.onerror = (err) => {
+            log.error('browserHelpers:resizeImage: Image load error:', err);
+            p.reject(err);
+        };
+
+        image.crossOrigin = 'anonymous';
+        image.src = dataURI;
+
+        return await p;
+    }
+
+    /**
+     * Copy canvas content to clipboard or download as file (based on device type)
+     * @param canvas Canvas element to copy/download
+     * @param filenameNoExt Filename without extension (for download)
+     */
+    public async copyOrDownloadCanvas(canvas: HTMLCanvasElement, filenameNoExt: string) {
+        const isMobile = /Mobile|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+        
+        if (!isMobile) {
+            await this.copyCanvasToClipboard(canvas);
+        } else {
+            try {
+                const p = libxHelpers.newPromise<Blob>();
+                await canvas.toBlob((blob) => p.resolve(blob));
+                const blob = await p;
+                this.localDownloadBlob(blob, `${filenameNoExt}.png`);
+            } catch (err) {
+                throw log.error('browserHelpers:copyOrDownloadCanvas: Failed to download as file!', err);
+            }
+        }
+    }
+
+    /**
+     * Copy canvas content to clipboard
+     * @param canvas Canvas element to copy
+     */
+    public async copyCanvasToClipboard(canvas: HTMLCanvasElement) {
+        try {
+            const canWriteToClipboard = await this.askClipboardWritePermission();
+            if (!canWriteToClipboard) throw new Error("Don't have permissions to copy");
+
+            const p = libxHelpers.newPromise<Blob>();
+            await canvas.toBlob((blob) => p.resolve(blob));
+            const blob = await p;
+            await this.writeToClipboard(blob);
+
+            log.info('browserHelpers:copyCanvasToClipboard: Copied!');
+        } catch (err) {
+            throw log.error('browserHelpers:copyCanvasToClipboard: Failed! Error:', err?.message || err);
+        }
+    }
+
+    /**
+     * Write blob to clipboard using modern Clipboard API
+     * @param blob Blob to write to clipboard
+     */
+    private async writeToClipboard(blob: Blob) {
+        const data = [new ClipboardItem({ [blob.type]: blob })];
+        await navigator.clipboard.write(data);
+    }
+
+    /**
+     * Ask for clipboard write permission
+     * @returns True if permission granted
+     */
+    private async askClipboardWritePermission(): Promise<boolean> {
+        try {
+            const { state } = await navigator.permissions.query(<any>{ name: 'clipboard-write' });
+            return state === 'granted';
+        } catch (error) {
+            return false;
+        }
+    }
+
+    //#endregion
+
+    //#region Media & Audio
+
+    /**
+     * Convert a File to HTMLAudioElement
+     * @param file Audio file
+     * @returns Audio element with loaded file
+     */
+    public async fileToAudio(file: File): Promise<HTMLAudioElement> {
+        const audio = new Audio();
+        audio.src = URL.createObjectURL(file);
+        const p = libxHelpers.newPromise<HTMLAudioElement>();
+        audio.onloadedmetadata = () => p.resolve(audio);
+        audio.onerror = (err) => p.reject(err);
+        return p;
+    }
+
+    /**
+     * Get MediaSource instance (supports ManagedMediaSource for iOS 17.1+)
+     * @returns MediaSource instance
+     */
+    public getMediaSource(): MediaSource {
+        if ('ManagedMediaSource' in window) {
+            return new (<any>window).ManagedMediaSource();
+        } else if ('MediaSource' in window) {
+            return new MediaSource();
+        } else {
+            throw new Error('MediaSource API is not supported on this device.');
+        }
+    }
+
+    /**
+     * Convert base64 string to MP3 file and trigger download
+     * @param base64String Base64 encoded audio data
+     * @param filename Output filename (default: 'audio.mp3')
+     */
+    public base64ToMP3(base64String: string, filename = 'audio.mp3') {
+        const byteCharacters = atob(base64String);
+        const byteArrays = [];
+
+        for (let i = 0; i < byteCharacters.length; i += 512) {
+            const slice = byteCharacters.slice(i, i + 512);
+            const byteNumbers = new Array(slice.length);
+
+            for (let j = 0; j < slice.length; j++) {
+                byteNumbers[j] = slice.charCodeAt(j);
+            }
+
+            byteArrays.push(new Uint8Array(byteNumbers));
+        }
+
+        const blob = new Blob(byteArrays, { type: 'audio/mp3' });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        URL.revokeObjectURL(url);
+    }
+
+    //#endregion
+
+    //#region DOM Utilities
+
+    /**
+     * Remove focus from currently active element
+     */
+    public blur() {
+        (<any>document.activeElement)?.blur();
+    }
+
+    /**
+     * Decode HTML entities in a string
+     * @param text Text containing HTML entities
+     * @returns Decoded text
+     */
+    public decodeHTMLEntities(text: string): string {
+        const txt = document.createElement('textarea');
+        txt.innerHTML = text;
+        return txt.value;
+    }
+
+    /**
+     * Scroll to element matching a query selector
+     * @param query CSS selector
+     * @param options Scroll options
+     * @returns Element that was scrolled to, or null if not found
+     */
+    public scrollTo(
+        query: string,
+        options?: { double?: boolean; smooth?: boolean }
+    ): Element | null {
+        const { double = false, smooth = true } = options || {};
+        const element = document.querySelector(query);
+        if (!element) return null;
+
+        element.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' });
+        if (double) {
+            setTimeout(() => {
+                element.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' });
+            }, 1000);
+        }
+
+        return element;
+    }
+
+    /**
+     * Show a modal dialog by ID
+     * @param modalId Modal element ID
+     */
+    public showModal(modalId: string) {
+        (<HTMLDialogElement>document.getElementById(modalId))?.showModal();
+    }
+
+    /**
+     * Close a modal dialog by ID
+     * @param modalId Modal element ID
+     */
+    public closeModal(modalId: string) {
+        (<HTMLDialogElement>document.getElementById(modalId))?.close();
+    }
+
+    /**
+     * Auto-grow textarea height based on content
+     * @param e Input event from textarea
+     */
+    public autoGrowTextarea(e: Event) {
+        const element = <HTMLTextAreaElement>e.target;
+        const maxHeight = 120;
+        element.style.height = 'auto';
+        if (element.scrollHeight > maxHeight) {
+            element.style.height = maxHeight + 'px';
+        } else {
+            element.style.height = element.scrollHeight + 'px';
+        }
+    }
+
+    //#endregion
+
+    //#region Page Information
+
+    /**
+     * Get page metadata (title, description, og:image)
+     * @returns Object with page metadata
+     */
+    public getPageMetadata(): { title: string; description: string; ogImage: string } {
+        const metadata = {
+            title: document.title,
+            description: '',
+            ogImage: '',
+        };
+
+        const metaTags = document.getElementsByTagName('meta');
+        for (let tag of metaTags) {
+            if (tag.getAttribute('name') === 'description') {
+                metadata.description = tag.getAttribute('content') || '';
+            } else if (tag.getAttribute('property') === 'og:image') {
+                metadata.ogImage = tag.getAttribute('content') || '';
+            }
+        }
+
+        return metadata;
+    }
+
+    /**
+     * Get referrer hostname
+     * @returns Hostname of the referrer, or empty string if none
+     */
+    public getReferrer(): string {
+        const url = document.referrer;
+        if (!url) return '';
+        try {
+            const hostname = new URL(url).hostname;
+            return hostname.replace(/^www\./, '');
+        } catch {
+            return '';
+        }
+    }
+
+    //#endregion
 }
 
 export const browserHelpers = new BrowserHelpers();
