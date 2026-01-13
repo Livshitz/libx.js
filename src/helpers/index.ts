@@ -812,6 +812,209 @@ export class Helpers {
     //         },
     //     });
     // }
+
+    //#region Number & Formatting
+
+    /**
+     * Format large numbers with k/m/b/t suffixes
+     * @param n Number to format
+     * @returns Formatted string (e.g., 1500 -> "1k", 1500000 -> "2m")
+     */
+    public formatNumber(n: number): string {
+        const x = 0;
+        if (n >= 1e12) return (n / 1e12).toFixed(x) + 't';
+        if (n >= 1e9) return (n / 1e9).toFixed(x) + 'b';
+        if (n >= 1e6) return (n / 1e6).toFixed(x) + 'm';
+        if (n >= 1e3) return (n / 1e3).toFixed(x) + 'k';
+        return n.toFixed(0);
+    }
+
+    //#endregion
+
+    //#region File Path Utilities
+
+    /**
+     * Get file extension from filename
+     * @param fileName Filename with extension
+     * @returns File extension (without dot) or null
+     */
+    public getFileExtension(fileName: string): string | null {
+        if (!fileName) return null;
+        return fileName.slice(((fileName.lastIndexOf('.') - 1) >>> 0) + 2);
+    }
+
+    /**
+     * Get filename without extension
+     * @param fileName Filename with extension
+     * @returns Filename without extension or null
+     */
+    public getFileNameOnly(fileName: string): string | null {
+        if (!fileName) return null;
+        return fileName.slice(0, fileName.lastIndexOf('.'));
+    }
+
+    /**
+     * Extract filename from URL
+     * @param url URL containing filename
+     * @returns Filename from URL or null
+     */
+    public getFileNameFromUrl(url: string): string | null {
+        if (!url) return null;
+        const decoded = decodeURIComponent(url);
+        let ret = decoded?.split('/')?.reverse()?.[0];
+        ret = ret?.replace('?alt=media', '');
+        return ret;
+    }
+
+    //#endregion
+
+    //#region Array & Object Utilities
+
+    /**
+     * Ensure array has a specific number of items per row by adding nulls
+     * @param array Array to pad
+     * @param itemsPerRow Desired items per row (default: 2)
+     * @returns Modified array with null padding
+     */
+    public ensureItemsPerRow<T = any>(array: T[], itemsPerRow = 2): (T | null)[] {
+        const remainder = array.length % itemsPerRow;
+        if (remainder !== 0) {
+            const itemsToAdd = itemsPerRow - remainder;
+            for (let i = 0; i < itemsToAdd; i++) {
+                array.push(null);
+            }
+        }
+        return array;
+    }
+
+    /**
+     * Ensure object has specific number of keys per row by adding null keys
+     * @param obj Object to pad
+     * @param itemsPerRow Desired keys per row (default: 2)
+     * @returns New object with null key padding
+     */
+    public ensureKeysPerRow(obj: any, itemsPerRow = 2): any {
+        const remainder = Object.keys(obj).length % itemsPerRow;
+        if (remainder === 0) return obj;
+        const clone = objectHelpers.clone(obj);
+        const itemsToAdd = itemsPerRow - remainder;
+        for (let i = 0; i < itemsToAdd; i++) {
+            clone['_' + i] = null;
+        }
+        return clone;
+    }
+
+    /**
+     * Remove null and undefined values from array
+     * @param arr Array to filter
+     * @returns Array without nulls
+     */
+    public removeNulls<T = any>(arr: (T | null | undefined)[]): T[] {
+        return arr.filter((x) => x != null) as T[];
+    }
+
+    //#endregion
+
+    //#region Data Conversions
+
+    /**
+     * Convert Blob to Data URI
+     * @param blob Blob to convert
+     * @returns Promise resolving to data URI string
+     */
+    public blobToDataURI(blob: Blob): Promise<string> {
+        const p = this.newPromise<string>();
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const dataURI = e.target?.result as string;
+            p.resolve(dataURI);
+        };
+        reader.onerror = function (err) {
+            p.reject(err);
+        };
+        reader.readAsDataURL(blob);
+        return p;
+    }
+
+    /**
+     * Convert Data URI to Blob
+     * @param dataURI Data URI string
+     * @returns Blob
+     */
+    public dataURItoBlob(dataURI: string): Blob {
+        const bytes =
+            dataURI.split(',')[0].indexOf('base64') >= 0
+                ? atob(dataURI.split(',')[1])
+                : unescape(dataURI.split(',')[1]);
+        const mime = dataURI.split(',')[0].split(':')[1].split(';')[0];
+        const max = bytes.length;
+        const ia = new Uint8Array(max);
+        for (let i = 0; i < max; i++) ia[i] = bytes.charCodeAt(i);
+        return new Blob([ia], { type: mime });
+    }
+
+    /**
+     * Convert Blob to File
+     * @param blob Blob to convert
+     * @param fileName Desired filename
+     * @returns File object
+     */
+    public blobToFile(blob: Blob, fileName: string): File {
+        return new File([blob], fileName, { type: blob.type });
+    }
+
+    /**
+     * Convert Blob to Uint8Array
+     * @param blob Blob to convert
+     * @returns Promise resolving to Uint8Array
+     */
+    public async blobToUint8Array(blob: Blob): Promise<Uint8Array> {
+        const arrayBuffer = await blob.arrayBuffer();
+        const uint8Array = new Uint8Array(arrayBuffer);
+        return uint8Array;
+    }
+
+    //#endregion
+
+    //#region YAML Parsing
+
+    /**
+     * Parse YAML string (auto-loads js-yaml library if needed)
+     * @param yaml YAML string to parse (can be wrapped in code block)
+     * @returns Parsed YAML object
+     */
+    public async parseYaml(yaml: string): Promise<any> {
+        let yamlLib = (<any>this).di?.get?.('yaml');
+        if (!yamlLib) {
+            yamlLib = await import('js-yaml');
+            if ((<any>this).di?.register) {
+                (<any>this).di.register('yaml', yamlLib);
+            }
+        }
+
+        yaml = this.extractBlock(yaml, 'yml');
+        log.verbose('helpers:parseYaml:', yaml);
+        return await yamlLib.load(yaml?.trim());
+    }
+
+    /**
+     * Extract code block from markdown-style text
+     * @param text Text containing code block
+     * @param blockName Block language identifier (e.g., 'yml', 'json')
+     * @returns Extracted block content or original text if no block found
+     */
+    public extractBlock(text: string, blockName: string): string {
+        const unescaped = text
+            .replace(/\\`/g, '`')
+            .replace(/\\n/g, '\n')
+            .replace(/\\"/g, '"');
+
+        const match = unescaped.match(new RegExp(`\`\`\`${blockName}([\\s\\S]*?)\`\`\``));
+        if (!match) return text;
+        return match[1];
+    }
+
+    //#endregion
 }
 
 export const helpers = new Helpers();
