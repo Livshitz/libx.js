@@ -53,6 +53,37 @@ export class Log implements ILog {
         return this.write(this.severities.Fatal, msg, args);
     }
 
+    /**
+     * Component-scoped logger. `debug`/`verbose` are gated per-component via the
+     * `DEBUG` flag (env var on node, localStorage on browser): comma-separated
+     * component names, or `*` for all. `info`/`warn`/`error`/`fatal` always emit.
+     * Messages are prefixed with `[name]`.
+     */
+    public forComponent(name: string): ComponentLogger {
+        const base = this;
+        const prefix = `[${name}]`;
+        const enabled = () => isComponentDebugEnabled(name);
+        return {
+            debug: (msg, ...args) => {
+                if (!enabled()) return;
+                const prev = base.isDebug;
+                base.isDebug = true;
+                try { return base.debug(`${prefix} ${msg}`, ...args); } finally { base.isDebug = prev; }
+            },
+            verbose: (msg, ...args) => {
+                if (!enabled()) return;
+                const prev = base.filterLevel;
+                if (base.filterLevel < LogLevel.Verbose) base.filterLevel = LogLevel.Verbose;
+                try { return base.verbose(`${prefix} ${msg}`, ...args); } finally { base.filterLevel = prev; }
+            },
+            info: (msg, ...args) => base.info(`${prefix} ${msg}`, ...args),
+            warn: (msg, ...args) => base.warning(`${prefix} ${msg}`, ...args),
+            warning: (msg, ...args) => base.warning(`${prefix} ${msg}`, ...args),
+            error: (msg, ...args) => base.error(`${prefix} ${msg}`, ...args),
+            fatal: (msg, ...args) => base.fatal(`${prefix} ${msg}`, ...args),
+        };
+    }
+
     public write(severity: LogLevel, msg: string, args = []) {
         var time = this.isShowTime ? '[' + new Date().format('HH:MM:ss.l') + ']' : '';
         var prefix = '';
@@ -198,10 +229,33 @@ export interface ILog {
     e(message: string, ...args);
     fatal(message: string, ...args);
 
+    forComponent(name: string): ComponentLogger;
+
     colors: typeof ConsoleColors;
     color(str: string, color: ConsoleColors): string;
     write(...args);
     // getStackTrace(): string;
+}
+
+export interface ComponentLogger {
+    debug(msg: any, ...args: any[]): any;
+    verbose(msg: any, ...args: any[]): any;
+    info(msg: any, ...args: any[]): any;
+    warn(msg: any, ...args: any[]): any;
+    warning(msg: any, ...args: any[]): any;
+    error(msg: any, ...args: any[]): any;
+    fatal(msg: any, ...args: any[]): any;
+}
+
+/** Reads the `DEBUG` flag (process.env on node, localStorage on browser) and tests `name`. */
+export function isComponentDebugEnabled(name: string): boolean {
+    let flag = '';
+    try {
+        if (typeof process !== 'undefined' && (process as any).env?.DEBUG) flag = (process as any).env.DEBUG;
+        else if (typeof localStorage !== 'undefined') flag = localStorage.getItem('DEBUG') || '';
+    } catch {}
+    if (!flag) return false;
+    return flag.split(',').map(s => s.trim()).some(t => t === '*' || t === name);
 }
 
 export const log = new Log();
