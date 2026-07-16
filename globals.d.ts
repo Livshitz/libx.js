@@ -14,8 +14,9 @@ declare global {
 			padNumber(width: number, z: string) : string;
 			contains(str: string) : boolean;
 			hashCode() : string;
-			endsWith(suffix: string) : boolean;
-			startsWith(prefix: string) : boolean;
+			// no endsWith/startsWith here — they are builtins. Re-declaring them narrowed the
+			// signature to 1 arg, so TS rejected the correct `startsWith(prefix, position)` call
+			// and hid the fact that the runtime override ignored `position` entirely.
 			isEmpty(input?: string) : boolean;
 		}
 
@@ -73,8 +74,7 @@ declare namespace LibxJSExtensions {
         padNumber(width: number, z: string): string;
         contains(str: string): boolean;
         hashCode(): string;
-        endsWith(suffix: string): boolean;
-        startsWith(prefix: string): boolean;
+        // no endsWith/startsWith — builtins; see the note in the block above.
         isEmpty(input?: string): boolean;
         removeLastPart(delimiter = '/'): string;
         getAbbreviation(): string;

@@ -50,19 +50,22 @@ export class StringExtensions {
         return hash.toString();
     };
 
-    public static endsWith = function (suffix) {
-        return this.indexOf(suffix, this.length - suffix.length) !== -1;
-    };
+    // NOTE: startsWith/endsWith are deliberately NOT defined here — they are JS builtins, and
+    // applyStringExtensions() copies every static of this class onto String.prototype. Defining
+    // them here OVERWROTE the natives with versions that silently ignore their 2nd argument
+    // (`position` / `endPosition`): after importing this package, 'xabc'.startsWith('abc', 1)
+    // returned false and 'abcx'.endsWith('abc', 3) returned false. The bug stayed invisible for
+    // years because globals.d.ts re-declared them as 1-arg, so TypeScript rejected the correct
+    // 2-arg call — only a plain-JS caller could hit it, and it then failed SILENTLY (a docx
+    // parser doing startsWith(tag, i) matched at every offset and emitted empty output while
+    // reporting success). Both old bodies were provably identical to the natives for every
+    // 1-arg call (416/416 cases), i.e. pure redundancy carrying a landmine.
+    // Do not shadow a builtin here.
 
     public static removeLastPart = function (delimiter = '/') {
         let parts = this.split(delimiter);
         parts.pop();
         return parts.join(delimiter);
-    };
-
-    // see below for better implementation!
-    public static startsWith = function (prefix) {
-        return this.indexOf(prefix) == 0;
     };
 
     public static isEmpty = function (input = null) {
