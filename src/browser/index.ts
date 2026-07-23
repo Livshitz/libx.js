@@ -1,4 +1,6 @@
 import { browserHelpers } from './browserHelpers';
+export { ImageCompressor, ImageCompressorOptions } from './ImageCompressor';
+export type { ImageCompressorResult } from './ImageCompressor';
 import req from './require';
 import { detect, parseUserAgent } from 'detect-browser';
 
