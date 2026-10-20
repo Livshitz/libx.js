@@ -28,7 +28,7 @@ export class ExpiryManager {
     }
 
     public setExpiry(key: string, expiryPeriodMS: number = null): Date {
-        let expiry = new Date().addMilliseconds(expiryPeriodMS || this.expiryPeriodMS);
+        let expiry = new Date(Date.now() + (expiryPeriodMS || this.expiryPeriodMS));
         this._expiryMap[key] = expiry;
         return expiry;
     }

@@ -7,8 +7,7 @@ import { libx } from "./bundles/browser.essentials";
 
 log.filterLevel = LogLevel.Info;
 // log.isDebug = true;
-helpers.extensions.applyAllExtensions();
-helpers.extensions.applyDateExtensions();
+if (!(<any>globalThis)._libx_avoidExtensions) helpers.extensions.applyAllExtensions();
 
 export default class App {
 	constructor() {
