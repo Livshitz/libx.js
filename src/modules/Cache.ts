@@ -92,7 +92,7 @@ export class Cache implements IDataProvider {
     }
 
     public setExpiry(path: string, expiryPeriodMS: number = null): Date {
-        let expiry = new Date().addMilliseconds(expiryPeriodMS || this._expiryPeriodMS);
+        let expiry = new Date(Date.now() + (expiryPeriodMS || this._expiryPeriodMS));
         this.store[`${this.prefix}/__expiry/${path}`] = expiry;
         return expiry;
     }

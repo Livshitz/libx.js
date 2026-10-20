@@ -11,13 +11,18 @@ export class ObjectExtensions {
 
     public extend<T1 = any, T2 = any>(input: T1, withObj: T2): T1 & T2 {
         for (let key of ObjectExtensions.__getCustomProperties.call(withObj)) {
-            input[key] = withObj[key];
+            if (!isNative(input[key])) input[key] = withObj[key];
         }
         for (let key of ObjectExtensions.__getCustomProperties.call((<any>withObj).__proto__)) {
-            input[key] = (<any>withObj).__proto__[key];
+            if (!isNative(input[key])) input[key] = (<any>withObj).__proto__[key];
         }
         return input as T1 & T2;
     }
+}
+
+// Never replace a built-in: other code on the page (third-party scripts, the runtime) relies on spec behavior.
+function isNative(fn: any): boolean {
+    return typeof fn === 'function' && /\[native code\]/.test(Function.prototype.toString.call(fn));
 }
 
 export const objectExtensions = new ObjectExtensions();

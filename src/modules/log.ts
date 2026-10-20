@@ -1,5 +1,4 @@
-import { extensions } from '../extensions/';
-extensions.applyDateExtensions();
+import { DateExtensions } from '../extensions/DateExtensions';
 
 export class Log implements ILog {
     public colors = ConsoleColors;
@@ -85,7 +84,7 @@ export class Log implements ILog {
     }
 
     public write(severity: LogLevel, msg: string, args = []) {
-        var time = this.isShowTime ? '[' + new Date().format('HH:MM:ss.l') + ']' : '';
+        var time = this.isShowTime ? '[' + DateExtensions.format.call(new Date(), 'HH:MM:ss.l') + ']' : '';
         var prefix = '';
         var style = '';
         var func = 'log';
@@ -149,10 +148,10 @@ export class Log implements ILog {
 
     public color(str: string, color: ConsoleColors) {
         var c = null;
-        if (!color.startsWith('\x1b[')) c = ConsoleColors['fg' + color.capitalize()];
+        if (!color.startsWith('\x1b[')) c = ConsoleColors['fg' + color.charAt(0).toUpperCase() + color.slice(1).toLowerCase()];
         else c = color;
         if (c == null && ConsoleColors[color] == null)
-            throw 'given color ({0}) is not supported. options: black, red, green, yellow, blue, magenta, cyan, white'.format(color);
+            throw `given color (${color}) is not supported. options: black, red, green, yellow, blue, magenta, cyan, white`;
         return c + str + ConsoleColors.reset;
     }
 
