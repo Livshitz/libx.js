@@ -1131,7 +1131,7 @@ this.getProjectConfig = (containingFolder, secret)=>{
             if (global.libx._projconfig == null) throw "libx:helpers:getProjectConfig: Detected browser, but `window.libx._projconfig` was not provided";
     	
         }
-        if (this._projectConfig == null) throw "libx:helpers:getProjectConfig: Could not find/load project.json in '{0}'".format(containingFolder);
+        if (this._projectConfig == null) throw `libx:helpers:getProjectConfig: Could not find/load project.json in '${containingFolder}'`;
         return ret = this._projectConfig;
     } finally {
         if (ret != null && ret.private == null) ret.private = {};

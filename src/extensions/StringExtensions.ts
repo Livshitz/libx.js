@@ -112,8 +112,8 @@ export class StringExtensions {
 
     public static replaceAll = function (find: string, replace: string) {
         if (find == null) return null;
-        // Coerce non-string `find` to match native String.prototype.replaceAll semantics
-        // (callers/deps may legitimately pass a number/bool). Avoids `find.replace` TypeError.
+        // Fallback for runtimes without native replaceAll (extend never replaces the native one).
+        if (<any>find instanceof RegExp) return this.replace(find, replace);
         const findReg = String(find).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         return this.replace(new RegExp(findReg, 'g'), replace);
     }

@@ -60,7 +60,7 @@ export class ProxyCacheOld<T extends object> {
         const name = this._name;
         for (let prop of props) {
             const propName = prop.replace(new RegExp(`${this._name}\/`, 'gi'), '');
-            if (propName.contains('__expiry')) continue;
+            if (propName.includes('__expiry')) continue;
             obj[propName] = this._cache.get(propName);
         }
         return obj;
