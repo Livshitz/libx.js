@@ -150,14 +150,14 @@ export class DateExtensions {
     // For convenience...
     public static formatx = function (mask, utc = null) {
         if (mask == null) return this;
-        return this.dateFormat(this, mask, utc);
+        return DateExtensions.dateFormat(this, mask, utc);
     };
 
     public static format = function (strFormat, utc = null) {
         if (isNaN(this.getTime())) return null;
         // An invalid date object returns NaN for getTime() and NaN is the only
         // object not strictly equal to itself.
-        return this.dateFormat(this, strFormat, utc);
+        return DateExtensions.dateFormat(this, strFormat, utc);
     };
 
     public static fromJson = function (aJsonDate) {

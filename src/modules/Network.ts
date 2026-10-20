@@ -161,7 +161,7 @@ export class Network {
 
     public get = async (url: string, params: any = null, options = {}) => {
         if (params != null) {
-            let includePrefix = url.contains('?') ? false : true;
+            let includePrefix = url.includes('?') ? false : true;
             let queryString = this.helper.toQueryString(params, !includePrefix);
             url += includePrefix ? queryString : '&' + queryString;
         }

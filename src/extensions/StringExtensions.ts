@@ -109,7 +109,9 @@ export class StringExtensions {
 
     public static replaceAll = function (find: string, replace: string) {
         if (find == null) return null;
-        const findReg = find.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        // Fallback for runtimes without native replaceAll (extend never replaces the native one).
+        if (<any>find instanceof RegExp) return this.replace(find, replace);
+        const findReg = String(find).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         return this.replace(new RegExp(findReg, 'g'), replace);
     }
 
